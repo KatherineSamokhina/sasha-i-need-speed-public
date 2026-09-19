@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>I Need Speed 1: First Racing</title>
+<!-- ?v=2 — хитрость против кэша: браузер иногда запоминает старые
+     файлы; поменяв цифру, мы заставляем его скачать свежие -->
+<link rel="stylesheet" href="style.css?v=15">
+</head>
+<body>
+  <div id="wrap">
+    <!-- Холст — это "экран" игры. Всё рисуется на нём каждый кадр, 60 раз в секунду -->
+    <canvas id="game" width="960" height="540"></canvas>
+
+    <!-- ГЛАВНОЕ МЕНЮ -->
+    <div id="menu" class="overlay">
+      <!-- Логотип студии VARDO GAMES на фоне: фургон-вардо с колёсами
+           (перерисован с фирменного знака Саши!) -->
+      <div class="studio-bg">
+        <svg viewBox="0 0 700 500" xmlns="http://www.w3.org/2000/svg">
+          <g fill="none" stroke="#ffffff" stroke-linejoin="round" stroke-linecap="round">
+            <!-- Кузов фургона с провисшим тентом и рожками по углам -->
+            <path stroke-width="15"
+              d="M70,55 Q350,140 630,55 Q612,85 618,180 Q625,270 612,315
+                 Q607,338 545,338 L155,338 Q93,338 88,315 Q75,270 82,180
+                 Q88,85 70,55 Z"/>
+            <!-- Рама между колёсами -->
+            <path stroke-width="11" d="M300,386 L400,386"/>
+            <!-- Левое колесо со спицами -->
+            <circle cx="235" cy="386" r="78" stroke-width="13"/>
+            <circle cx="235" cy="386" r="12" stroke-width="9"/>
+            <path stroke-width="8" d="M235,320 L235,452 M169,386 L301,386
+              M188,339 L282,433 M282,339 L188,433"/>
+            <!-- Правое колесо со спицами -->
+            <circle cx="465" cy="386" r="78" stroke-width="13"/>
+            <circle cx="465" cy="386" r="12" stroke-width="9"/>
+            <path stroke-width="8" d="M465,320 L465,452 M399,386 L531,386
+              M418,339 L512,433 M512,339 L418,433"/>
+          </g>
+          <!-- Надписи -->
+          <text x="350" y="225" text-anchor="middle" fill="#ffffff"
+            font-family="Verdana, sans-serif" font-weight="bold"
+            font-size="86" letter-spacing="8">VARDO</text>
+          <text x="350" y="318" text-anchor="middle" fill="#ffffff"
+            font-family="Verdana, sans-serif" font-weight="bold"
+            font-size="40" letter-spacing="14">GAMES</text>
+        </svg>
+      </div>
+      <h1>I NEED SPEED 1</h1>
+      <h2>First Racing</h2>
+      <p class="car" id="menu-car">Chevalet Avio 2013</p>
+      <p class="money" id="menu-money">🪙 500</p>
+      <div class="menu-grid">
+        <button id="btn-races">🏁 ЗАЕЗДЫ</button>
+        <button id="btn-city" class="btn-violet">🏙 ГОРОД</button>
+        <button id="btn-mp" class="btn-green">🌐 МУЛЬТИПЛЕЕР</button>
+        <button id="btn-garage" class="btn-blue">🔧 Гараж</button>
+        <button id="btn-settings" class="btn-dark">⚙️ Настройки</button>
+      </div>
+      <p class="studio-credit">© Vardo Games</p>
+    </div>
+
+    <!-- МУЛЬТИПЛЕЕР: пир-ту-пир через WebRTC (спецификация Саши) -->
+    <div id="mp" class="overlay hidden">
+      <h1>🌐 МУЛЬТИПЛЕЕР</h1>
+      <p class="crash-text" id="mp-status">Пир-ту-пир: катайтесь вдвоём по интернету!</p>
+      <button id="btn-mp-host">🎮 Создать игру (получить код)</button>
+      <div class="settings-btns">
+        <input id="mp-code" class="text-input" placeholder="код друга: ins1-….">
+        <button id="btn-mp-join">🔗 Подключиться</button>
+      </div>
+      <button id="btn-mp-back" class="btn-dark">⬅ Назад</button>
+    </div>
+
+    <!-- ГОРОД: карта выбора заездов + шоссе + заправка (план Саши).
+         Топливо существует ТОЛЬКО здесь! -->
+    <div id="city" class="overlay hidden">
+      <h1>🏙 ГОРОД</h1>
+      <p class="money" id="city-money"></p>
+      <div id="city-map">
+        <canvas id="city-canvas" width="640" height="340"></canvas>
+        <button class="poi" id="poi-race" style="left:19%; top:26%">🏁 Кольцо</button>
+        <button class="poi btn-orange" id="poi-drag" style="left:72%; top:18%">⚡ Драг</button>
+        <button class="poi btn-blue" id="poi-ta" style="left:74%; top:56%">⏱ Рекорды</button>
+        <button class="poi btn-green" id="poi-hw" style="left:34%; top:87%">🛣 ШОССЕ</button>
+        <button class="poi btn-slate" id="poi-fuel" style="left:48%; top:47%">⛽ Заправка</button>
+      </div>
+      <p class="crash-text" id="fuel-line">⛽ Бак: 100%</p>
+      <button id="btn-city-back" class="btn-dark">⬅ Назад</button>
+    </div>
+
+    <!-- ЗАЕЗДЫ: подраздел со всеми видами гонок (структура Саши) -->
+    <div id="races" class="overlay hidden">
+      <h1>🏁 ЗАЕЗДЫ</h1>
+      <p class="crash-text" id="races-msg"></p>
+      <button id="btn-race">🏁 ГОНКА — 3 круга с соперниками</button>
+      <button id="btn-drag" class="btn-orange">⚡ ДРАГ — дуэль с препятствиями</button>
+      <button id="btn-ta" class="btn-blue">⏱ ПРОТИВ РЕКОРДА — обгони призрака</button>
+      <button id="btn-go" class="btn-green">🚗 СВОБОДНАЯ ЕЗДА — без соперников</button>
+      <button id="btn-track" class="btn-slate">🛣️ Трасса: Зелёное кольцо</button>
+      <button id="btn-races-back" class="btn-dark">⬅ Назад</button>
+    </div>
+
+    <!-- ГАРАЖ: листаем машины и выбираем -->
+    <div id="garage" class="overlay hidden">
+      <h1>🔧 ГАРАЖ</h1>
+      <div class="garage-row">
+        <button id="btn-prev" class="nav">◀</button>
+        <canvas id="garage-canvas" width="330" height="220"></canvas>
+        <button id="btn-next" class="nav">▶</button>
+      </div>
+      <h3 id="garage-name"></h3>
+      <p id="garage-desc" class="crash-text"></p>
+      <div id="garage-stats"></div>
+      <div class="settings-btns">
+        <button id="btn-select">✅ Выбрать эту машину</button>
+        <button id="btn-tuning">🔩 Тюнинг</button>
+        <button id="btn-garage-back">⬅ Назад</button>
+      </div>
+    </div>
+
+    <!-- НАСТРОЙКИ: две клавиши на каждую функцию -->
+    <div id="settings" class="overlay hidden">
+      <h1>⚙️ НАСТРОЙКИ</h1>
+      <p class="crash-text">На каждую функцию — две клавиши. Кликни по клавише и нажми новую.</p>
+      <div id="binds"></div>
+      <div class="settings-btns">
+        <input id="code-input" class="text-input" placeholder="секретный код…">
+        <button id="btn-code">✨ Активировать</button>
+      </div>
+      <p class="crash-text hidden" id="code-status"></p>
+      <p class="crash-text hidden" id="code-status-admin"></p>
+      <div class="settings-btns">
+        <button id="btn-defaults">↩ Базовые настройки</button>
+        <button id="btn-reset-progress">🗑 Сбросить прогресс</button>
+        <button id="btn-back">⬅ Назад</button>
+      </div>
+    </div>
+
+    <!-- ТЮНИНГ: цвет, винилы, детали, железо (Этап 4, план Саши) -->
+    <div id="tuning" class="overlay hidden">
+      <h1>🔩 ТЮНИНГ</h1>
+      <h3 id="tuning-name"></h3>
+      <p class="money" id="tuning-money"></p>
+      <canvas id="tuning-canvas" width="300" height="180"></canvas>
+      <div class="trow"><span class="tlabel">🎨 Цвет</span><div id="paints" class="topts"></div></div>
+      <div class="trow"><span class="tlabel">🏁 Винил</span><div id="vinyls" class="topts"></div></div>
+      <div class="trow"><span class="tlabel">🔩 Детали</span><div id="details" class="topts"></div></div>
+      <div class="trow"><span class="tlabel">⚙️ Железо</span><div id="hardware" class="topts"></div></div>
+      <div class="settings-btns">
+        <button id="btn-paint-reset">↩ Сброс тюнинга</button>
+        <button id="btn-tuning-back">⬅ В гараж</button>
+      </div>
+    </div>
+
+    <!-- ПАУЗА (Esc): как экран аварии, но с надписью ПАУЗА -->
+    <div id="pause" class="overlay hidden">
+      <h1>ПАУЗА</h1>
+      <p class="crash-text">Esc — продолжить гонку</p>
+      <button id="btn-pause-restart">🔁 Снова заезд <span class="k">R</span></button>
+      <button id="btn-pause-menu">🏠 Главное меню</button>
+    </div>
+
+    <!-- ФИНИШ ГОНКИ: результат и медаль -->
+    <div id="finish" class="overlay hidden">
+      <h1>🏁 ФИНИШ!</h1>
+      <p class="crash-text" id="finish-text">Место: 1 из 4</p>
+      <button id="btn-finish-again">🔁 Ещё гонку! <span class="k">R</span></button>
+      <button id="btn-finish-menu">🏠 Главное меню</button>
+    </div>
+
+    <!-- АВАРИЯ: появляется при столкновении, время замирает -->
+    <div id="crash" class="overlay hidden">
+      <h1>💥 АВАРИЯ!</h1>
+      <p class="crash-text">Столкновение! Мотор заглох.</p>
+      <button id="btn-restart">🔁 Снова заезд <span class="k">R</span></button>
+      <button id="btn-crash-menu">🏠 Главное меню</button>
+    </div>
+
+    <!-- СЕНСОРНОЕ УПРАВЛЕНИЕ для телефонов и планшетов -->
+    <div id="touch" class="hidden">
+      <button class="tbtn" id="t-left">◀</button>
+      <button class="tbtn" id="t-right">▶</button>
+      <button class="tbtn tgas" id="t-gas">ГАЗ</button>
+      <button class="tbtn tbrake" id="t-brake">ТОРМОЗ</button>
+      <button class="tbtn tpause" id="t-pause">⏸</button>
+      <div id="t-context"></div>
+    </div>
+  </div>
+
+  <!-- PeerJS — библиотека мультиплеера, лежит ВНУТРИ игры
+       (Яндекс Игры требуют, чтобы все файлы были свои) -->
+  <script src="peerjs.min.js"></script>
+  <!-- SDK Яндекс Игр: на их сайте сообщает «игра загрузилась».
+       Дома этот скрипт просто не загрузится — и ничего страшного -->
+  <script src="https://yandex.ru/games/sdk/v2" onerror=""></script>
+  <script src="game.js?v=15"></script>
+  <script>
+    // Знакомимся с Яндекс Играми, если мы запущены у них
+    if (typeof YaGames !== "undefined") {
+      YaGames.init().then(function (ysdk) {
+        window.ysdk = ysdk;
+        if (ysdk.features && ysdk.features.LoadingAPI)
+          ysdk.features.LoadingAPI.ready();   // «игра готова, убирайте загрузку!»
+      }).catch(function () {});
+    }
+  </script>
+</body>
+</html>

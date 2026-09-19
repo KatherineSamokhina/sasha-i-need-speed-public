@@ -1,0 +1,439 @@
+/* Оформление страницы вокруг игры */
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: #101018;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  font-family: "Segoe UI", Verdana, sans-serif;
+}
+
+#wrap {
+  position: relative;           /* чтобы стартовый экран лёг ПОВЕРХ холста */
+  width: min(96vw, 960px);
+}
+
+#game {
+  width: 100%;
+  display: block;
+  border-radius: 10px;
+  box-shadow: 0 0 60px rgba(255, 40, 40, 0.25);
+}
+
+/* ---- Экраны поверх игры: меню, пауза, авария ---- */
+.overlay {
+  position: absolute;
+  inset: 0;                     /* растянуть на весь холст */
+  background: rgba(8, 8, 16, 0.84);
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  color: white;
+  text-align: center;
+}
+
+.overlay.hidden { display: none; }
+
+.overlay h1 {
+  font-size: 52px;
+  font-style: italic;
+  letter-spacing: 4px;
+  color: #ff3131;
+  text-shadow: 0 0 24px rgba(255, 49, 49, 0.8), 3px 3px 0 #6d0000;
+}
+
+.overlay h2 {
+  font-size: 24px;
+  font-style: italic;
+  letter-spacing: 10px;
+  color: #ffd23f;
+  margin-bottom: 10px;
+}
+
+.overlay .car {
+  font-size: 18px;
+  color: #9be0ff;
+  margin-bottom: 12px;
+}
+
+.overlay .keys {
+  font-size: 13px;
+  color: #aaa;
+  margin-top: 4px;
+}
+
+/* Главное меню — один столбец (правка Саши) */
+.menu-grid {
+  display: grid;
+  grid-template-columns: 340px;
+  gap: 10px;
+  margin-top: 6px;
+}
+
+.menu-grid button {
+  min-width: 0;
+  width: 100%;
+  font-size: 16px;
+  padding: 12px 8px;
+}
+
+/* Цвета кнопок — чтобы не сливались (правка Саши)! */
+.overlay button.btn-orange { background: #d97400; box-shadow: 0 4px 0 #6d3a00; }
+.overlay button.btn-blue   { background: #1f5fd6; box-shadow: 0 4px 0 #0d2a66; }
+.overlay button.btn-green  { background: #1f8f4d; box-shadow: 0 4px 0 #0b4023; }
+.overlay button.btn-slate  { background: #46586e; box-shadow: 0 4px 0 #1f2937; }
+.overlay button.btn-dark   { background: #3a3a46; box-shadow: 0 4px 0 #1c1c24; }
+.overlay button.btn-violet { background: #7a4fd6; box-shadow: 0 4px 0 #3a2570; }
+
+/* Текстовые поля (секретный код, код мультиплеера) */
+.text-input {
+  min-width: 240px;
+  font-size: 16px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 2px solid #3a3f52;
+  background: #14161f;
+  color: #fff;
+  outline: none;
+}
+.text-input:focus { border-color: #ffd23f; }
+
+.hidden { display: none !important; }
+
+/* ---- Горизонтальный режим на телефонах (решение Саши) ----
+   Если телефон держат ВЕРТИКАЛЬНО, поворачиваем всю игру на 90°:
+   она всегда широкоэкранная, как настоящие гонки! */
+@media (orientation: portrait) {
+  body.touch-device { overflow: hidden; }
+  body.touch-device #wrap {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vh;                 /* ширина игры = высота экрана */
+    height: 100vw;
+    transform: rotate(90deg) translateY(-100%);
+    transform-origin: top left;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+}
+
+/* ---- Сенсорное управление (телефоны и планшеты) ---- */
+#touch {
+  position: fixed;        /* кнопки у краёв ЭКРАНА — под большие пальцы! */
+  inset: 0;
+  pointer-events: none;   /* сам слой прозрачен для нажатий… */
+  z-index: 50;
+}
+
+#touch .tbtn {
+  position: absolute;
+  pointer-events: auto;   /* …а кнопки — ловят! */
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.5);
+  background: rgba(20, 20, 32, 0.45);
+  color: #fff;
+  font-size: 20px;
+  font-weight: bold;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+#touch .tbtn:active { background: rgba(213, 18, 30, 0.6); }
+
+#t-left  { left: 16px;  bottom: 18px; }
+#t-right { left: 104px; bottom: 18px; }
+#t-gas   { right: 18px; bottom: 86px; width: 92px; height: 92px; background: rgba(31, 143, 77, 0.5); font-size: 18px; }
+#t-brake { right: 116px; bottom: 20px; background: rgba(213, 18, 30, 0.45); font-size: 13px; }
+#t-pause { right: 12px; top: 12px; width: 46px; height: 46px; font-size: 18px; }
+
+#t-context {
+  position: absolute;
+  left: 16px;
+  bottom: 104px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  pointer-events: none;
+}
+
+#t-context .tbtn {
+  position: static;
+  width: 56px;
+  height: 56px;
+  font-size: 15px;
+}
+
+/* ---- Логотип студии VARDO GAMES (фургон!) на фоне меню ---- */
+.studio-bg {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: rotate(-8deg);
+  pointer-events: none;
+  user-select: none;
+}
+
+.studio-bg svg {
+  width: 500px;
+  opacity: 0.07;
+}
+
+.studio-credit {
+  font-size: 12px;
+  letter-spacing: 3px;
+  color: #5a5f6e;
+  margin-top: 4px;
+}
+
+/* Меню стало выше — ужимаем, чтобы всё влезало без прокрутки */
+#menu { gap: 8px; }
+#menu h1 { font-size: 44px; }
+#menu .menu-grid button { padding: 10px 8px; }
+
+/* ---- Город: карта с точками-кнопками ---- */
+#city { background: #0a0a12; gap: 8px; }
+#city h1 { font-size: 30px; letter-spacing: 3px; }
+
+#city-map { position: relative; }
+
+#city-canvas {
+  border-radius: 12px;
+  box-shadow: inset 0 0 40px rgba(0,0,0,0.5);
+}
+
+.overlay button.poi {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  min-width: 0;
+  font-size: 14px;
+  font-weight: bold;
+  padding: 7px 14px;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  box-shadow: 0 3px 0 rgba(0, 0, 0, 0.55);
+}
+
+.overlay button.poi:hover { transform: translate(-50%, -50%) scale(1.12); }
+
+/* Игровая валюта — золотые монеты */
+.money {
+  font-size: 17px;
+  font-weight: bold;
+  color: #ffd23f;
+  text-shadow: 0 0 12px rgba(255, 210, 63, 0.5);
+}
+
+.overlay button.chip.locked {
+  background: #3a3a46;
+  color: #9a9aa8;
+  box-shadow: 0 3px 0 #1c1c24;
+  cursor: default;
+}
+
+.overlay .keys:first-of-type { margin-top: 18px; }
+
+/* ---- Кнопки ---- */
+.overlay button {
+  font-size: 19px;
+  font-weight: bold;
+  min-width: 320px;
+  padding: 12px 34px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  background: #d5121e;
+  color: white;
+  box-shadow: 0 4px 0 #6d0000;
+  transition: transform 0.08s;
+}
+
+.overlay button:hover { transform: scale(1.05); }
+.overlay button:active { transform: translateY(3px); box-shadow: 0 1px 0 #6d0000; }
+
+.overlay button .k {
+  background: rgba(255,255,255,0.25);
+  border-radius: 5px;
+  padding: 1px 8px;
+  font-size: 15px;
+  margin-left: 6px;
+}
+
+.overlay button.soon {
+  background: #3a3a46;
+  color: #9a9aa8;
+  cursor: default;
+  box-shadow: 0 4px 0 #1c1c24;
+}
+.overlay button.soon:hover { transform: none; }
+
+/* ---- Особые цвета отдельных экранов ---- */
+/* Главное меню и настройки — сплошной чёрный фон (решение Саши) */
+#menu, #settings, #garage { background: #0a0a12; }
+
+/* Пауза — как экран аварии, но с надписью ПАУЗА (решение Саши) */
+#pause, #crash { background: rgba(30, 5, 5, 0.72); }
+#pause h1, #crash h1 {
+  color: #ffd23f;
+  text-shadow: 0 0 22px rgba(255, 120, 30, 0.9), 3px 3px 0 #6d0000;
+}
+.crash-text {
+  font-size: 17px;
+  color: #ffb3a7;
+  margin-bottom: 10px;
+}
+
+/* ---- Настройки: таблица клавиш ---- */
+#settings h1 { font-size: 32px; letter-spacing: 2px; }
+#settings .crash-text { color: #9be0ff; font-size: 14px; margin-bottom: 2px; }
+
+#binds {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin: 6px 0 10px;
+}
+
+.bind-row {
+  display: grid;
+  grid-template-columns: 250px 105px 105px;
+  gap: 8px;
+  align-items: center;
+}
+
+.bind-row span {
+  text-align: right;
+  font-size: 14px;
+  color: #cfd6e4;
+}
+
+.overlay button.keybtn {
+  min-width: 0;
+  font-size: 15px;
+  padding: 6px 4px;
+  background: #23283a;
+  box-shadow: 0 3px 0 #10131f;
+}
+
+.overlay button.keybtn.listening {
+  background: #ffd23f;
+  color: #201500;
+  animation: blink 0.7s infinite;
+}
+
+@keyframes blink {
+  50% { opacity: 0.35; }
+}
+
+.settings-btns { display: flex; gap: 12px; }
+.settings-btns button {
+  min-width: 0;
+  font-size: 16px;
+  padding: 10px 22px;
+}
+
+/* ---- Тюнинг ---- */
+#tuning { background: #0a0a12; gap: 8px; }
+#tuning h1 { font-size: 26px; letter-spacing: 2px; }
+#tuning h3 { font-size: 15px; font-style: italic; color: #9be0ff; }
+
+#tuning-canvas {
+  background: radial-gradient(ellipse at 50% 80%, #232838 0%, #12141d 70%);
+  border-radius: 12px;
+}
+
+.trow { display: flex; align-items: center; gap: 10px; }
+.tlabel { width: 88px; text-align: right; font-size: 13px; color: #9aa3b5; }
+.topts { display: flex; gap: 6px; flex-wrap: wrap; max-width: 470px; }
+
+.overlay button.chip {
+  min-width: 0;
+  font-size: 13px;
+  padding: 6px 12px;
+  background: #23283a;
+  box-shadow: 0 3px 0 #10131f;
+}
+.overlay button.chip.active { background: #d5121e; box-shadow: 0 3px 0 #6d0000; }
+
+.overlay button.paint-swatch {
+  min-width: 0;
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  border-radius: 50%;
+  box-shadow: none;
+  border: 2px solid rgba(255,255,255,0.25);
+}
+.overlay button.paint-swatch.active { border-color: #ffd23f; transform: scale(1.2); }
+
+/* ---- Гараж ---- */
+#garage h1 { font-size: 34px; letter-spacing: 3px; }
+
+.garage-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+#garage-canvas {
+  background: radial-gradient(ellipse at 50% 80%, #232838 0%, #12141d 70%);
+  border-radius: 14px;
+  box-shadow: inset 0 0 30px rgba(0,0,0,0.6);
+}
+
+.overlay button.nav {
+  min-width: 0;
+  font-size: 26px;
+  padding: 10px 16px;
+  border-radius: 50%;
+}
+
+#garage-name {
+  font-size: 20px;
+  font-style: italic;
+  color: #9be0ff;
+}
+
+#garage #garage-desc { margin-bottom: 2px; color: #cfd6e4; }
+
+#garage-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-bottom: 8px;
+}
+
+.stat {
+  display: grid;
+  grid-template-columns: 120px 180px 130px;
+  gap: 10px;
+  align-items: center;
+  font-size: 13px;
+}
+
+.stat span { text-align: right; color: #9aa3b5; }
+.stat b { text-align: left; color: #ffd23f; white-space: nowrap; }
+
+.stat .bar {
+  height: 10px;
+  background: #1c2030;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.stat .bar div {
+  height: 100%;
+  background: linear-gradient(90deg, #d5121e, #ff8c1a);
+  border-radius: 5px;
+}
