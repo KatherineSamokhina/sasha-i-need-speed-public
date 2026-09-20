@@ -299,8 +299,30 @@ const CARS = [
     noNpc: true,      // соперникам гиперкары не выдаются — нечестно!
     desc: "Роскошь: карбон, крыло-этажерка и четыре трубы букетом.",
   },
+  // ---- Мерседес-день (4 фото от Саши) ----
   {
-    id: "tuatara", name: "ЦСЦ Туатара", gearbox: "А",
+    id: "merc190", name: "Merzedes 190E Evo", gearbox: "М",
+    topKmh: 250, zeroTo100: 7.1,
+    desc: "Чёрная классика гонок: спойлер на багажнике и характер чемпиона.",
+  },
+  {
+    id: "amggt53", name: "Merzedes AMJ GT 53", gearbox: "А",
+    topKmh: 285, zeroTo100: 4.5,
+    desc: "Матово-серый зверь: крыло-карбон и четыре трубы парами.",
+  },
+  {
+    id: "maybach", name: "Merzedes-Maybax S", gearbox: "А",
+    topKmh: 250, zeroTo100: 4.8,
+    desc: "Двухцветная роскошь: едет тихо, выглядит громко.",
+  },
+  {
+    id: "gle", name: "Merzedes GLE Coupe", gearbox: "А",
+    topKmh: 240, zeroTo100: 5.7,
+    offroadSoft: true,
+    desc: "Белый купе-внедорожник: покатая крыша, широкие плечи.",
+  },
+  {
+    id: "tuatara", name: "ZSC Tuatara", gearbox: "А",
     topKmh: 320,      // ограничение Саши: «MAX 320 км час»
     zeroTo100: 2.5,
     noNpc: true,      // соперникам гиперкары не выдаются — нечестно!
@@ -328,6 +350,7 @@ const BRAKE_100_0 = {
   fordgt: 1.5, nautilus: 2.8, continental17: 2.6, mark5: 3.8,
   lincoln60: 4.0, navigator: 3.2, zephyr: 2.9, mkz: 2.6,
   gemera: 1.7, wayra: 1.6, tuatara: 1.6,
+  merc190: 3.0, amggt53: 2.3, maybach: 2.5, gle: 2.7,
 };
 
 // Досчитываем игровые характеристики из реальных цифр.
@@ -359,6 +382,7 @@ const CAR_PRICES = {
   escalade: 1300, mkz: 1600, charger69: 1700, charger14: 1800,
   continental17: 1900, challenger: 2200, sixteen: 3500, fordgt: 5500,
   gemera: 8000, wayra: 9000, tuatara: 8500,
+  merc190: 1400, amggt53: 2600, maybach: 2800, gle: 1500,
   zis: -1,   // −1 = не продаётся, только код «вечная ностальгия»
 };
 
@@ -1954,6 +1978,10 @@ const PAINT_SLOTS = {
   gemera: ["#2e3436", "#262b2d"],
   wayra: ["#c9ccd1", "#b8bcc2"],
   tuatara: ["#f2f3f0", "#e2e4e0"],
+  merc190: ["#1a1c20", "#131519"],
+  amggt53: ["#5a5e63", "#4d5156"],
+  maybach: ["#ece9e2", "#dcd9d2"],
+  gle: ["#f2f3f0", "#e2e4e0"],
 };
 
 const PAINT_PALETTE = ["#d5121e", "#ff8c1a", "#ffd23f", "#57d977", "#1f8f4d",
@@ -1970,7 +1998,8 @@ const RIM_X = { aveo: 66, picanto: 56, corsa: 59, focus: 73, delorean: 75,
   escalade: 68, sixteen: 76, cruze: 68, ecosport: 63, kuga: 67,
   fordgt: 80, nautilus: 68, continental17: 73, mark5: 72,
   lincoln60: 74, navigator: 68, zephyr: 69, mkz: 72,
-  gemera: 80, wayra: 82, tuatara: 80 };
+  gemera: 80, wayra: 82, tuatara: 80,
+  merc190: 70, amggt53: 76, maybach: 72, gle: 70 };
 
 // ---------- ИГРОВАЯ ВАЛЮТА 🪙 ----------
 // Зарабатывается в гонках (по месту на финише), тратится на железо.
@@ -4950,6 +4979,121 @@ function drawTuatara(g) {
   plate(g, -22, 34);
 }
 
+// Трёхлучевая звезда в кольце (для всех Мерседесов)
+function mercStar(g, x, y, r, color = "#c9d0d7") {
+  g.strokeStyle = color;
+  g.lineWidth = Math.max(1.4, r * 0.22);
+  g.beginPath(); g.arc(x, y, r, 0, Math.PI * 2); g.stroke();
+  g.beginPath();
+  for (const a of [-Math.PI / 2, Math.PI / 6, (5 * Math.PI) / 6]) {
+    g.moveTo(x, y);
+    g.lineTo(x + Math.cos(a) * r, y + Math.sin(a) * r);
+  }
+  g.stroke();
+}
+
+// --- Mercedes 190E Evo: чёрная классика с спойлером ---
+function drawMerc190(g) {
+  carBase(g);
+  roundRect(g, -56, -100, 112, 36, 6, "#1a2026");
+  g.fillStyle = "rgba(255,255,255,0.10)"; g.fillRect(-48, -95, 42, 26);
+  roundRect(g, -84, -66, 168, 60, 8, "#1a1c20");
+  g.fillStyle = "rgba(255,255,255,0.12)"; g.fillRect(-76, -65, 152, 3);
+  // Спойлер на кромке багажника (Evo!)
+  roundRect(g, -60, -70, 120, 7, 3, "#0e1013");
+  // Широкие двухсекционные фонари: янтарь снаружи, красный внутри
+  for (const side of [-1, 1]) {
+    roundRect(g, side * 56 - 24, -58, 48, 15, 3, "#1c1f23");
+    roundRect(g, side * 74 - 4,  -55, 12, 9, 1, "#ffb35c");
+    roundRect(g, side * 52 - 18, -55, 30, 9, 1, "#c22020");
+  }
+  mercStar(g, 0, -52, 7);
+  g.fillStyle = "#c9d0d7"; g.font = "bold 6px Verdana"; g.textAlign = "center";
+  g.fillText("190 E", -58, -38);
+  g.fillText("2.5-16", 58, -38);
+  plate(g, -42);
+  roundRect(g, -84, -24, 168, 13, 5, "#26292d");
+}
+
+// --- Mercedes-AMG GT 53: матовый фастбек с крылом ---
+function drawAmgGt53(g) {
+  carBase(g, -26, 32);
+  // Крыло на кромке
+  roundRect(g, -64, -92, 128, 8, 4, "#26292d");
+  roundRect(g, -30, -86, 60, 5, 2, "#3a3f45");
+  // Покатое стекло
+  roundRect(g, -48, -84, 96, 20, 8, "#1a2026");
+  roundRect(g, -88, -68, 176, 62, 12, "#5a5e63");
+  g.fillStyle = "rgba(255,255,255,0.14)"; g.fillRect(-80, -67, 160, 3);
+  // Узкие изогнутые фонари
+  for (const side of [-1, 1]) {
+    roundRect(g, side * 56 - 26, -58, 52, 9, 4, "#2a0d0d");
+    roundRect(g, side * 56 - 23, -56, 46, 5, 2, "#e82121");
+  }
+  mercStar(g, 0, -50, 6);
+  g.fillStyle = "#c9d0d7"; g.font = "bold 5px Verdana"; g.textAlign = "center";
+  g.fillText("AMJ", -66, -44); g.fillText("GT 53", 66, -44);
+  plate(g, -40, 40);
+  // Чёрный диффузор и ЧЕТЫРЕ трубы парами
+  roundRect(g, -88, -24, 176, 16, 6, "#191b1e");
+  for (const side of [-1, 1]) {
+    for (const dx of [-8, 8]) {
+      g.strokeStyle = "#c9d0d7"; g.lineWidth = 2.5;
+      g.beginPath(); g.arc(side * 58 + dx, -15, 5.5, 0, Math.PI * 2); g.stroke();
+    }
+  }
+}
+
+// --- Mercedes-Maybach S: двухцветная роскошь ---
+function drawMaybach(g) {
+  carBase(g);
+  // Верх (крыша и стойки) — чёрный, стекло огромное
+  roundRect(g, -58, -104, 116, 34, 8, "#101214");
+  roundRect(g, -52, -100, 104, 28, 6, "#1a2026");
+  g.fillStyle = "rgba(255,255,255,0.10)"; g.fillRect(-44, -96, 40, 20);
+  // Чёрная кромка багажника переходит в белый низ
+  roundRect(g, -82, -72, 164, 14, 6, "#101214");
+  roundRect(g, -84, -62, 168, 56, 8, "#ece9e2");
+  g.fillStyle = "rgba(255,255,255,0.5)"; g.fillRect(-76, -61, 152, 2);
+  // Узкие фонари на стыке цветов
+  for (const side of [-1, 1]) {
+    roundRect(g, side * 60 - 20, -66, 40, 8, 4, "#2a0d0d");
+    roundRect(g, side * 60 - 17, -64, 34, 4, 2, "#e82121");
+  }
+  mercStar(g, 0, -66, 6, "#e8e2d2");
+  g.fillStyle = "#8f8a7c"; g.font = "bold 5px Verdana"; g.textAlign = "center";
+  g.fillText("M A Y B A X", 0, -50);
+  plate(g, -44);
+  // Хромовые прямоугольные насадки труб
+  roundRect(g, -84, -20, 168, 10, 5, "#dcd9d2");
+  roundRect(g, -62, -18, 30, 7, 3, "#b9bec6");
+  roundRect(g,  32, -18, 30, 7, 3, "#b9bec6");
+  roundRect(g, -58, -16.5, 22, 4, 2, "#26292d");
+  roundRect(g,  36, -16.5, 22, 4, 2, "#26292d");
+}
+
+// --- Mercedes GLE Coupe: белый купе-внедорожник ---
+function drawGle(g) {
+  carBase(g, -28, 34);
+  // Покатая крыша-купе
+  roundRect(g, -52, -104, 104, 30, 12, "#1a2026");
+  g.fillStyle = "rgba(255,255,255,0.10)"; g.fillRect(-44, -99, 40, 20);
+  roundRect(g, -84, -80, 168, 74, 11, "#f2f3f0");
+  g.fillStyle = "rgba(0,0,0,0.05)"; g.fillRect(-84, -48, 168, 3);
+  // Широкие фонари + хромовая планка между ними
+  for (const side of [-1, 1]) {
+    roundRect(g, side * 58 - 22, -70, 44, 14, 5, "#7a1216");
+    roundRect(g, side * 58 - 18, -67, 36, 8, 3, "#d42323");
+  }
+  roundRect(g, -34, -66, 68, 4, 2, "#c9d0d7");
+  mercStar(g, 0, -54, 6, "#8a9096");
+  plate(g, -44, 40);
+  // Хромовая защита в бампере
+  roundRect(g, -84, -24, 168, 15, 6, "#e2e4e0");
+  roundRect(g, -60, -20, 26, 8, 3, "#b9bec6");
+  roundRect(g,  34, -20, 26, 8, 3, "#b9bec6");
+}
+
 const CAR_DRAWERS = {
   aveo: drawAveo, picanto: drawPicanto, focus: drawFocus,
   delorean: drawDelorean, corsa: drawCorsa,
@@ -4968,6 +5112,8 @@ const CAR_DRAWERS = {
   mark5: drawMark5, lincoln60: drawLincoln60, navigator: drawNavigator,
   zephyr: drawZephyr, mkz: drawMkz,
   gemera: drawGemera, wayra: drawWayra, tuatara: drawTuatara,
+  merc190: drawMerc190, amggt53: drawAmgGt53, maybach: drawMaybach,
+  gle: drawGle,
 };
 
 // Огненный след: два пылающих следа за колёсами, три слоя пламени
