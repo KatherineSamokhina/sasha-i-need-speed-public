@@ -192,6 +192,98 @@ const CARS = [
     topKmh: 143, zeroTo100: 19.0,  // заводские цифры ВАЗ-2104
     desc: "Красный универсал: багажник размером с дачу. Везёт ВСЁ.",
   },
+  // ---- Американский автосалон (17 фото от Саши за один раз!) ----
+  {
+    id: "challenger", name: "Dodgee Challenjer", gearbox: "С",
+    topKmh: 280, zeroTo100: 4.5,
+    desc: "Кислотно-зелёный мускул: рычит так, что дрожат стёкла.",
+  },
+  {
+    id: "charger14", name: "Dodgee Charjer", gearbox: "А",
+    topKmh: 250, zeroTo100: 5.5,
+    desc: "Чёрный седан-мускул: семейный снаружи, злой внутри.",
+  },
+  {
+    id: "charger69", name: "Dodgee Charjer 1969", gearbox: "М",
+    topKmh: 215, zeroTo100: 6.5,
+    desc: "Жёлтая легенда 60-х: полоса-шмель и хромовый характер.",
+  },
+  {
+    id: "durango", name: "Dodgee Duranga", gearbox: "А",
+    topKmh: 210, zeroTo100: 7.5,
+    offroadSoft: true,
+    desc: "Белый семейный танк: фонарь во всю корму, как гоночный трек.",
+  },
+  {
+    id: "escalade", name: "Kadillak Eskalade", gearbox: "А",
+    topKmh: 180, zeroTo100: 6.8,
+    offroadSoft: true,
+    desc: "Чёрный небоскрёб на колёсах с фонарями до самой крыши.",
+  },
+  {
+    id: "sixteen", name: "Kadillak Sixteen", gearbox: "А",
+    topKmh: 300, zeroTo100: 4.0,
+    desc: "Концепт с мотором V16: шестнадцать цилиндров роскоши.",
+  },
+  {
+    id: "cruze", name: "Chevalet Cruzze", gearbox: "С",
+    topKmh: 195, zeroTo100: 9.5,
+    desc: "Красный аккуратный седан: галстук-бабочка на багажнике.",
+  },
+  {
+    id: "ecosport", name: "Fjord EkoSport", gearbox: "С",
+    topKmh: 180, zeroTo100: 11.5,
+    offroadSoft: true,
+    desc: "Синий малыш с запаской на двери — готов к приключениям.",
+  },
+  {
+    id: "kuga", name: "Fjord Kugga", gearbox: "А",
+    topKmh: 196, zeroTo100: 9.2,
+    offroadSoft: true,
+    desc: "Чёрный кроссовер: тихий, удобный и не боится обочин.",
+  },
+  {
+    id: "fordgt", name: "Fjord GT", gearbox: "А",
+    topKmh: 348, zeroTo100: 3.0,
+    desc: "Синий гиперкар: круглые фонари-турбины и 348 км/ч!",
+  },
+  {
+    id: "nautilus", name: "Linkoln Nautilas", gearbox: "А",
+    topKmh: 210, zeroTo100: 6.5,
+    offroadSoft: true,
+    desc: "Синий люкс-кроссовер с фонарём через всю корму.",
+  },
+  {
+    id: "continental17", name: "Linkoln Kontinental", gearbox: "А",
+    topKmh: 240, zeroTo100: 5.8,
+    desc: "Чёрный лимузин-джентльмен: тонкая полоса света и тишина.",
+  },
+  {
+    id: "mark5", name: "Linkoln Марк V 1979", gearbox: "А",
+    topKmh: 190, zeroTo100: 11.5,
+    desc: "Голубой корабль 70-х: горб запаски на багажнике — фирменный знак.",
+  },
+  {
+    id: "lincoln60", name: "Linkoln Kontinental 1960", gearbox: "А",
+    topKmh: 175, zeroTo100: 11.0,
+    desc: "Белый крейсер с плавниками и четырьмя круглыми огнями.",
+  },
+  {
+    id: "navigator", name: "Linkoln Navigador", gearbox: "А",
+    topKmh: 175, zeroTo100: 7.5,
+    offroadSoft: true,
+    desc: "Серый гигант: три ряда сидений и капитанский мостик.",
+  },
+  {
+    id: "zephyr", name: "Linkoln Zefir", gearbox: "А",
+    topKmh: 210, zeroTo100: 7.8,
+    desc: "Серебристый зефир: мягкий, сладкий, быстрее, чем кажется.",
+  },
+  {
+    id: "mkz", name: "Linkoln MKZ", gearbox: "А",
+    topKmh: 250, zeroTo100: 5.6,
+    desc: "Белый красавец: светящаяся дуга через всю корму.",
+  },
 ];
 
 // Режимы поездки (фишка Корсы — идея Саши): меняют тягу и голос мотора.
@@ -209,6 +301,10 @@ const BRAKE_100_0 = {
   shelby: 3.3, darkhorse: 2.3, fford: 1.8, f1: 1.2,
   zis: 5.5, disco: 3.1, hilux: 4.0, rav4: 2.9, buhanka: 4.6, raf: 4.2,
   kopeyka: 4.0, semerka: 3.8, chetverka: 3.9,
+  challenger: 2.5, charger14: 2.7, charger69: 3.4, durango: 3.0,
+  escalade: 3.1, sixteen: 2.4, cruze: 2.9, ecosport: 3.0, kuga: 2.9,
+  fordgt: 1.5, nautilus: 2.8, continental17: 2.6, mark5: 3.8,
+  lincoln60: 4.0, navigator: 3.2, zephyr: 2.9, mkz: 2.6,
 };
 
 // Досчитываем игровые характеристики из реальных цифр.
@@ -234,6 +330,11 @@ const CAR_PRICES = {
   aveo: 0, kopeyka: 250, chetverka: 270, semerka: 280, picanto: 300, buhanka: 350, raf: 400, hilux: 500, disco: 700, rav4: 900, corsa: 600, focus: 800,
   camaro70: 1000, vetteC1: 1200, delorean: 1500, shelby: 1600,
   camaroNew: 2000, darkhorse: 2400, vetteC8: 3000, fford: 4000, f1: 6000,
+  // Американский автосалон
+  ecosport: 650, cruze: 700, kuga: 850, zephyr: 900, lincoln60: 950,
+  mark5: 1000, durango: 1100, navigator: 1150, nautilus: 1200,
+  escalade: 1300, mkz: 1600, charger69: 1700, charger14: 1800,
+  continental17: 1900, challenger: 2200, sixteen: 3500, fordgt: 5500,
   zis: -1,   // −1 = не продаётся, только код «вечная ностальгия»
 };
 
@@ -968,7 +1069,7 @@ function trackBanReason() {
   if (currentTrack === 3 && (car.id === "fford" || car.id === "f1"))
     return "🏜 В пустыне болиды не работают: песок в моторе! Возьми другую машину.";
   if (currentTrack === 4 && !car.offroadSoft && !car.ram)
-    return "⛰ Офроуд — только внедорожники и броня (Discoverry, Highlux, REV4, Буханка, РАФ, ЗИС)!";
+    return "⛰ Офроуд — только внедорожники и броня! Ищи в гараже вездеходы.";
   return null;
 }
 
@@ -1809,6 +1910,23 @@ const PAINT_SLOTS = {
   kopeyka:   ["#a51e24", "#8f171f"],
   semerka:   ["#f2f3f0", "#e4e6e2"],
   chetverka: ["#c5342c", "#ad2b25"],
+  challenger: ["#a8d426", "#93bd1e"],
+  charger14: ["#17191c", "#101214"],
+  charger69: ["#e8c11c", "#d1ab12"],
+  durango: ["#f0f1f3", "#dfe1e5"],
+  escalade: ["#101214", "#0b0d0f"],
+  sixteen: ["#6d747c", "#5d636b"],
+  cruze: ["#a51e28", "#8f171f"],
+  ecosport: ["#2b57c9", "#2149ad"],
+  kuga: ["#141618", "#0e1012"],
+  fordgt: ["#1a55c4", "#1345a5"],
+  nautilus: ["#1d2f45", "#162538"],
+  continental17: ["#101214", "#0b0d0f"],
+  mark5: ["#9db4c9", "#89a2b8"],
+  lincoln60: ["#f2f3f0", "#e2e4e0"],
+  navigator: ["#5c6166", "#4d5257"],
+  zephyr: ["#c9ccd1", "#b8bcc2"],
+  mkz: ["#e8e6df", "#d8d6cf"],
 };
 
 const PAINT_PALETTE = ["#d5121e", "#ff8c1a", "#ffd23f", "#57d977", "#1f8f4d",
@@ -1820,7 +1938,11 @@ const HW_NAMES = { engine: "Мотор", brakes: "Тормоза", tires: "Ши�
 const RIM_X = { aveo: 66, picanto: 56, corsa: 59, focus: 73, delorean: 75,
   camaro70: 77, camaroNew: 78, vetteC1: 73, vetteC8: 79, shelby: 75,
   darkhorse: 76, fford: 84, f1: 85, zis: 66, disco: 68, hilux: 67, rav4: 67,
-  buhanka: 62, raf: 64, kopeyka: 64, semerka: 64, chetverka: 64 };
+  buhanka: 62, raf: 64, kopeyka: 64, semerka: 64, chetverka: 64,
+  challenger: 78, charger14: 74, charger69: 78, durango: 68,
+  escalade: 68, sixteen: 76, cruze: 68, ecosport: 63, kuga: 67,
+  fordgt: 80, nautilus: 68, continental17: 73, mark5: 72,
+  lincoln60: 74, navigator: 68, zephyr: 69, mkz: 72 };
 
 // ---------- ИГРОВАЯ ВАЛЮТА 🪙 ----------
 // Зарабатывается в гонках (по месту на финише), тратится на железо.
@@ -4161,11 +4283,11 @@ function drawKopeyka(g) {
     roundRect(g, side * 66 - 10, -42, 12, 8, 1, "#d42323");
     roundRect(g, side * 66 + 3, -42, 6, 8, 1, "#e8e6df");
   }
-  // Шильдик слева, номер по центру
+  // Шильдик слева ПОД фонарём (правка Саши: налезал на фару!)
   g.fillStyle = "#d7dce2";
   g.font = "bold 6px Verdana";
   g.textAlign = "center";
-  g.fillText("ВАЗ 2101", -52, -34);
+  g.fillText("ВАЗ 2101", -52, -24.5);
   roundRect(g, -22, -42, 44, 12, 2, "#f0f0f0");
   g.fillStyle = "#222";
   g.font = "bold 7px Verdana";
@@ -4262,6 +4384,397 @@ function drawChetverka(g) {
   roundRect(g,  72, -20, 14, 9, 4, "#26292d");
 }
 
+// ==================== АМЕРИКАНСКИЙ АВТОСАЛОН ====================
+// 17 машин по фото Саши. Общая заготовка колёс и тени:
+function carBase(g, wheelY = -28, wheelH = 34) {
+  g.fillStyle = "rgba(0,0,0,0.38)";
+  g.beginPath(); g.ellipse(0, 8, 94, 12, 0, 0, Math.PI * 2); g.fill();
+  roundRect(g, -80, wheelY, 30, wheelH, 7, "#121212");
+  roundRect(g,  50, wheelY, 30, wheelH, 7, "#121212");
+}
+function plate(g, y, w = 44) {
+  roundRect(g, -w / 2, y, w, 12, 2, "#f0f0f0");
+  g.fillStyle = "#222";
+  g.font = "bold 7px Verdana";
+  g.textAlign = "center";
+  g.fillText("САША", 0, y + 9);
+}
+
+// --- Dodge Challenger: кислотный мускул, фонари в чёрной нише ---
+function drawChallenger(g) {
+  carBase(g);
+  roundRect(g, -56, -96, 112, 30, 8, "#1a2026");          // стекло
+  g.fillStyle = "rgba(255,255,255,0.10)"; g.fillRect(-48, -92, 40, 20);
+  roundRect(g, -88, -70, 176, 64, 9, "#a8d426");          // мускулистый кузов
+  g.fillStyle = "rgba(255,255,255,0.22)"; g.fillRect(-80, -69, 160, 3);
+  roundRect(g, -74, -60, 148, 20, 6, "#15171a");          // чёрная ниша фонарей
+  for (const side of [-1, 1]) {                           // два широких фонаря
+    roundRect(g, side * 40 - 26, -57, 52, 14, 6, "#3d0a0a");
+    roundRect(g, side * 40 - 23, -54, 46, 8, 4, "#e82121");
+  }
+  g.fillStyle = "#a8d426"; g.font = "bold 6px Verdana"; g.textAlign = "center";
+  g.fillText("D O D G E E", 0, -52);
+  plate(g, -36);
+  roundRect(g, -88, -22, 176, 14, 6, "#191b1e");          // чёрный низ
+  roundRect(g, -62, -18, 26, 8, 3, "#c9d0d7");            // трубы!
+  roundRect(g,  36, -18, 26, 8, 3, "#c9d0d7");
+}
+
+// --- Dodge Charger 2014: чёрный седан, красная лента фонарей ---
+function drawCharger14(g) {
+  carBase(g);
+  roundRect(g, -54, -98, 108, 34, 7, "#1a2026");
+  g.fillStyle = "rgba(255,255,255,0.09)"; g.fillRect(-46, -93, 40, 24);
+  roundRect(g, -86, -68, 172, 62, 8, "#17191c");
+  g.fillStyle = "rgba(255,255,255,0.10)"; g.fillRect(-78, -67, 156, 3);
+  roundRect(g, -70, -62, 140, 4, 2, "#26292d");           // губа-спойлер
+  roundRect(g, -72, -56, 144, 14, 5, "#8f0f0f");          // лента фонарей
+  roundRect(g, -68, -53, 136, 8, 4, "#e82121");
+  g.fillStyle = "#c9d0d7"; g.font = "bold 6px Verdana"; g.textAlign = "center";
+  g.fillText("C H A R J E R", 0, -34);
+  plate(g, -30);
+  roundRect(g, -86, -18, 172, 10, 5, "#101214");
+}
+
+// --- Dodge Charger 1969: жёлтая легенда с полосой-шмелём ---
+function drawCharger69(g) {
+  carBase(g);
+  // Покатое стекло между «крыльями» кузова
+  roundRect(g, -50, -94, 100, 32, 6, "#1a2026");
+  g.fillStyle = "rgba(255,255,255,0.10)"; g.fillRect(-42, -89, 36, 22);
+  roundRect(g, -88, -66, 176, 60, 8, "#e8c11c");
+  g.fillStyle = "rgba(255,255,255,0.25)"; g.fillRect(-80, -65, 160, 3);
+  // Чёрная полоса-шмель вокруг хвоста
+  roundRect(g, 52, -66, 24, 60, 4, "#17191c");
+  g.fillStyle = "#e8c11c"; g.font = "bold 8px Verdana"; g.textAlign = "center";
+  g.fillText("R", 64, -38);
+  // Чёрная панель с фонарём во всю ширину в хромовой рамке
+  roundRect(g, -70, -58, 140, 16, 4, "#15171a");
+  roundRect(g, -66, -54, 132, 8, 4, "#c22020");
+  roundRect(g, -70, -58, 140, 3, 1, "#c9d0d7");
+  plate(g, -36);
+  roundRect(g, -90, -22, 180, 10, 4, "#d7dce2");          // хром-бампер
+}
+
+// --- Dodge Durango: белый SUV, фонарь-«гоночный трек» ---
+function drawDurango(g) {
+  carBase(g, -30, 36);
+  roundRect(g, -80, -116, 160, 110, 10, "#f0f1f3");
+  g.fillStyle = "rgba(0,0,0,0.05)"; g.fillRect(-80, -46, 160, 3);
+  roundRect(g, -58, -108, 116, 38, 7, "#1a2026");
+  g.fillStyle = "rgba(255,255,255,0.10)"; g.fillRect(-50, -102, 44, 26);
+  // Красная светящаяся лента через ВСЮ корму
+  roundRect(g, -74, -62, 148, 16, 8, "#2a0d0d");
+  roundRect(g, -70, -58, 140, 8, 4, "#e82121");
+  g.fillStyle = "#5c6166"; g.font = "bold 6px Verdana"; g.textAlign = "center";
+  g.fillText("D U R A N G A", 0, -38);
+  plate(g, -34);
+  roundRect(g, -80, -22, 160, 12, 5, "#26292d");
+  roundRect(g, -34, -18, 68, 7, 3, "#b9bec6");
+}
+
+// --- Cadillac Escalade: чёрный небоскрёб, фонари до крыши ---
+function drawEscalade(g) {
+  carBase(g, -30, 36);
+  roundRect(g, -78, -122, 156, 116, 9, "#101214");
+  g.fillStyle = "rgba(255,255,255,0.10)"; g.fillRect(-70, -120, 140, 3);
+  roundRect(g, -56, -112, 112, 44, 7, "#1a2026");
+  g.fillStyle = "rgba(255,255,255,0.08)"; g.fillRect(-48, -106, 44, 30);
+  // ФИРМЕННЫЕ вертикальные фонари во всю высоту кормы
+  for (const side of [-1, 1]) {
+    roundRect(g, side * 72 - 5, -118, 10, 96, 4, "#2a0d0d");
+    roundRect(g, side * 72 - 3, -114, 6, 88, 3, "#e82121");
+  }
+  // Эмблема-герб
+  roundRect(g, -7, -68, 14, 10, 3, "#d7dce2");
+  g.fillStyle = "#8f6f1f"; g.fillRect(-4, -66, 8, 6);
+  plate(g, -46);
+  roundRect(g, -66, -20, 132, 10, 5, "#191b1e");
+}
+
+// --- Cadillac Sixteen: серый концепт V16 ---
+function drawSixteen(g) {
+  carBase(g);
+  roundRect(g, -48, -92, 96, 30, 10, "#1a2026");
+  g.fillStyle = "rgba(255,255,255,0.10)"; g.fillRect(-40, -87, 34, 20);
+  // Длинный гладкий низкий кузов
+  roundRect(g, -90, -64, 180, 58, 12, "#6d747c");
+  g.fillStyle = "rgba(255,255,255,0.18)"; g.fillRect(-82, -63, 164, 3);
+  // Узенькие вертикальные фонари
+  for (const side of [-1, 1]) {
+    roundRect(g, side * 80 - 4, -58, 8, 30, 3, "#8f0f0f");
+    roundRect(g, side * 80 - 2, -55, 4, 24, 2, "#e82121");
+  }
+  roundRect(g, -6, -60, 12, 9, 2, "#d7dce2");             // эмблема
+  g.fillStyle = "#8f6f1f"; g.fillRect(-3, -58, 6, 5);
+  g.fillStyle = "#c9d0d7"; g.font = "bold 5px Verdana"; g.textAlign = "center";
+  g.fillText("S I X T E E N", 0, -40);
+  plate(g, -34);
+  roundRect(g, -84, -20, 168, 9, 5, "#5d636b");
+}
+
+// --- Chevrolet Cruze: красный седан с бабочкой на хроме ---
+function drawCruze(g) {
+  carBase(g);
+  roundRect(g, -52, -98, 104, 34, 7, "#1a2026");
+  g.fillStyle = "rgba(255,255,255,0.10)"; g.fillRect(-44, -93, 38, 24);
+  roundRect(g, -84, -66, 168, 60, 9, "#a51e28");
+  g.fillStyle = "rgba(255,255,255,0.16)"; g.fillRect(-76, -65, 152, 3);
+  // Фонари-уголки
+  for (const side of [-1, 1]) {
+    roundRect(g, side * 62 - 20, -60, 40, 18, 5, "#7a1216");
+    roundRect(g, side * 62 - 16, -56, 32, 10, 3, "#e82121");
+  }
+  // Хромовая планка с золотой бабочкой
+  roundRect(g, -40, -56, 80, 6, 3, "#d7dce2");
+  roundRect(g, -9, -58, 18, 10, 2, "#c9a11c");
+  plate(g, -40);
+  roundRect(g, -84, -20, 168, 10, 5, "#8f171f");
+}
+
+// --- Ford EcoSport: синий малыш с запаской на двери! ---
+function drawEcoSport(g) {
+  carBase(g, -28, 34);
+  roundRect(g, -72, -112, 144, 106, 10, "#2b57c9");
+  g.fillStyle = "rgba(255,255,255,0.16)"; g.fillRect(-64, -110, 128, 3);
+  roundRect(g, -52, -104, 104, 36, 7, "#1a2026");
+  g.fillStyle = "rgba(255,255,255,0.10)"; g.fillRect(-44, -98, 40, 24);
+  for (const side of [-1, 1]) {
+    roundRect(g, side * 62 - 8, -62, 16, 26, 4, "#1c1f23");
+    roundRect(g, side * 62 - 6, -58, 12, 10, 2, "#e82121");
+    roundRect(g, side * 62 - 6, -47, 12, 8, 2, "#ffb35c");
+  }
+  // ЗАПАСКА в синем чехле прямо на двери багажника
+  g.fillStyle = "#1d3f96";
+  g.beginPath(); g.arc(0, -48, 26, 0, Math.PI * 2); g.fill();
+  g.fillStyle = "#2b57c9";
+  g.beginPath(); g.arc(0, -48, 19, 0, Math.PI * 2); g.fill();
+  g.fillStyle = "#1d3f96";
+  g.beginPath(); g.arc(0, -48, 7, 0, Math.PI * 2); g.fill();
+  plate(g, -30, 40);
+  roundRect(g, -74, -18, 148, 9, 4, "#26292d");
+}
+
+// --- Ford Kuga: чёрный кроссовер с серебристой защитой ---
+function drawKuga(g) {
+  carBase(g, -28, 34);
+  roundRect(g, -76, -114, 152, 108, 11, "#141618");
+  g.fillStyle = "rgba(255,255,255,0.10)"; g.fillRect(-68, -112, 136, 3);
+  roundRect(g, -56, -106, 112, 38, 7, "#232a31");
+  g.fillStyle = "rgba(255,255,255,0.08)"; g.fillRect(-48, -100, 44, 26);
+  for (const side of [-1, 1]) {
+    roundRect(g, side * 60 - 18, -64, 36, 14, 5, "#2a0d0d");
+    roundRect(g, side * 60 - 14, -61, 28, 8, 3, "#e82121");
+  }
+  g.fillStyle = "#8a9096"; g.font = "bold 6px Verdana"; g.textAlign = "center";
+  g.fillText("K U G G A", 0, -44);
+  plate(g, -40, 40);
+  roundRect(g, -76, -22, 152, 14, 6, "#1d2023");
+  roundRect(g, -40, -16, 80, 7, 3, "#b9bec6");
+  g.fillStyle = "#c9d0d7";
+  g.beginPath(); g.arc(-52, -13, 5, 0, Math.PI * 2); g.fill();
+  g.beginPath(); g.arc( 52, -13, 5, 0, Math.PI * 2); g.fill();
+}
+
+// --- Ford GT: гиперкар с круглыми фонарями-турбинами ---
+function drawFordGT(g) {
+  carBase(g, -24, 30);
+  // Низкий широченный корпус
+  roundRect(g, -92, -74, 184, 68, 14, "#1a55c4");
+  g.fillStyle = "rgba(255,255,255,0.20)"; g.fillRect(-84, -73, 168, 3);
+  roundRect(g, -44, -92, 88, 24, 8, "#1a2026");            // узкое стекло
+  // КРУГЛЫЕ фонари: красное кольцо, чёрная турбина внутри
+  for (const side of [-1, 1]) {
+    g.fillStyle = "#e82121";
+    g.beginPath(); g.arc(side * 62, -50, 17, 0, Math.PI * 2); g.fill();
+    g.fillStyle = "#15171a";
+    g.beginPath(); g.arc(side * 62, -50, 11, 0, Math.PI * 2); g.fill();
+    g.fillStyle = "#2a2d31";
+    g.beginPath(); g.arc(side * 62, -50, 5, 0, Math.PI * 2); g.fill();
+  }
+  // Две центральные трубы-сопла
+  g.fillStyle = "#15171a";
+  g.beginPath(); g.arc(-11, -56, 8, 0, Math.PI * 2); g.fill();
+  g.beginPath(); g.arc( 11, -56, 8, 0, Math.PI * 2); g.fill();
+  g.fillStyle = "#000";
+  g.beginPath(); g.arc(-11, -56, 5, 0, Math.PI * 2); g.fill();
+  g.beginPath(); g.arc( 11, -56, 5, 0, Math.PI * 2); g.fill();
+  // Решётка и диффузор
+  roundRect(g, -70, -38, 140, 10, 4, "#15171a");
+  plate(g, -26, 40);
+  g.fillStyle = "#101214";
+  for (const x of [-58, -34, 24, 46]) {
+    g.beginPath();
+    g.moveTo(x, -6); g.lineTo(x + 12, -6); g.lineTo(x + 9, -22); g.lineTo(x + 3, -22);
+    g.closePath(); g.fill();
+  }
+}
+
+// --- Lincoln Nautilus: синий люкс-кроссовер ---
+function drawNautilus(g) {
+  carBase(g, -28, 34);
+  roundRect(g, -78, -112, 156, 106, 11, "#1d2f45");
+  g.fillStyle = "rgba(255,255,255,0.12)"; g.fillRect(-70, -110, 140, 3);
+  roundRect(g, -56, -104, 112, 36, 7, "#151d28");
+  g.fillStyle = "rgba(255,255,255,0.08)"; g.fillRect(-48, -98, 44, 24);
+  g.fillStyle = "#c9d0d7"; g.font = "bold 6px Verdana"; g.textAlign = "center";
+  g.fillText("L I N K O L N", 0, -62);
+  // Фонарь во всю ширину
+  roundRect(g, -72, -58, 144, 12, 6, "#2a0d0d");
+  roundRect(g, -68, -55, 136, 6, 3, "#e82121");
+  roundRect(g, -8, -60, 16, 16, 3, "#15171a");            // эмблема-книжка
+  g.fillStyle = "#c9d0d7"; g.fillRect(-1.5, -58, 3, 12);
+  plate(g, -40, 40);
+  roundRect(g, -78, -22, 156, 14, 6, "#16202c");
+  roundRect(g, -58, -16, 30, 8, 3, "#b9bec6");
+  roundRect(g,  28, -16, 30, 8, 3, "#b9bec6");
+}
+
+// --- Lincoln Continental 2017: чёрный джентльмен ---
+function drawContinental17(g) {
+  carBase(g);
+  roundRect(g, -54, -98, 108, 34, 8, "#1a2026");
+  g.fillStyle = "rgba(255,255,255,0.08)"; g.fillRect(-46, -93, 40, 24);
+  roundRect(g, -86, -66, 172, 60, 9, "#101214");
+  g.fillStyle = "rgba(255,255,255,0.10)"; g.fillRect(-78, -65, 156, 3);
+  g.fillStyle = "#c9d0d7"; g.font = "bold 6px Verdana"; g.textAlign = "center";
+  g.fillText("L I N K O L N", 0, -58);
+  // Тонкая световая полоса от края до края в хромовой оправе
+  roundRect(g, -78, -54, 156, 10, 5, "#2a0d0d");
+  roundRect(g, -74, -52, 148, 5, 2, "#e82121");
+  roundRect(g, -78, -44, 156, 2, 1, "#8a9096");
+  plate(g, -38);
+  roundRect(g, -86, -18, 172, 9, 4, "#0b0d0f");
+  roundRect(g, -70, -15, 140, 3, 1, "#8a9096");
+}
+
+// --- Lincoln Mark V 1979: корабль с горбом запаски ---
+function drawMark5(g) {
+  carBase(g);
+  roundRect(g, -56, -96, 112, 30, 5, "#1a2026");
+  g.fillStyle = "rgba(255,255,255,0.10)"; g.fillRect(-48, -91, 42, 20);
+  // Огромный плоский багажник
+  roundRect(g, -92, -68, 184, 62, 6, "#9db4c9");
+  g.fillStyle = "rgba(255,255,255,0.25)"; g.fillRect(-84, -67, 168, 3);
+  // ГОРБ запаски — полукруг на двери багажника (фирменный знак!)
+  g.fillStyle = "#8aa2b8";
+  g.beginPath(); g.arc(0, -24, 34, Math.PI, 0); g.closePath(); g.fill();
+  g.strokeStyle = "#d7dce2"; g.lineWidth = 2;
+  g.beginPath(); g.arc(0, -24, 34, Math.PI, 0); g.stroke();
+  roundRect(g, -3, -52, 6, 14, 2, "#8f6f1f");             // эмблемка на горбе
+  // Узкие вертикальные фонари по углам
+  for (const side of [-1, 1]) {
+    roundRect(g, side * 82 - 6, -62, 12, 26, 2, "#1c1f23");
+    for (let i = 0; i < 3; i++)
+      roundRect(g, side * 82 - 4, -60 + i * 8, 8, 6, 1, "#c22020");
+  }
+  g.fillStyle = "#5c6166"; g.font = "bold 5px Verdana"; g.textAlign = "center";
+  g.fillText("C O N T I N E N T A L", -46, -58);
+  plate(g, -20, 36);
+  roundRect(g, -94, -12, 188, 8, 3, "#d7dce2");
+}
+
+// --- Lincoln Continental 1960: белый крейсер с плавниками ---
+function drawLincoln60(g) {
+  carBase(g);
+  roundRect(g, -58, -94, 116, 28, 5, "#1a2026");
+  g.fillStyle = "rgba(255,255,255,0.12)"; g.fillRect(-50, -89, 44, 18);
+  roundRect(g, -90, -66, 180, 60, 6, "#f2f3f0");
+  g.fillStyle = "rgba(0,0,0,0.05)"; g.fillRect(-82, -40, 164, 3);
+  // ПЛАВНИКИ, наклонённые наружу!
+  for (const side of [-1, 1]) {
+    g.fillStyle = "#e2e4e0";
+    g.beginPath();
+    g.moveTo(side * 74, -64);
+    g.lineTo(side * 94, -84);
+    g.lineTo(side * 92, -60);
+    g.closePath(); g.fill();
+    g.strokeStyle = "#c0c6cd"; g.lineWidth = 2;
+    g.beginPath(); g.moveTo(side * 74, -64); g.lineTo(side * 94, -84); g.stroke();
+  }
+  // Решётчатая панель с ЧЕТЫРЬМЯ круглыми огнями
+  roundRect(g, -78, -60, 156, 22, 4, "#a8adb4");
+  g.fillStyle = "rgba(0,0,0,0.18)";
+  for (let y = -58; y < -40; y += 4) g.fillRect(-76, y, 152, 1.6);
+  for (const x of [-64, -46, 46, 64]) {
+    g.fillStyle = "#7a1216";
+    g.beginPath(); g.arc(x, -49, 7, 0, Math.PI * 2); g.fill();
+    g.fillStyle = "#d42323";
+    g.beginPath(); g.arc(x, -49, 4.5, 0, Math.PI * 2); g.fill();
+  }
+  roundRect(g, -9, -56, 18, 8, 2, "#d7dce2");             // эмблема по центру
+  plate(g, -34, 40);
+  roundRect(g, -92, -22, 184, 10, 4, "#d7dce2");
+}
+
+// --- Lincoln Navigator: серый гигант ---
+function drawNavigator(g) {
+  carBase(g, -30, 36);
+  roundRect(g, -80, -118, 160, 112, 9, "#5c6166");
+  g.fillStyle = "rgba(255,255,255,0.14)"; g.fillRect(-72, -116, 144, 3);
+  roundRect(g, -58, -110, 116, 42, 7, "#1a2026");
+  g.fillStyle = "rgba(255,255,255,0.08)"; g.fillRect(-50, -104, 46, 30);
+  // Широкие фонари с красно-белыми секциями
+  for (const side of [-1, 1]) {
+    roundRect(g, side * 62 - 18, -62, 36, 16, 4, "#1c1f23");
+    roundRect(g, side * 62 - 15, -59, 18, 10, 2, "#c22020");
+    roundRect(g, side * 62 + 4,  -59, 10, 10, 2, "#e8e6df");
+  }
+  // Хромовая планка с эмблемой
+  roundRect(g, -40, -60, 80, 4, 2, "#c9d0d7");
+  roundRect(g, -5, -66, 10, 14, 2, "#15171a");
+  g.fillStyle = "#c9d0d7"; g.fillRect(-1, -64, 2, 10);
+  g.fillStyle = "#c9d0d7"; g.font = "bold 5px Verdana"; g.textAlign = "center";
+  g.fillText("N A V I G A D O R", 0, -32);
+  plate(g, -56, 40);
+  roundRect(g, -80, -24, 160, 14, 5, "#3d4247");
+}
+
+// --- Lincoln Zephyr: серебристый зефир ---
+function drawZephyr(g) {
+  carBase(g);
+  roundRect(g, -52, -98, 104, 34, 7, "#1a2026");
+  g.fillStyle = "rgba(255,255,255,0.10)"; g.fillRect(-44, -93, 38, 24);
+  roundRect(g, -84, -66, 168, 60, 9, "#c9ccd1");
+  g.fillStyle = "rgba(255,255,255,0.30)"; g.fillRect(-76, -65, 152, 3);
+  // Большие красные фонари-трапеции
+  for (const side of [-1, 1]) {
+    g.fillStyle = "#c22020";
+    g.beginPath();
+    g.moveTo(side * 76, -62); g.lineTo(side * 34, -58);
+    g.lineTo(side * 38, -40); g.lineTo(side * 76, -42);
+    g.closePath(); g.fill();
+    roundRect(g, side * 55 - 12, -54, 24, 8, 2, "#e8e6df");
+  }
+  roundRect(g, -5, -62, 10, 13, 2, "#15171a");            // эмблема
+  g.fillStyle = "#c9d0d7"; g.fillRect(-1, -60, 2, 9);
+  g.fillStyle = "#8a9096"; g.font = "bold 5px Verdana"; g.textAlign = "center";
+  g.fillText("Z E F I R", 52, -34);
+  plate(g, -36);
+  roundRect(g, -84, -20, 168, 10, 5, "#b8bcc2");
+}
+
+// --- Lincoln MKZ: белый, светящаяся дуга во всю корму ---
+function drawMkz(g) {
+  carBase(g);
+  roundRect(g, -54, -96, 108, 32, 8, "#1a2026");
+  g.fillStyle = "rgba(255,255,255,0.10)"; g.fillRect(-46, -91, 40, 22);
+  roundRect(g, -86, -66, 172, 60, 10, "#e8e6df");
+  g.fillStyle = "rgba(255,255,255,0.35)"; g.fillRect(-78, -65, 156, 3);
+  g.fillStyle = "#8a9096"; g.font = "bold 6px Verdana"; g.textAlign = "center";
+  g.fillText("L I N K O L N", 0, -58);
+  // Светящаяся ДУГА: чуть изогнутая красная лента с хвостиками вверх
+  g.strokeStyle = "#2a0d0d"; g.lineWidth = 11; g.lineCap = "round";
+  g.beginPath(); g.moveTo(-76, -46); g.quadraticCurveTo(0, -56, 76, -46); g.stroke();
+  g.strokeStyle = "#e82121"; g.lineWidth = 5;
+  g.beginPath(); g.moveTo(-76, -46); g.quadraticCurveTo(0, -56, 76, -46); g.stroke();
+  g.lineCap = "butt";
+  plate(g, -38);
+  roundRect(g, -86, -20, 172, 12, 5, "#3d4247");
+  roundRect(g, -60, -15, 34, 6, 3, "#8a9096");
+  roundRect(g,  26, -15, 34, 6, 3, "#8a9096");
+}
+
 const CAR_DRAWERS = {
   aveo: drawAveo, picanto: drawPicanto, focus: drawFocus,
   delorean: drawDelorean, corsa: drawCorsa,
@@ -4272,6 +4785,13 @@ const CAR_DRAWERS = {
   disco: drawDisco, hilux: drawHilux, rav4: drawRav4,
   buhanka: drawBuhanka, raf: drawRaf,
   kopeyka: drawKopeyka, semerka: drawSemerka, chetverka: drawChetverka,
+  challenger: drawChallenger, charger14: drawCharger14,
+  charger69: drawCharger69, durango: drawDurango,
+  escalade: drawEscalade, sixteen: drawSixteen, cruze: drawCruze,
+  ecosport: drawEcoSport, kuga: drawKuga, fordgt: drawFordGT,
+  nautilus: drawNautilus, continental17: drawContinental17,
+  mark5: drawMark5, lincoln60: drawLincoln60, navigator: drawNavigator,
+  zephyr: drawZephyr, mkz: drawMkz,
 };
 
 // Огненный след: два пылающих следа за колёсами, три слоя пламени
