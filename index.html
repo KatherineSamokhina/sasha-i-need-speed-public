@@ -6,7 +6,7 @@
 <title>I Need Speed 1: First Racing</title>
 <!-- ?v=2 — хитрость против кэша: браузер иногда запоминает старые
      файлы; поменяв цифру, мы заставляем его скачать свежие -->
-<link rel="stylesheet" href="style.css?v=15">
+<link rel="stylesheet" href="style.css?v=16">
 </head>
 <body>
   <div id="wrap">
@@ -157,7 +157,7 @@
     <!-- ПАУЗА (Esc): как экран аварии, но с надписью ПАУЗА -->
     <div id="pause" class="overlay hidden">
       <h1>ПАУЗА</h1>
-      <p class="crash-text">Esc — продолжить гонку</p>
+      <p class="crash-text pc-hint">Esc — продолжить гонку</p>
       <button id="btn-pause-restart">🔁 Снова заезд <span class="k">R</span></button>
       <button id="btn-pause-menu">🏠 Главное меню</button>
     </div>
@@ -195,7 +195,7 @@
   <!-- SDK Яндекс Игр: на их сайте сообщает «игра загрузилась».
        Дома этот скрипт просто не загрузится — и ничего страшного -->
   <script src="https://yandex.ru/games/sdk/v2" onerror=""></script>
-  <script src="game.js?v=15"></script>
+  <script src="game.js?v=16"></script>
   <script>
     // Знакомимся с Яндекс Играми, если мы запущены у них
     if (typeof YaGames !== "undefined") {

@@ -4038,7 +4038,9 @@ function renderHUD() {
   ctx.fillText("Трасса: " + (raceKind === "drag" ? "Драг-полоса"
     : raceKind === "highway" ? "Шоссе" : TRACK_NAMES[currentTrack]),
     W - 18, 88);
-  if (raceKind === "circuit") {
+  // Подсказки про клавиши — только там, где есть клавиатура!
+  // На телефоне их прячем (решение Саши): там свои кнопки
+  if (raceKind === "circuit" && !isTouchDevice) {
     ctx.fillStyle = "rgba(255,255,255,0.45)";
     ctx.font = "11px Verdana";
     ctx.fillText("T — сменить трассу", W - 18, 104);
@@ -4061,25 +4063,31 @@ function renderHUD() {
   ctx.font = "bold 15px Verdana";
   ctx.textAlign = "left";
   ctx.fillText("Передача: " + gearText, 18, H - 36);
-  ctx.fillStyle = "rgba(255,255,255,0.45)";
-  ctx.font = "12px Verdana";
-  ctx.fillText(boxHint, 155, H - 36);
+  if (!isTouchDevice) {
+    ctx.fillStyle = "rgba(255,255,255,0.45)";
+    ctx.font = "12px Verdana";
+    ctx.fillText(boxHint, 155, H - 36);
+  }
 
   // Режим поездки (фишка Корсы): ЭКО зелёный, НОРМА белый, СПОРТ красный
   if (car.modes && engineOn) {
     ctx.fillStyle = MODE_COLORS[driveMode];
     ctx.font = "bold 14px Verdana";
     ctx.fillText("Режим: " + MODE_NAMES[driveMode], 18, H - 58);
-    ctx.fillStyle = "rgba(255,255,255,0.45)";
-    ctx.font = "12px Verdana";
-    ctx.fillText(keyLabel(binds.mode[0]) + " — сменить режим", 160, H - 58);
+    if (!isTouchDevice) {
+      ctx.fillStyle = "rgba(255,255,255,0.45)";
+      ctx.font = "12px Verdana";
+      ctx.fillText(keyLabel(binds.mode[0]) + " — сменить режим", 160, H - 58);
+    }
   }
-  ctx.fillStyle = "rgba(255,255,255,0.55)";
-  ctx.font = "12px Verdana";
-  ctx.fillText(
-    muted ? "🔇 M — включить звук"
-          : `🔊 ${Math.round(soundVolume * 100)}%   M — выкл,  − / + — громкость`,
-    18, H - 14);
+  if (!isTouchDevice) {
+    ctx.fillStyle = "rgba(255,255,255,0.55)";
+    ctx.font = "12px Verdana";
+    ctx.fillText(
+      muted ? "🔇 M — включить звук"
+            : `🔊 ${Math.round(soundVolume * 100)}%   M — выкл,  − / + — громкость`,
+      18, H - 14);
+  }
 
   // ---------- Шоссе: топливный бар ----------
   if (raceKind === "highway") {
