@@ -6173,7 +6173,7 @@ function drawM5(g) {
   }
   bnwBadge(g, 0, -56, 8);
   g.fillStyle = "#c9d0d7"; g.font = "italic bold 7px Verdana"; g.textAlign = "center";
-  g.fillText("M5", -62, -38);
+  g.fillText("M5", -62, -28);   // ниже (правка Саши) — под ступнёй фары
   plate(g, -42);
   // Диффузор и ЧЕТЫРЕ круглые трубы
   roundRect(g, -86, -24, 172, 15, 6, "#17191c");
