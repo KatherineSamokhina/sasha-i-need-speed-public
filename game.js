@@ -5527,7 +5527,8 @@ function drawTucson(g) {
   // свисают по два тонких косых лезвия с острым кончиком
   g.lineCap = "butt";
   for (const side of [-1, 1]) {
-    for (const [xt, xb, yb] of [[72, 53, -38], [58, 43, -46]]) {
+    // Оба лезвия одной длины и параллельны (правка Саши)
+    for (const [xt, xb, yb] of [[72, 55, -42], [58, 41, -42]]) {
       // тёмная окантовка
       g.strokeStyle = "#2a0d0d"; g.lineWidth = 8;
       g.beginPath();
