@@ -5506,36 +5506,62 @@ function drawSonata(g) {
   roundRect(g,  40, -16, 26, 6, 3, "#8a9096");   // двойная труба справа
 }
 
-// --- Hyundai Tucson: серый, фонари-когти ---
+// --- Hyundai Tucson: версия 2 («не похож» © Саша) — полоса во всю
+// ширину, крупные зигзаги-стрелки, эмблема H прямо НА СТЕКЛЕ ---
 function drawTucson(g) {
   carBase(g, -28, 34);
-  roundRect(g, -60, -110, 120, 10, 4, "#3d4247");   // спойлер (дворник под ним!)
-  roundRect(g, -54, -102, 108, 32, 7, "#1a2026");
-  g.fillStyle = "rgba(255,255,255,0.08)"; g.fillRect(-46, -97, 42, 22);
-  roundRect(g, -80, -74, 160, 68, 10, "#5c6a68");
-  g.fillStyle = "rgba(255,255,255,0.14)"; g.fillRect(-72, -73, 144, 3);
-  // Тонкая полоса через корму и КОГТИ по бокам
-  roundRect(g, -66, -64, 132, 3, 1, "#2a2d31");
+  roundRect(g, -62, -114, 124, 11, 4, "#4e5a58");   // спойлер (дворник под ним!)
+  roundRect(g, -56, -105, 112, 36, 7, "#161c1e");
+  g.fillStyle = "rgba(255,255,255,0.07)"; g.fillRect(-48, -100, 44, 26);
+  // Эмблема H на стекле (как на фото!)
+  g.strokeStyle = "#c9d0d7"; g.lineWidth = 1.6;
+  g.beginPath(); g.ellipse(0, -88, 11, 7, 0, 0, Math.PI * 2); g.stroke();
+  g.fillStyle = "#c9d0d7"; g.font = "italic bold 8px Verdana"; g.textAlign = "center";
+  g.fillText("H", 0, -85);
+  // Кузов
+  roundRect(g, -80, -72, 160, 66, 10, "#5c6a68");
+  g.fillStyle = "rgba(255,255,255,0.14)"; g.fillRect(-72, -71, 144, 3);
+  // Тонкая красная полоса ВО ВСЮ ширину — соединяет фонари
+  roundRect(g, -74, -68, 148, 4, 2, "#c22020");
+  // КРУПНЫЕ зигзаги-стрелки ◀ ▶ (смотрят внутрь), по два с каждой стороны
   for (const side of [-1, 1]) {
-    g.fillStyle = "#c22020";
-    for (const [dx, dy] of [[0, 0], [10, 7]]) {
+    for (const [cx, cy, s] of [[60, -56, 11], [47, -44, 8]]) {
+      g.fillStyle = "#2a0d0d";
       g.beginPath();
-      g.moveTo(side * (48 + dx), -62 + dy);
-      g.lineTo(side * (72 + dx), -54 + dy);
-      g.lineTo(side * (66 + dx), -48 + dy);
-      g.lineTo(side * (46 + dx), -56 + dy);
+      g.moveTo(side * (cx + s), -68);
+      g.lineTo(side * cx, cy);
+      g.lineTo(side * (cx + s), cy + s);
+      g.lineTo(side * (cx + s + 7), cy + s);
+      g.lineTo(side * (cx + 7), cy);
+      g.lineTo(side * (cx + s + 7), -68);
+      g.closePath(); g.fill();
+      g.fillStyle = "#e82121";
+      g.beginPath();
+      g.moveTo(side * (cx + s + 2), -66);
+      g.lineTo(side * (cx + 3), cy);
+      g.lineTo(side * (cx + s + 2), cy + s - 2);
+      g.lineTo(side * (cx + s + 5), cy + s - 2);
+      g.lineTo(side * (cx + 6), cy);
+      g.lineTo(side * (cx + s + 5), -66);
       g.closePath(); g.fill();
     }
   }
-  g.fillStyle = "#c9d0d7"; g.font = "bold 5px Verdana"; g.textAlign = "center";
-  g.fillText("HYONDAI", -50, -34);
-  g.fillText("TUCSON", 50, -34);
-  plate(g, -58, 40);
-  // Чёрный низ, серебристая защита, квадратные трубы справа
-  roundRect(g, -80, -28, 160, 19, 6, "#26292d");
-  roundRect(g, -38, -22, 76, 9, 4, "#b9bec6");
-  roundRect(g, 44, -20, 22, 8, 2, "#8a9096");
-  g.fillStyle = "#101214"; g.fillRect(47, -18, 7, 4); g.fillRect(56, -18, 7, 4);
+  // Номер высоко на двери, надписи по бокам
+  plate(g, -62, 40);
+  g.fillStyle = "#c9d0d7"; g.font = "bold 5px Verdana";
+  g.fillText("HYONDAI", -52, -30);
+  g.font = "italic bold 5px Verdana";
+  g.fillText("Tucson", 52, -30);
+  // Чёрный низ, БОЛЬШАЯ серебристая защита-ромб, трубы справа
+  roundRect(g, -80, -26, 160, 17, 6, "#23272a");
+  roundRect(g, -42, -22, 84, 11, 5, "#b9bec6");
+  g.fillStyle = "rgba(0,0,0,0.12)";
+  for (let x = -38; x < 40; x += 8) g.fillRect(x, -20, 4, 7);
+  roundRect(g, 46, -21, 24, 9, 2, "#8a9096");
+  g.fillStyle = "#101214"; g.fillRect(49, -19, 8, 5); g.fillRect(59, -19, 8, 5);
+  // Красные вертикальные катафоты в углах бампера
+  roundRect(g, -78, -24, 4, 13, 2, "#c22020");
+  roundRect(g,  74, -24, 4, 13, 2, "#c22020");
 }
 
 // --- Hyundai i30: серебристый хэтчбек-кругляш ---
