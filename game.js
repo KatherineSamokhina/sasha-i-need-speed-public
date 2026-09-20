@@ -358,6 +358,17 @@ const CARS = [
     noNpc: true,
     desc: "Младший брат Ф-1: та же школа, чуть скромнее мотор.",
   },
+  // ---- БМВ (заказ Саши; правило: новая марка = сразу пара!) ----
+  {
+    id: "m3e30", name: "BNW M3 E30", gearbox: "М",
+    topKmh: 248, zeroTo100: 6.5,
+    desc: "Чёрная легенда 80-х: спойлер на ножках и красная полоска.",
+  },
+  {
+    id: "m5", name: "BNW M5", gearbox: "А",
+    topKmh: 305, zeroTo100: 3.4,
+    desc: "Красный семейный седан… с мотором монстра. Волк в костюме.",
+  },
   // ---- Гиперкары (восторг Саши: «СКОРОСТЬ ГЕМЕРЫ!!!») ----
   {
     id: "gemera", name: "Konisegg Gemera", gearbox: "А",
@@ -470,7 +481,7 @@ const BRAKE_100_0 = {
   sportage: 2.9, k5: 2.8, sonata: 2.8, tucson: 2.9, i30: 2.9,
   astro: 2.9, cobra: 3.2, defendor: 4.2, pejo206: 3.0,
   raf977: 4.4, uaz469: 4.5, zis101: 5.0, f2: 1.5,
-  agera: 1.6, zonta: 1.8, aero: 1.7,
+  agera: 1.6, zonta: 1.8, aero: 1.7, m3e30: 3.0, m5: 2.2,
 };
 
 // Досчитываем игровые характеристики из реальных цифр.
@@ -505,7 +516,7 @@ const CAR_PRICES = {
   merc190: 1400, amggt53: 2600, maybach: 2800, gle: 1500,
   astro: 650, cobra: 2100, defendor: 750, pejo206: 500,
   raf977: 350, uaz469: 400, zis101: 500, f2: 3500,
-  agera: 8200, zonta: 7000, aero: 7800,
+  agera: 8200, zonta: 7000, aero: 7800, m3e30: 1500, m5: 2700,
   pejo308: 1300, volga3110: 320, volga24: 300, volga21: 380,
   sportage: 850, k5: 950, sonata: 900, tucson: 800, i30: 600,
   zis: -1,   // −1 = не продаётся, только код «вечная ностальгия»
@@ -2029,6 +2040,7 @@ const CAR_CATEGORY = {
   astro: "city", cobra: "sport", defendor: "suv", pejo206: "city",
   raf977: "ussr", uaz469: "ussr", zis101: "ussr", f2: "hyper",
   agera: "hyper", zonta: "hyper", aero: "hyper",
+  m3e30: "sport", m5: "sport",
 };
 // Марка каждой машины — для вкладки «По марке» (заказ Саши)
 const CAR_BRAND = {
@@ -2055,6 +2067,7 @@ const CAR_BRAND = {
   astro: "Opal", cobra: "Shelbee", defendor: "Sand Hover",
   pejo206: "Pejo", raf977: "РАФ", uaz469: "УАЗ", zis101: "ЗИС",
   f2: "Нет марки", agera: "Konisegg", zonta: "Paganny", aero: "ZSC",
+  m3e30: "BNW", m5: "BNW",
 };
 let garageCat = 0;      // номер выбранной категории в CATEGORIES
 let garageBrand = null; // выбранная марка (null = фильтруем по типу)
@@ -2309,6 +2322,8 @@ const PAINT_SLOTS = {
   agera: ["#5a5e63", "#4d5156"],
   zonta: ["#c9ccd1", "#b8bcc2"],
   aero: ["#f2f3f0", "#e2e4e0"],
+  m3e30: ["#1d1f24", "#15171b"],
+  m5: ["#c5232c", "#ad1e26"],
 };
 
 const PAINT_PALETTE = ["#d5121e", "#ff8c1a", "#ffd23f", "#57d977", "#1f8f4d",
@@ -2330,7 +2345,8 @@ const RIM_X = { aveo: 66, picanto: 56, corsa: 59, focus: 73, delorean: 75,
   pejo308: 68, volga3110: 66, volga24: 66, volga21: 64,
   sportage: 66, k5: 71, sonata: 71, tucson: 66, i30: 65,
   astro: 64, cobra: 74, defendor: 64, pejo206: 62, raf977: 62,
-  uaz469: 64, zis101: 66, f2: 84, agera: 80, zonta: 80, aero: 80 };
+  uaz469: 64, zis101: 66, f2: 84, agera: 80, zonta: 80, aero: 80,
+  m3e30: 70, m5: 74 };
 
 // ---------- ИГРОВАЯ ВАЛЮТА 🪙 ----------
 // Зарабатывается в гонках (по месту на финише), тратится на железо.
@@ -6080,6 +6096,72 @@ function drawAero(g) {
   }
 }
 
+// Круглая эмблема-пропеллер BNW: чёрное кольцо, сине-белые четвертинки
+function bnwBadge(g, x, y, r) {
+  g.fillStyle = "#17191c";
+  g.beginPath(); g.arc(x, y, r, 0, Math.PI * 2); g.fill();
+  g.fillStyle = "#3b7bd4";
+  g.beginPath(); g.moveTo(x, y); g.arc(x, y, r * 0.62, -Math.PI / 2, 0); g.fill();
+  g.beginPath(); g.moveTo(x, y); g.arc(x, y, r * 0.62, Math.PI / 2, Math.PI); g.fill();
+  g.fillStyle = "#e8e6df";
+  g.beginPath(); g.moveTo(x, y); g.arc(x, y, r * 0.62, 0, Math.PI / 2); g.fill();
+  g.beginPath(); g.moveTo(x, y); g.arc(x, y, r * 0.62, Math.PI, Math.PI * 1.5); g.fill();
+}
+
+// --- BMW M3 E30: чёрная легенда (по фото Саши) — приподнятый
+// спойлер и красная полоска на бампере ---
+function drawM3e30(g) {
+  carBase(g);
+  roundRect(g, -52, -98, 104, 34, 5, "#1a2026");
+  g.fillStyle = "rgba(255,255,255,0.10)"; g.fillRect(-44, -93, 40, 24);
+  // Приподнятый спойлер на ножках (как на фото!)
+  roundRect(g, -52, -78, 104, 7, 3, "#15171b");
+  roundRect(g, -40, -71, 6, 7, 2, "#101214");
+  roundRect(g,  34, -71, 6, 7, 2, "#101214");
+  roundRect(g, -84, -66, 168, 60, 7, "#1d1f24");
+  g.fillStyle = "rgba(255,255,255,0.12)"; g.fillRect(-76, -65, 152, 3);
+  // Широкие полосатые фонари E30
+  for (const side of [-1, 1]) {
+    roundRect(g, side * 54 - 26, -58, 52, 16, 3, "#1c1f23");
+    roundRect(g, side * 54 - 23, -55, 46, 5, 1, "#c22020");
+    roundRect(g, side * 54 - 23, -49, 46, 4, 1, "#7a1216");
+  }
+  bnwBadge(g, 0, -56, 8);
+  g.fillStyle = "#c9d0d7"; g.font = "italic bold 7px Verdana"; g.textAlign = "center";
+  g.fillText("M3", 62, -38);
+  plate(g, -40);
+  // Чёрный бампер с КРАСНОЙ полоской во всю ширину (фишка с фото!)
+  roundRect(g, -84, -22, 168, 12, 5, "#26292d");
+  roundRect(g, -80, -13, 160, 2.5, 1, "#c22020");
+}
+
+// --- BMW M5: красный седан-ракета (по фото Саши) ---
+function drawM5(g) {
+  carBase(g);
+  roundRect(g, -54, -98, 108, 34, 9, "#1a2026");
+  g.fillStyle = "rgba(255,255,255,0.10)"; g.fillRect(-46, -93, 40, 24);
+  // Губа-спойлер на кромке багажника
+  roundRect(g, -56, -68, 112, 4, 2, "#8f171f");
+  roundRect(g, -86, -66, 172, 60, 10, "#c5232c");
+  g.fillStyle = "rgba(255,255,255,0.18)"; g.fillRect(-78, -65, 156, 3);
+  // Узкие Г-образные фонари
+  for (const side of [-1, 1]) {
+    roundRect(g, side * 58 - 24, -60, 48, 8, 4, "#2a0d0d");
+    roundRect(g, side * 58 - 21, -58, 42, 4, 2, "#e82121");
+    roundRect(g, side * (78) - 4, -58, 8, 16, 3, "#2a0d0d");
+  }
+  bnwBadge(g, 0, -56, 8);
+  g.fillStyle = "#c9d0d7"; g.font = "italic bold 7px Verdana"; g.textAlign = "center";
+  g.fillText("M5", -62, -38);
+  plate(g, -42);
+  // Диффузор и ЧЕТЫРЕ круглые трубы
+  roundRect(g, -86, -24, 172, 15, 6, "#17191c");
+  for (const x of [-62, -46, 46, 62]) {
+    g.strokeStyle = "#c9d0d7"; g.lineWidth = 2.5;
+    g.beginPath(); g.arc(x, -16, 5.5, 0, Math.PI * 2); g.stroke();
+  }
+}
+
 const CAR_DRAWERS = {
   aveo: drawAveo, picanto: drawPicanto, focus: drawFocus,
   delorean: drawDelorean, corsa: drawCorsa,
@@ -6108,6 +6190,7 @@ const CAR_DRAWERS = {
   pejo206: drawPejo206, raf977: drawRaf977, uaz469: drawUaz469,
   zis101: drawZis101, f2: drawF2, agera: drawAgera,
   zonta: drawZonta, aero: drawAero,
+  m3e30: drawM3e30, m5: drawM5,
 };
 
 // Огненный след: два пылающих следа за колёсами, три слоя пламени
