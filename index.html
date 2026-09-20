@@ -6,7 +6,7 @@
 <title>I Need Speed 1: First Racing</title>
 <!-- ?v=2 — хитрость против кэша: браузер иногда запоминает старые
      файлы; поменяв цифру, мы заставляем его скачать свежие -->
-<link rel="stylesheet" href="style.css?v=38">
+<link rel="stylesheet" href="style.css?v=39">
 </head>
 <body>
   <div id="wrap">
@@ -59,7 +59,7 @@
         <button id="btn-settings" class="btn-dark">⚙️ Настройки</button>
       </div>
       <!-- Номер версии: сразу видно, какая сборка запущена (урок бага №14) -->
-      <p class="studio-credit">© Vardo Games · v38</p>
+      <p class="studio-credit">© Vardo Games · v39</p>
     </div>
 
     <!-- МУЛЬТИПЛЕЕР: пир-ту-пир через WebRTC (спецификация Саши) -->
@@ -123,10 +123,13 @@
       </div>
     </div>
 
-    <!-- КАТЕГОРИИ ГАРАЖА: отдельный экран выбора раздела (правка Саши) -->
+    <!-- КАТЕГОРИИ ГАРАЖА: отдельный экран, две вкладки (правки Саши) -->
     <div id="cats" class="overlay hidden">
       <h1>📂 КАТЕГОРИИ</h1>
-      <p class="crash-text">Выбери раздел гаража</p>
+      <div class="settings-btns">
+        <button id="cats-tab-type" class="chip active">По типу</button>
+        <button id="cats-tab-brand" class="chip">По марке</button>
+      </div>
       <div class="menu-grid" id="cats-grid"></div>
       <button id="btn-cats-back" class="btn-dark">⬅ Назад в гараж</button>
     </div>
@@ -206,7 +209,7 @@
   <!-- SDK Яндекс Игр: на их сайте сообщает «игра загрузилась».
        Дома этот скрипт просто не загрузится — и ничего страшного -->
   <script src="https://yandex.ru/games/sdk/v2" onerror=""></script>
-  <script src="game.js?v=38"></script>
+  <script src="game.js?v=39"></script>
   <script>
     // Знакомимся с Яндекс Играми, если мы запущены у них
     if (typeof YaGames !== "undefined") {

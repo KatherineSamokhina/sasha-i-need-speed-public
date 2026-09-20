@@ -1900,7 +1900,29 @@ const CAR_CATEGORY = {
   fford: "hyper", f1: "hyper", fordgt: "hyper", gemera: "hyper",
   wayra: "hyper", tuatara: "hyper",
 };
-let garageCat = 0;   // номер выбранной категории в CATEGORIES
+// Марка каждой машины — для вкладки «По марке» (заказ Саши)
+const CAR_BRAND = {
+  aveo: "Chevalet", camaro70: "Chevalet", camaroNew: "Chevalet",
+  vetteC1: "Chevalet", vetteC8: "Chevalet", cruze: "Chevalet",
+  picanto: "Kiwi", corsa: "Opal", delorean: "TMC", shelby: "Shelbee",
+  focus: "Fjord", darkhorse: "Fjord", fford: "Fjord", ecosport: "Fjord",
+  kuga: "Fjord", fordgt: "Fjord",
+  disco: "Sand Hover", hilux: "Tayoda", rav4: "Tayoda",
+  kopeyka: "ВАЗ", semerka: "ВАЗ", chetverka: "ВАЗ",
+  volga21: "Волга", volga24: "Волга", volga3110: "Волга",
+  buhanka: "УАЗ", raf: "РАФ", zis: "ЗИС", f1: "Ф-1",
+  challenger: "Dodgee", charger14: "Dodgee", charger69: "Dodgee",
+  durango: "Dodgee",
+  escalade: "Kadillark", sixteen: "Kadillark",
+  nautilus: "Linkorn", continental17: "Linkorn", mark5: "Linkorn",
+  lincoln60: "Linkorn", navigator: "Linkorn", zephyr: "Linkorn",
+  mkz: "Linkorn",
+  merc190: "Merzedes", amggt53: "Merzedes", maybach: "Merzedes",
+  gle: "Merzedes",
+  pejo308: "Pejo", gemera: "Konisegg", wayra: "Paganny", tuatara: "ZSC",
+};
+let garageCat = 0;      // номер выбранной категории в CATEGORIES
+let garageBrand = null; // выбранная марка (null = фильтруем по типу)
 
 // Список индексов CARS для текущей категории, по цене (ЗИС — в конец:
 // его цена −1 означает «бесценный», такому место последнее)
@@ -1908,7 +1930,9 @@ function garageList() {
   const [key] = CATEGORIES[garageCat];
   return CARS
     .map((c, i) => i)
-    .filter((i) => key === "all" || CAR_CATEGORY[CARS[i].id] === key)
+    .filter((i) => garageBrand
+      ? CAR_BRAND[CARS[i].id] === garageBrand
+      : key === "all" || CAR_CATEGORY[CARS[i].id] === key)
     .sort((a, b) => {
       const pa = CAR_PRICES[CARS[a].id], pb = CAR_PRICES[CARS[b].id];
       return (pa === -1 ? Infinity : pa) - (pb === -1 ? Infinity : pb);
@@ -1922,7 +1946,8 @@ function renderGarage() {
   document.getElementById("garage-name").textContent =
     `${c.name}  (${pos + 1}/${list.length})`;
   const catBtn = document.getElementById("btn-cat");
-  if (catBtn) catBtn.textContent = "📂 Категория: " + CATEGORIES[garageCat][1];
+  if (catBtn) catBtn.textContent =
+    "📂 Категория: " + (garageBrand || CATEGORIES[garageCat][1]);
   document.getElementById("garage-desc").textContent = c.desc;
   document.getElementById("garage-stats").innerHTML =
     statBar("Максималка", c.topKmh / 360, c.topKmh + " км/ч") +
@@ -1954,6 +1979,7 @@ function renderGarage() {
 function openGarage() {
   inGarage = true;
   garageCat = 0;         // открываем всегда с раздела «Все»
+  garageBrand = null;
   garageIndex = carIndex;
   renderGarage();
   show("menu", false);
@@ -1983,28 +2009,69 @@ wireButton("btn-next", () => garageStep(1));
 // (правка Саши) — как настоящее меню, а не список под кнопкой
 const CAT_COLORS = ["", "btn-violet", "btn-green", "btn-blue",
                     "btn-orange", "btn-slate", "btn-dark"];
-function openCats() {
+let catsMode = "type";   // какая вкладка открыта: "type" или "brand"
+
+function pickAndReturn() {
+  garageIndex = garageList()[0];  // раздел начинается с самой дешёвой
+  show("cats", false);
+  show("garage", true);
+  renderGarage();
+}
+
+function renderCats() {
+  document.getElementById("cats-tab-type").classList
+    .toggle("active", catsMode === "type");
+  document.getElementById("cats-tab-brand").classList
+    .toggle("active", catsMode === "brand");
   const grid = document.getElementById("cats-grid");
   grid.innerHTML = "";
-  CATEGORIES.forEach(([key, label], i) => {
-    const count = CARS.filter(
-      (c) => key === "all" || CAR_CATEGORY[c.id] === key).length;
-    const b = document.createElement("button");
-    b.className = CAT_COLORS[i % CAT_COLORS.length];
-    b.textContent = (i === garageCat ? "✅ " : "") + `${label} — ${count}`;
-    b.addEventListener("click", () => {
-      garageCat = i;
-      garageIndex = garageList()[0];  // раздел начинается с самой дешёвой
-      show("cats", false);
-      show("garage", true);
-      renderGarage();
+  if (catsMode === "type") {
+    // Вкладка «По типу»: 7 больших цветных кнопок
+    grid.className = "menu-grid";
+    grid.removeAttribute("style");
+    CATEGORIES.forEach(([key, label], i) => {
+      const count = CARS.filter(
+        (c) => key === "all" || CAR_CATEGORY[c.id] === key).length;
+      const b = document.createElement("button");
+      b.className = CAT_COLORS[i % CAT_COLORS.length];
+      b.textContent = (!garageBrand && i === garageCat ? "✅ " : "")
+        + `${label} — ${count}`;
+      b.addEventListener("click", () => {
+        garageBrand = null;
+        garageCat = i;
+        pickAndReturn();
+      });
+      grid.appendChild(b);
     });
-    grid.appendChild(b);
-  });
+  } else {
+    // Вкладка «По марке»: компактные кнопки-фишки, марок-то много!
+    grid.className = "settings-btns";
+    grid.style.flexWrap = "wrap";
+    grid.style.justifyContent = "center";
+    grid.style.maxWidth = "640px";
+    const brands = [...new Set(Object.values(CAR_BRAND))];
+    for (const brand of brands) {
+      const count = CARS.filter((c) => CAR_BRAND[c.id] === brand).length;
+      const b = document.createElement("button");
+      b.className = "chip" + (garageBrand === brand ? " active" : "");
+      b.textContent = `${brand} — ${count}`;
+      b.addEventListener("click", () => {
+        garageBrand = brand;
+        pickAndReturn();
+      });
+      grid.appendChild(b);
+    }
+  }
+}
+
+function openCats() {
+  renderCats();
   show("garage", false);
   show("cats", true);
 }
 wireButton("btn-cat", openCats);
+wireButton("cats-tab-type",  () => { catsMode = "type";  renderCats(); });
+wireButton("cats-tab-brand", () => { catsMode = "brand"; renderCats(); });
 wireButton("btn-cats-back", () => {
   show("cats", false);
   show("garage", true);
