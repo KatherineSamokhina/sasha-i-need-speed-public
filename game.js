@@ -1923,9 +1923,6 @@ function renderGarage() {
     `${c.name}  (${pos + 1}/${list.length})`;
   const catBtn = document.getElementById("btn-cat");
   if (catBtn) catBtn.textContent = "📂 Категория: " + CATEGORIES[garageCat][1];
-  // Подсветить выбранный раздел в открытом списке
-  document.querySelectorAll("#cat-list button").forEach((b, i) =>
-    b.classList.toggle("active", i === garageCat));
   document.getElementById("garage-desc").textContent = c.desc;
   document.getElementById("garage-stats").innerHTML =
     statBar("Максималка", c.topKmh / 360, c.topKmh + " км/ч") +
@@ -1958,7 +1955,6 @@ function openGarage() {
   inGarage = true;
   garageCat = 0;         // открываем всегда с раздела «Все»
   garageIndex = carIndex;
-  document.getElementById("cat-list").classList.add("hidden");
   renderGarage();
   show("menu", false);
   show("garage", true);
@@ -1983,22 +1979,36 @@ function garageStep(dir) {
 }
 wireButton("btn-prev", () => garageStep(-1));
 wireButton("btn-next", () => garageStep(1));
-// Кнопка «Категория» ОТКРЫВАЕТ список разделов (правка Саши):
-// выбираешь любой сразу, а не листаешь по кругу
-const catListEl = document.getElementById("cat-list");
-CATEGORIES.forEach(([key, label], i) => {
-  const b = document.createElement("button");
-  b.className = "chip";
-  b.textContent = label;
-  b.addEventListener("click", () => {
-    garageCat = i;
-    garageIndex = garageList()[0];   // раздел начинается с самой дешёвой
-    catListEl.classList.add("hidden");
-    renderGarage();
+// Кнопка «Категория» открывает ОТДЕЛЬНЫЙ ЭКРАН выбора раздела
+// (правка Саши) — как настоящее меню, а не список под кнопкой
+const CAT_COLORS = ["", "btn-violet", "btn-green", "btn-blue",
+                    "btn-orange", "btn-slate", "btn-dark"];
+function openCats() {
+  const grid = document.getElementById("cats-grid");
+  grid.innerHTML = "";
+  CATEGORIES.forEach(([key, label], i) => {
+    const count = CARS.filter(
+      (c) => key === "all" || CAR_CATEGORY[c.id] === key).length;
+    const b = document.createElement("button");
+    b.className = CAT_COLORS[i % CAT_COLORS.length];
+    b.textContent = (i === garageCat ? "✅ " : "") + `${label} — ${count}`;
+    b.addEventListener("click", () => {
+      garageCat = i;
+      garageIndex = garageList()[0];  // раздел начинается с самой дешёвой
+      show("cats", false);
+      show("garage", true);
+      renderGarage();
+    });
+    grid.appendChild(b);
   });
-  catListEl.appendChild(b);
+  show("garage", false);
+  show("cats", true);
+}
+wireButton("btn-cat", openCats);
+wireButton("btn-cats-back", () => {
+  show("cats", false);
+  show("garage", true);
 });
-wireButton("btn-cat", () => catListEl.classList.toggle("hidden"));
 wireButton("btn-select", () => {
   const c = CARS[garageIndex];
   if (garageIndex === carIndex) return;
