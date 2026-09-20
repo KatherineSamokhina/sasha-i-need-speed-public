@@ -2302,11 +2302,44 @@ function drawCarTuned(g, id, t) {
 }
 
 // Винилы и детали — поверх кузова
+// «Примерочная» тюнинга (ревизия реалистики, заказ Саши): украшения
+// рисовались по меркам седана — на фургонах спойлер висел посреди
+// дверей, а полосы шли по стёклам. Здесь мерки нестандартных машин:
+// spoilerY — где крыша, stripeTop — откуда начинать полосы,
+// noSpoiler — у машины УЖЕ есть заводское крыло.
+const MOD_FIT = {
+  buhanka: { spoilerY: -132, stripeTop: -70 },
+  raf: { spoilerY: -128, stripeTop: -70 },
+  escalade: { spoilerY: -126, stripeTop: -62 },
+  durango: { spoilerY: -120, stripeTop: -64 },
+  navigator: { spoilerY: -122, stripeTop: -62 },
+  disco: { spoilerY: -120, stripeTop: -58 },
+  hilux: { spoilerY: -108, stripeTop: -56 },
+  rav4: { spoilerY: -124, stripeTop: -62 },
+  kuga: { spoilerY: -118, stripeTop: -60 },
+  gle: { spoilerY: -108, stripeTop: -58 },
+  sportage: { spoilerY: -110, stripeTop: -60 },
+  tucson: { spoilerY: -120, stripeTop: -58 },
+  ecosport: { spoilerY: -116, stripeTop: -58 },
+  chetverka: { spoilerY: -116, stripeTop: -64 },
+  i30: { spoilerY: -108, stripeTop: -60 },
+  zis: { spoilerY: -112, stripeTop: -64 },
+  gemera: { spoilerY: -86, stripeTop: -74 },
+  wayra: { noSpoiler: true, stripeTop: -74 },
+  fordgt: { noSpoiler: true, stripeTop: -70 },
+  tuatara: { noSpoiler: true, stripeTop: -72 },
+  f1: { noSpoiler: true },
+  fford: { noSpoiler: true },
+  vetteC8: { noSpoiler: true },
+};
+
 function drawMods(g, id, t) {
+  const fit = MOD_FIT[id] || {};
   if (t.vinyl === "полосы") {
+    const top = fit.stripeTop ?? -98;
     g.fillStyle = "rgba(255,255,255,0.85)";
-    g.fillRect(-19, -98, 12, 90);
-    g.fillRect(  7, -98, 12, 90);
+    g.fillRect(-19, top, 12, -8 - top);
+    g.fillRect(  7, top, 12, -8 - top);
   } else if (t.vinyl === "пламя") {
     const flame = (h1, h2, color) => {
       g.fillStyle = color;
@@ -2334,11 +2367,12 @@ function drawMods(g, id, t) {
     g.textAlign = "center";
     g.fillText("7", -44, -36);
   }
-  if (t.spoiler) {
+  if (t.spoiler && !fit.noSpoiler) {
+    const sy = fit.spoilerY ?? -72;
     g.fillStyle = "#101214";
-    g.fillRect(-34, -66, 5, 12);
-    g.fillRect( 29, -66, 5, 12);
-    roundRect(g, -58, -72, 116, 7, 3, "#101214");
+    g.fillRect(-34, sy + 6, 5, 12);
+    g.fillRect( 29, sy + 6, 5, 12);
+    roundRect(g, -58, sy, 116, 7, 3, "#101214");
   }
   if (t.rims) {
     const x = RIM_X[id] || 66;
@@ -2397,7 +2431,13 @@ function renderTuning() {
   // 🔩 Детали
   const det = document.getElementById("details");
   det.innerHTML = "";
-  det.appendChild(chip("спойлер", t.spoiler, () => { t.spoiler = !t.spoiler; }));
+  if (MOD_FIT[c.id] && MOD_FIT[c.id].noSpoiler) {
+    const b = chip("крыло уже есть!", false, () => {});
+    b.classList.add("locked");
+    det.appendChild(b);
+  } else {
+    det.appendChild(chip("спойлер", t.spoiler, () => { t.spoiler = !t.spoiler; }));
+  }
   det.appendChild(chip("золотые диски", t.rims, () => { t.rims = !t.rims; }));
   const neons = Object.keys(NEON_COLORS);
   det.appendChild(chip("неон: " + t.neon, t.neon !== "нет", () => {
