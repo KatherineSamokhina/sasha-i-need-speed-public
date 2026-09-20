@@ -2138,7 +2138,12 @@ const pressRight = () => down("right") || touchState.right;
 // =====================================================================
 
 const touchState = { gas: false, brake: false, left: false, right: false };
-const isTouchDevice = ("ontouchstart" in window) || navigator.maxTouchPoints > 0;
+// Телефон или комп? Раньше спрашивали «умеешь касания?» — но многие
+// Windows-компы отвечают «умею», и их принимали за телефоны (баг Саши
+// «на компе стало всё телефонным»). Теперь спрашиваем правильнее:
+// «какой у тебя ГЛАВНЫЙ указатель?» Палец (coarse — «грубый») — телефон,
+// мышка (fine — «точный») — комп, даже если у него есть сенсорный экран.
+const isTouchDevice = window.matchMedia("(pointer: coarse)").matches;
 // На телефонах игра ВСЕГДА горизонтальная (решение Саши): если
 // телефон держат вертикально — CSS повернёт игру на 90°!
 if (isTouchDevice) document.body.classList.add("touch-device");
