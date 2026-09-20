@@ -312,6 +312,52 @@ const CARS = [
     topKmh: 192, zeroTo100: 10.5,
     desc: "Серебристый хэтчбек-кругляш: честный работяга.",
   },
+  // ---- «Братья одиночкам» (идея Саши): по брату каждой марке-одиночке.
+  // Кроме TMC: DeLorean был ЕДИНСТВЕННОЙ моделью марки — это его легенда!
+  {
+    id: "astro", name: "Opal Astro", gearbox: "С",
+    topKmh: 190, zeroTo100: 10.5,
+    desc: "Брат Корзы: серебристый хэтчбек на каждый день.",
+  },
+  {
+    id: "cobra", name: "Shelbee Cobra", gearbox: "М",
+    topKmh: 265, zeroTo100: 4.2,
+    desc: "Открытая ракета 60-х: трубы торчат ИЗ БОКОВ. Брат Мустанго!",
+  },
+  {
+    id: "defendor", name: "Sand Hover Defendor", gearbox: "М",
+    topKmh: 145, zeroTo100: 14.0,
+    offroadSoft: true,
+    desc: "Квадратный брат Discoverry: запаска на двери, никаких компромиссов.",
+  },
+  {
+    id: "pejo206", name: "Pejo 206", gearbox: "С",
+    topKmh: 180, zeroTo100: 12.0,
+    desc: "Младший брат 308-го: маленький, юркий, всеми любимый.",
+  },
+  {
+    id: "raf977", name: "РАФ 977 Латвия", gearbox: "М",
+    topKmh: 110, zeroTo100: 30.0,
+    offroadSoft: true,
+    desc: "Старший брат 2203-го: бирюзовый ретро-фургончик 60-х.",
+  },
+  {
+    id: "uaz469", name: "УАЗ-469 Козлик", gearbox: "М",
+    topKmh: 100, zeroTo100: 30.0,
+    offroadSoft: true,
+    desc: "Брат Буханки: открытый вездеход, скачет по кочкам как козлик.",
+  },
+  {
+    id: "zis101", name: "ЗИС-101", gearbox: "М",
+    topKmh: 115, zeroTo100: 35.0,
+    desc: "Мирный брат бронированного: чёрный лимузин 30-х. Без тарана!",
+  },
+  {
+    id: "f2", name: "Болид Ф-2", gearbox: "М",
+    topKmh: 280, zeroTo100: 3.4,
+    noNpc: true,
+    desc: "Младший брат Ф-1: та же школа, чуть скромнее мотор.",
+  },
   // ---- Гиперкары (восторг Саши: «СКОРОСТЬ ГЕМЕРЫ!!!») ----
   {
     id: "gemera", name: "Konisegg Gemera", gearbox: "А",
@@ -377,6 +423,26 @@ const CARS = [
     noNpc: true,      // соперникам гиперкары не выдаются — нечестно!
     desc: "Белая капля-ракета: плавники, лента огня и электроника на 320.",
   },
+  {
+    id: "agera", name: "Konisegg Agera", gearbox: "А",
+    topKmh: 340,      // электроника держит (по традиции лимитов Саши)
+    zeroTo100: 2.9,
+    noNpc: true,
+    desc: "Старший брат Гемеры: круглая корма и рёв на всю Швецию.",
+  },
+  {
+    id: "zonta", name: "Paganny Zonta", gearbox: "М",
+    topKmh: 325, zeroTo100: 3.5,
+    noNpc: true,
+    desc: "Брат Вайры: четыре трубы кругом и опера вместо выхлопа.",
+  },
+  {
+    id: "aero", name: "ZSC Aero", gearbox: "М",
+    topKmh: 330,      // электроника держит (по традиции лимитов Саши)
+    zeroTo100: 2.8,
+    noNpc: true,
+    desc: "Старший брат Туатары: белая капля, что была быстрейшей в мире.",
+  },
 ];
 
 // Режимы поездки (фишка Корсы — идея Саши): меняют тягу и голос мотора.
@@ -402,6 +468,9 @@ const BRAKE_100_0 = {
   merc190: 3.0, amggt53: 2.3, maybach: 2.5, gle: 2.7,
   pejo308: 2.6, volga3110: 3.9, volga24: 4.1, volga21: 4.4,
   sportage: 2.9, k5: 2.8, sonata: 2.8, tucson: 2.9, i30: 2.9,
+  astro: 2.9, cobra: 3.2, defendor: 4.2, pejo206: 3.0,
+  raf977: 4.4, uaz469: 4.5, zis101: 5.0, f2: 1.5,
+  agera: 1.6, zonta: 1.8, aero: 1.7,
 };
 
 // Досчитываем игровые характеристики из реальных цифр.
@@ -434,6 +503,9 @@ const CAR_PRICES = {
   continental17: 1900, challenger: 2200, sixteen: 3500, fordgt: 5500,
   gemera: 8000, wayra: 9000, tuatara: 8500,
   merc190: 1400, amggt53: 2600, maybach: 2800, gle: 1500,
+  astro: 650, cobra: 2100, defendor: 750, pejo206: 500,
+  raf977: 350, uaz469: 400, zis101: 500, f2: 3500,
+  agera: 8200, zonta: 7000, aero: 7800,
   pejo308: 1300, volga3110: 320, volga24: 300, volga21: 380,
   sportage: 850, k5: 950, sonata: 900, tucson: 800, i30: 600,
   zis: -1,   // −1 = не продаётся, только код «вечная ностальгия»
@@ -1954,6 +2026,9 @@ const CAR_CATEGORY = {
   fford: "hyper", f1: "hyper", fordgt: "hyper", gemera: "hyper",
   wayra: "hyper", tuatara: "hyper",
   sportage: "suv", k5: "city", sonata: "city", tucson: "suv", i30: "city",
+  astro: "city", cobra: "sport", defendor: "suv", pejo206: "city",
+  raf977: "ussr", uaz469: "ussr", zis101: "ussr", f2: "hyper",
+  agera: "hyper", zonta: "hyper", aero: "hyper",
 };
 // Марка каждой машины — для вкладки «По марке» (заказ Саши)
 const CAR_BRAND = {
@@ -1977,6 +2052,9 @@ const CAR_BRAND = {
   merc190: "Merzedes", amggt53: "Merzedes", maybach: "Merzedes",
   gle: "Merzedes",
   pejo308: "Pejo", gemera: "Konisegg", wayra: "Paganny", tuatara: "ZSC",
+  astro: "Opal", cobra: "Shelbee", defendor: "Sand Hover",
+  pejo206: "Pejo", raf977: "РАФ", uaz469: "УАЗ", zis101: "ЗИС",
+  f2: "Нет марки", agera: "Konisegg", zonta: "Paganny", aero: "ZSC",
 };
 let garageCat = 0;      // номер выбранной категории в CATEGORIES
 let garageBrand = null; // выбранная марка (null = фильтруем по типу)
@@ -2220,6 +2298,17 @@ const PAINT_SLOTS = {
   sonata: ["#17191c", "#101214"],
   tucson: ["#5c6a68", "#4e5a58"],
   i30: ["#c9ccd1", "#b8bcc2"],
+  astro: ["#8f979e", "#7d858c"],
+  cobra: ["#1d3f96", "#173482"],
+  defendor: ["#3f6d4e", "#356043"],
+  pejo206: ["#c9ccd1", "#b8bcc2"],
+  raf977: ["#7fc4c9", "#6fb4b9"],
+  uaz469: ["#5a6e4a", "#4d5f3f"],
+  zis101: ["#17191c", "#101214"],
+  f2: ["#ff8c1a", "#e87608"],
+  agera: ["#5a5e63", "#4d5156"],
+  zonta: ["#c9ccd1", "#b8bcc2"],
+  aero: ["#f2f3f0", "#e2e4e0"],
 };
 
 const PAINT_PALETTE = ["#d5121e", "#ff8c1a", "#ffd23f", "#57d977", "#1f8f4d",
@@ -2239,7 +2328,9 @@ const RIM_X = { aveo: 66, picanto: 56, corsa: 59, focus: 73, delorean: 75,
   gemera: 80, wayra: 82, tuatara: 80,
   merc190: 70, amggt53: 76, maybach: 72, gle: 70,
   pejo308: 68, volga3110: 66, volga24: 66, volga21: 64,
-  sportage: 66, k5: 71, sonata: 71, tucson: 66, i30: 65 };
+  sportage: 66, k5: 71, sonata: 71, tucson: 66, i30: 65,
+  astro: 64, cobra: 74, defendor: 64, pejo206: 62, raf977: 62,
+  uaz469: 64, zis101: 66, f2: 84, agera: 80, zonta: 80, aero: 80 };
 
 // ---------- ИГРОВАЯ ВАЛЮТА 🪙 ----------
 // Зарабатывается в гонках (по месту на финише), тратится на железо.
@@ -2355,6 +2446,15 @@ const MOD_FIT = {
   f1: { noSpoiler: true },
   fford: { noSpoiler: true },
   vetteC8: { noSpoiler: true },
+  defendor: { spoilerY: -130, stripeTop: -70 },
+  raf977: { spoilerY: -124, stripeTop: -66 },
+  uaz469: { spoilerY: -92, stripeTop: -56 },
+  zis101: { spoilerY: -112, stripeTop: -64 },
+  cobra: { noSpoiler: true, stripeTop: -60 },   // родстеру спойлер некуда!
+  f2: { noSpoiler: true },
+  agera: { noSpoiler: true, stripeTop: -72 },
+  zonta: { noSpoiler: true, stripeTop: -74 },
+  aero: { spoilerY: -84, stripeTop: -72 },
 };
 
 function drawMods(g, id, t) {
@@ -5681,6 +5781,305 @@ function drawI30(g) {
   roundRect(g, -78, -18, 156, 9, 4, "#b8bcc2");
 }
 
+// ==================== БРАТЬЯ ОДИНОЧКАМ (идея Саши) ====================
+
+// --- Opel Astra: серебристый хэтчбек, брат Корзы ---
+function drawAstro(g) {
+  carBase(g, -26, 32);
+  roundRect(g, -56, -102, 112, 40, 12, "#1a2026");
+  g.fillStyle = "rgba(255,255,255,0.12)"; g.fillRect(-48, -96, 44, 28);
+  roundRect(g, -78, -68, 156, 62, 12, "#8f979e");
+  g.fillStyle = "rgba(255,255,255,0.25)"; g.fillRect(-70, -67, 140, 3);
+  // Молния Опаля в круге
+  g.strokeStyle = "#d7dce2"; g.lineWidth = 2;
+  g.beginPath(); g.arc(0, -54, 9, 0, Math.PI * 2); g.stroke();
+  g.beginPath(); g.moveTo(-6, -54); g.lineTo(2, -58); g.lineTo(-2, -50); g.lineTo(6, -54); g.stroke();
+  for (const side of [-1, 1]) {
+    roundRect(g, side * 62 - 14, -62, 28, 20, 6, "#7a1216");
+    roundRect(g, side * 62 - 11, -58, 22, 8, 3, "#d42323");
+    roundRect(g, side * 62 - 11, -49, 22, 5, 2, "#e8e6df");
+  }
+  plate(g, -40, 40);
+  roundRect(g, -78, -20, 156, 10, 5, "#7d858c");
+}
+
+// --- Shelby Cobra: открытая ракета 60-х с боковыми трубами ---
+function drawCobra(g) {
+  carBase(g, -24, 30);
+  // Низкий открытый кузов с раздутыми арками
+  roundRect(g, -84, -60, 168, 54, 16, "#1d3f96");
+  g.fillStyle = "rgba(255,255,255,0.2)"; g.fillRect(-76, -59, 152, 3);
+  // Белые гоночные полосы (заводские!)
+  g.fillStyle = "#f2f3f0";
+  g.fillRect(-17, -60, 12, 54);
+  g.fillRect(5, -60, 12, 54);
+  // Открытая кабина: ветровое стекло и дуга
+  roundRect(g, -34, -76, 68, 8, 3, "#c9d0d7");
+  g.fillStyle = "#101214";
+  g.beginPath(); g.ellipse(0, -60, 30, 10, 0, Math.PI, 0); g.fill();
+  // Круглые фонарики
+  for (const side of [-1, 1]) {
+    g.fillStyle = "#7a1216";
+    g.beginPath(); g.arc(side * 62, -42, 6, 0, Math.PI * 2); g.fill();
+    g.fillStyle = "#d42323";
+    g.beginPath(); g.arc(side * 62, -42, 3.5, 0, Math.PI * 2); g.fill();
+  }
+  // ТРУБЫ ИЗ БОКОВ (фишка Кобры!)
+  roundRect(g, -92, -26, 22, 7, 3, "#c9d0d7");
+  roundRect(g,  70, -26, 22, 7, 3, "#c9d0d7");
+  plate(g, -34, 36);
+  roundRect(g, -86, -18, 172, 8, 4, "#d7dce2");
+}
+
+// --- Land Rover Defender: квадратный, запаска на двери ---
+function drawDefendor(g) {
+  carBase(g, -30, 36);
+  roundRect(g, -76, -126, 152, 120, 6, "#3f6d4e");
+  g.fillStyle = "#e8e6df"; g.fillRect(-76, -126, 152, 12);  // белая крыша
+  roundRect(g, -62, -110, 124, 32, 4, "#1a2026");
+  g.fillStyle = "rgba(255,255,255,0.10)"; g.fillRect(-54, -105, 46, 22);
+  g.fillStyle = "#35543f"; g.fillRect(-1.5, -110, 3, 84);   // щель двери
+  // ЗАПАСКА на двери багажника
+  g.fillStyle = "#1c1f23";
+  g.beginPath(); g.arc(28, -56, 22, 0, Math.PI * 2); g.fill();
+  g.fillStyle = "#2a2e33";
+  g.beginPath(); g.arc(28, -56, 15, 0, Math.PI * 2); g.fill();
+  g.fillStyle = "#1c1f23";
+  g.beginPath(); g.arc(28, -56, 6, 0, Math.PI * 2); g.fill();
+  // Фонарики-кубики
+  for (const side of [-1, 1]) {
+    roundRect(g, side * 66 - 7, -64, 14, 12, 2, "#d42323");
+    roundRect(g, side * 66 - 7, -50, 14, 10, 2, "#ffb35c");
+  }
+  plate(g, -44, 38);
+  roundRect(g, -78, -22, 156, 12, 4, "#26292d");
+}
+
+// --- Peugeot 206: маленький юркий хэтч ---
+function drawPejo206(g) {
+  carBase(g, -24, 30);
+  roundRect(g, -50, -96, 100, 40, 14, "#1a2026");
+  g.fillStyle = "rgba(255,255,255,0.12)"; g.fillRect(-42, -90, 40, 28);
+  roundRect(g, -70, -62, 140, 56, 13, "#c9ccd1");
+  g.fillStyle = "rgba(255,255,255,0.3)"; g.fillRect(-62, -61, 124, 3);
+  // Фонари-капли вдоль стекла
+  for (const side of [-1, 1]) {
+    roundRect(g, side * 56 - 10, -80, 20, 30, 8, "#7a1216");
+    roundRect(g, side * 56 - 7, -74, 14, 12, 4, "#d42323");
+    roundRect(g, side * 56 - 7, -60, 14, 7, 3, "#ffb35c");
+  }
+  g.fillStyle = "#8a9096"; g.font = "bold 6px Verdana"; g.textAlign = "center";
+  g.fillText("🦁", 0, -50);
+  g.fillText("206", 48, -38);
+  plate(g, -36, 36);
+  roundRect(g, -70, -18, 140, 9, 4, "#b8bcc2");
+}
+
+// --- РАФ-977 «Латвия»: бирюзовый ретро-фургончик ---
+function drawRaf977(g) {
+  carBase(g, -26, 32);
+  // Двухцветный: белый верх, бирюзовый низ, всё круглое
+  roundRect(g, -72, -122, 144, 116, 18, "#7fc4c9");
+  g.fillStyle = "#f2f3f0";
+  roundRect(g, -72, -122, 144, 46, 18, "#f2f3f0");
+  roundRect(g, -56, -114, 112, 34, 10, "#1a2026");
+  g.fillStyle = "rgba(255,255,255,0.15)"; g.fillRect(-48, -108, 44, 22);
+  // Хромовый молдинг на стыке цветов
+  roundRect(g, -72, -78, 144, 4, 2, "#d7dce2");
+  // Круглые фонарики
+  for (const side of [-1, 1]) {
+    g.fillStyle = "#7a1216";
+    g.beginPath(); g.arc(side * 58, -54, 6.5, 0, Math.PI * 2); g.fill();
+    g.fillStyle = "#d42323";
+    g.beginPath(); g.arc(side * 58, -54, 4, 0, Math.PI * 2); g.fill();
+  }
+  g.fillStyle = "#20304c"; g.font = "italic bold 7px Verdana"; g.textAlign = "center";
+  g.fillText("Latvija", 0, -88);
+  plate(g, -44, 38);
+  roundRect(g, -74, -20, 148, 9, 4, "#d7dce2");
+}
+
+// --- УАЗ-469 «Козлик»: открытый армейский вездеход ---
+function drawUaz469(g) {
+  carBase(g, -28, 34);
+  // Плоский зелёный кузов с бортами
+  roundRect(g, -74, -84, 148, 78, 6, "#5a6e4a");
+  g.fillStyle = "rgba(255,255,255,0.12)"; g.fillRect(-66, -83, 132, 3);
+  // Сложенный брезент валиком наверху
+  roundRect(g, -66, -96, 132, 12, 6, "#4d5f3f");
+  g.fillStyle = "rgba(0,0,0,0.15)";
+  for (const x of [-50, -25, 0, 25]) g.fillRect(x, -95, 3, 10);
+  // ЗАПАСКА на корме
+  g.fillStyle = "#1c1f23";
+  g.beginPath(); g.arc(-30, -52, 20, 0, Math.PI * 2); g.fill();
+  g.fillStyle = "#2a2e33";
+  g.beginPath(); g.arc(-30, -52, 13, 0, Math.PI * 2); g.fill();
+  g.fillStyle = "#1c1f23";
+  g.beginPath(); g.arc(-30, -52, 5, 0, Math.PI * 2); g.fill();
+  // Канистра справа
+  roundRect(g, 34, -70, 24, 30, 3, "#44543a");
+  g.fillStyle = "rgba(0,0,0,0.2)"; g.fillRect(38, -66, 16, 3);
+  // Фонарики
+  for (const side of [-1, 1]) {
+    g.fillStyle = "#d42323";
+    g.beginPath(); g.arc(side * 66, -38, 4.5, 0, Math.PI * 2); g.fill();
+  }
+  plate(g, -30, 34);
+  roundRect(g, -76, -18, 152, 8, 3, "#3d4a33");
+}
+
+// --- ЗИС-101: мирный чёрный лимузин 30-х ---
+function drawZis101(g) {
+  carBase(g);
+  // Высокая округлая корма с покатой спиной
+  roundRect(g, -52, -108, 104, 40, 16, "#17191c");
+  roundRect(g, -40, -102, 80, 26, 8, "#1a2026");
+  g.fillStyle = "rgba(255,255,255,0.10)"; g.fillRect(-34, -98, 30, 18);
+  roundRect(g, -76, -72, 152, 66, 14, "#17191c");
+  g.fillStyle = "rgba(255,255,255,0.14)"; g.fillRect(-68, -71, 136, 3);
+  // Отдельные крылья над колёсами
+  g.fillStyle = "#101214";
+  g.beginPath(); g.ellipse(-64, -22, 24, 16, 0, Math.PI, 0); g.fill();
+  g.beginPath(); g.ellipse( 64, -22, 24, 16, 0, Math.PI, 0); g.fill();
+  // Хромовая полоса и фонарики-жучки
+  roundRect(g, -56, -50, 112, 2.5, 1, "#d7dce2");
+  for (const side of [-1, 1]) {
+    g.fillStyle = "#7a1216";
+    g.beginPath(); g.arc(side * 46, -40, 5, 0, Math.PI * 2); g.fill();
+    g.fillStyle = "#d42323";
+    g.beginPath(); g.arc(side * 46, -40, 3, 0, Math.PI * 2); g.fill();
+  }
+  plate(g, -34, 36);
+  roundRect(g, -70, -18, 140, 8, 4, "#d7dce2");
+}
+
+// --- Болид Ф-2: оранжевый младший брат Ф-1 ---
+function drawF2(g) {
+  g.fillStyle = "rgba(0,0,0,0.38)";
+  g.beginPath(); g.ellipse(0, 8, 96, 12, 0, 0, Math.PI * 2); g.fill();
+  // Открытые колёса
+  roundRect(g, -94, -34, 26, 40, 8, "#121212");
+  roundRect(g,  68, -34, 26, 40, 8, "#121212");
+  // Крыло на пилонах
+  roundRect(g, -70, -96, 140, 10, 3, "#e87608");
+  roundRect(g, -10, -86, 20, 10, 2, "#26292d");
+  // Узкий корпус-сигара
+  roundRect(g, -26, -76, 52, 70, 10, "#ff8c1a");
+  g.fillStyle = "rgba(255,255,255,0.25)"; g.fillRect(-18, -75, 36, 3);
+  g.fillStyle = "#17191c";
+  g.fillRect(-26, -46, 52, 8);
+  g.fillStyle = "#f2f3f0"; g.font = "bold 10px Verdana"; g.textAlign = "center";
+  g.fillText("2", 0, -20);
+  // Диффузор и огонёк
+  roundRect(g, -30, -12, 60, 7, 2, "#1c1f23");
+  g.fillStyle = "#e82121";
+  g.beginPath(); g.arc(0, -55, 3.5, 0, Math.PI * 2); g.fill();
+  // Тяги подвески к колёсам
+  g.strokeStyle = "#26292d"; g.lineWidth = 4;
+  g.beginPath(); g.moveTo(-26, -30); g.lineTo(-70, -22); g.stroke();
+  g.beginPath(); g.moveTo( 26, -30); g.lineTo( 70, -22); g.stroke();
+}
+
+// --- Koenigsegg Agera: круглая корма, брат Гемеры ---
+function drawAgera(g) {
+  carBase(g, -24, 30);
+  roundRect(g, -28, -96, 56, 18, 8, "#1a2026");   // узкое стекло
+  // Широкое округлое тело
+  roundRect(g, -90, -78, 180, 72, 18, "#5a5e63");
+  g.fillStyle = "rgba(255,255,255,0.18)"; g.fillRect(-80, -77, 160, 3);
+  // Круглая тёмная корма-чаша
+  g.fillStyle = "#26292d";
+  g.beginPath(); g.ellipse(0, -40, 62, 30, 0, 0, Math.PI * 2); g.fill();
+  // Круглые фонари-кольца
+  for (const side of [-1, 1]) {
+    g.strokeStyle = "#e82121"; g.lineWidth = 3.5;
+    g.beginPath(); g.arc(side * 40, -46, 9, 0, Math.PI * 2); g.stroke();
+    g.fillStyle = "#e82121";
+    g.beginPath(); g.arc(side * 40, -46, 3, 0, Math.PI * 2); g.fill();
+  }
+  // Одна центральная труба
+  g.fillStyle = "#15171a";
+  g.beginPath(); g.arc(0, -34, 9, 0, Math.PI * 2); g.fill();
+  g.fillStyle = "#000";
+  g.beginPath(); g.arc(0, -34, 6, 0, Math.PI * 2); g.fill();
+  // Эмблемка-щит
+  roundRect(g, -5, -70, 10, 12, 2, "#c9a11c");
+  plate(g, -24, 34);
+  g.fillStyle = "#101214";
+  for (const x of [-66, -44, 30, 52]) {
+    g.beginPath();
+    g.moveTo(x, -6); g.lineTo(x + 12, -6); g.lineTo(x + 9, -20); g.lineTo(x + 3, -20);
+    g.closePath(); g.fill();
+  }
+}
+
+// --- Pagani Zonda: четыре трубы кругом, брат Вайры ---
+function drawZonta(g) {
+  carBase(g, -24, 30);
+  // Дуга-крыло на стойках
+  roundRect(g, -80, -100, 160, 8, 4, "#15171a");
+  roundRect(g, -50, -92, 7, 16, 3, "#26292d");
+  roundRect(g,  43, -92, 7, 16, 3, "#26292d");
+  roundRect(g, -30, -92, 60, 18, 8, "#1a2026");   // стекло-пузырь
+  roundRect(g, -90, -76, 180, 70, 16, "#c9ccd1");
+  g.fillStyle = "rgba(255,255,255,0.3)"; g.fillRect(-80, -75, 160, 3);
+  // По два овальных фонарика с каждой стороны
+  for (const side of [-1, 1]) {
+    for (const dy of [0, 14]) {
+      g.fillStyle = "#3d0a0a";
+      g.beginPath(); g.ellipse(side * 62, -58 + dy, 9, 6, 0, 0, Math.PI * 2); g.fill();
+      g.strokeStyle = "#e82121"; g.lineWidth = 2;
+      g.beginPath(); g.ellipse(side * 62, -58 + dy, 6, 4, 0, 0, Math.PI * 2); g.stroke();
+    }
+  }
+  // ЧЕТЫРЕ трубы КРУГОМ в центре (фишка Зонды!)
+  g.fillStyle = "#15171a";
+  g.beginPath(); g.arc(0, -46, 17, 0, Math.PI * 2); g.fill();
+  g.fillStyle = "#26292d";
+  for (const [dx, dy] of [[-7, -53], [7, -53], [-7, -39], [7, -39]]) {
+    g.beginPath(); g.arc(dx, dy, 5, 0, Math.PI * 2); g.fill();
+    g.fillStyle = "#000";
+    g.beginPath(); g.arc(dx, dy, 3, 0, Math.PI * 2); g.fill();
+    g.fillStyle = "#26292d";
+  }
+  plate(g, -26, 34);
+  roundRect(g, -90, -22, 180, 14, 7, "#141618");
+}
+
+// --- SSC Ultimate Aero: бывшая быстрейшая, брат Туатары ---
+function drawAero(g) {
+  carBase(g, -24, 30);
+  roundRect(g, -32, -94, 64, 18, 8, "#1a2026");
+  // Гладкая белая капля
+  roundRect(g, -88, -76, 176, 70, 16, "#f2f3f0");
+  g.fillStyle = "rgba(255,255,255,0.45)"; g.fillRect(-78, -75, 156, 3);
+  // Чёрные воздухозаборники на плечах
+  roundRect(g, -78, -70, 30, 12, 6, "#15171a");
+  roundRect(g,  48, -70, 30, 12, 6, "#15171a");
+  // Тонкие фонари
+  for (const side of [-1, 1]) {
+    roundRect(g, side * 58 - 20, -56, 40, 9, 4, "#2a0d0d");
+    roundRect(g, side * 58 - 17, -54, 34, 5, 2, "#e82121");
+  }
+  // Двойные трубы по центру
+  g.fillStyle = "#15171a";
+  for (const dx of [-10, 10]) {
+    g.beginPath(); g.arc(dx, -36, 6.5, 0, Math.PI * 2); g.fill();
+  }
+  g.fillStyle = "#000";
+  for (const dx of [-10, 10]) {
+    g.beginPath(); g.arc(dx, -36, 4, 0, Math.PI * 2); g.fill();
+  }
+  plate(g, -26, 34);
+  roundRect(g, -88, -22, 176, 14, 6, "#141618");
+  g.fillStyle = "#0a0c0e";
+  for (const x of [-64, -42, 32, 54]) {
+    g.beginPath();
+    g.moveTo(x, -8); g.lineTo(x + 10, -8); g.lineTo(x + 7, -22); g.lineTo(x + 3, -22);
+    g.closePath(); g.fill();
+  }
+}
+
 const CAR_DRAWERS = {
   aveo: drawAveo, picanto: drawPicanto, focus: drawFocus,
   delorean: drawDelorean, corsa: drawCorsa,
@@ -5705,6 +6104,10 @@ const CAR_DRAWERS = {
   volga24: drawVolga24, volga21: drawVolga21,
   sportage: drawSportage, k5: drawK5, sonata: drawSonata,
   tucson: drawTucson, i30: drawI30,
+  astro: drawAstro, cobra: drawCobra, defendor: drawDefendor,
+  pejo206: drawPejo206, raf977: drawRaf977, uaz469: drawUaz469,
+  zis101: drawZis101, f2: drawF2, agera: drawAgera,
+  zonta: drawZonta, aero: drawAero,
 };
 
 // Огненный след: два пылающих следа за колёсами, три слоя пламени
