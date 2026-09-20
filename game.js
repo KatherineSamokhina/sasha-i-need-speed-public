@@ -165,6 +165,18 @@ const CARS = [
     offroadSoft: true,  // кроссовер: трава НЕ тормозит (но аварии убивают!)
     desc: "Современный кроссовер: быстрый на шоссе и не боится травы.",
   },
+  {
+    id: "buhanka", name: "Буханка 452", gearbox: "М",
+    topKmh: 100, zeroTo100: 30.0,  // честные цифры: она не про скорость
+    offroadSoft: true,  // фургон-вездеход: трава НЕ тормозит!
+    desc: "Легендарный фургон-вездеход: не быстрый, зато нигде не застрянет.",
+  },
+  {
+    id: "raf", name: "РАФ 2203", gearbox: "М",
+    topKmh: 120, zeroTo100: 26.0,  // рижский микроавтобус, тоже не гонщик
+    offroadSoft: true,  // решение Саши: УАЗ и РАФ — внедорожники!
+    desc: "Рижский микроавтобус: возил такси и скорую. Теперь — гоняет!",
+  },
 ];
 
 // Режимы поездки (фишка Корсы — идея Саши): меняют тягу и голос мотора.
@@ -180,7 +192,7 @@ const BRAKE_100_0 = {
   aveo: 3.0, picanto: 2.9, corsa: 2.8, focus: 2.7, delorean: 3.2,
   camaro70: 3.4, camaroNew: 2.4, vetteC1: 3.5, vetteC8: 2.1,
   shelby: 3.3, darkhorse: 2.3, fford: 1.8, f1: 1.2,
-  zis: 5.5, disco: 3.1, hilux: 4.0, rav4: 2.9,
+  zis: 5.5, disco: 3.1, hilux: 4.0, rav4: 2.9, buhanka: 4.6, raf: 4.2,
 };
 
 // Досчитываем игровые характеристики из реальных цифр.
@@ -203,7 +215,7 @@ let car = CARS[0];   // текущая машина (по умолчанию —
 // ---------- МАГАЗИН МАШИН (решение Саши: всё платное, кроме Авио!) ----------
 // ЗЫС не продаётся ни за какие деньги — только секретный код.
 const CAR_PRICES = {
-  aveo: 0, picanto: 300, hilux: 500, disco: 700, rav4: 900, corsa: 600, focus: 800,
+  aveo: 0, picanto: 300, buhanka: 350, raf: 400, hilux: 500, disco: 700, rav4: 900, corsa: 600, focus: 800,
   camaro70: 1000, vetteC1: 1200, delorean: 1500, shelby: 1600,
   camaroNew: 2000, darkhorse: 2400, vetteC8: 3000, fford: 4000, f1: 6000,
   zis: -1,   // −1 = не продаётся, только код «вечная ностальгия»
@@ -940,7 +952,7 @@ function trackBanReason() {
   if (currentTrack === 3 && (car.id === "fford" || car.id === "f1"))
     return "🏜 В пустыне болиды не работают: песок в моторе! Возьми другую машину.";
   if (currentTrack === 4 && !car.offroadSoft && !car.ram)
-    return "⛰ Офроуд — только внедорожники и броня (Discoverry, Highlux, REV4, ЗИС)!";
+    return "⛰ Офроуд — только внедорожники и броня (Discoverry, Highlux, REV4, Буханка, РАФ, ЗИС)!";
   return null;
 }
 
@@ -1776,6 +1788,8 @@ const PAINT_SLOTS = {
   disco:     ["#9aa0a6", "#8a9096"],
   hilux:     ["#b3202a", "#a01b24", "#8f171f"],
   rav4:      ["#4a4f57", "#42474e", "#3d4249"],
+  buhanka:   ["#c9ccd1", "#b8bcc2"],
+  raf:       ["#f2f3f0", "#e2e4e0"],
 };
 
 const PAINT_PALETTE = ["#d5121e", "#ff8c1a", "#ffd23f", "#57d977", "#1f8f4d",
@@ -1786,7 +1800,8 @@ const HW_NAMES = { engine: "Мотор", brakes: "Тормоза", tires: "Ши�
 // Где у каждой машины колёса (для золотых дисков)
 const RIM_X = { aveo: 66, picanto: 56, corsa: 59, focus: 73, delorean: 75,
   camaro70: 77, camaroNew: 78, vetteC1: 73, vetteC8: 79, shelby: 75,
-  darkhorse: 76, fford: 84, f1: 85, zis: 66, disco: 68, hilux: 67, rav4: 67 };
+  darkhorse: 76, fford: 84, f1: 85, zis: 66, disco: 68, hilux: 67, rav4: 67,
+  buhanka: 62, raf: 64 };
 
 // ---------- ИГРОВАЯ ВАЛЮТА 🪙 ----------
 // Зарабатывается в гонках (по месту на финише), тратится на железо.
@@ -4020,6 +4035,90 @@ function drawRav4(g) {
   roundRect(g,  72, -22, 6, 10, 2, "#a11c1c");
 }
 
+// --- УАЗ «Буханка»: светло-серый фургон-кубик (по фото Саши) ---
+function drawBuhanka(g) {
+  g.fillStyle = "rgba(0,0,0,0.38)";
+  g.beginPath(); g.ellipse(0, 8, 88, 12, 0, 0, Math.PI * 2); g.fill();
+  // Колёсики — маленькие, как у настоящей
+  roundRect(g, -74, -26, 26, 32, 6, "#121212");
+  roundRect(g,  48, -26, 26, 32, 6, "#121212");
+  // Высоченный кузов-«буханка» со скруглённой крышей
+  roundRect(g, -78, -128, 156, 122, 14, "#c9ccd1");
+  g.fillStyle = "rgba(255,255,255,0.35)";
+  g.fillRect(-70, -126, 140, 4);
+  g.fillStyle = "rgba(0,0,0,0.08)";
+  g.fillRect(-78, -52, 156, 3);   // штамповка по низу
+  // Две задние двери: щель посередине и петли по краям
+  g.fillStyle = "#9aa0a6";
+  g.fillRect(-1.5, -120, 3, 100);
+  for (const y of [-110, -80, -46]) {
+    roundRect(g, -76, y, 5, 10, 2, "#b0b4ba");
+    roundRect(g,  71, y, 5, 10, 2, "#b0b4ba");
+  }
+  // Два окна в дверях
+  roundRect(g, -64, -118, 55, 34, 5, "#1a2026");
+  roundRect(g,   9, -118, 55, 34, 5, "#1a2026");
+  g.fillStyle = "rgba(255,255,255,0.12)";
+  g.fillRect(-58, -113, 24, 24);
+  g.fillRect(15, -113, 24, 24);
+  // Ручки дверей
+  roundRect(g, -14, -74, 9, 4, 2, "#5c6166");
+  roundRect(g,   5, -74, 9, 4, 2, "#5c6166");
+  // Фонарики-кругляши по углам
+  for (const side of [-1, 1]) {
+    g.fillStyle = "#d42323";
+    g.beginPath(); g.arc(side * 66, -40, 5, 0, Math.PI * 2); g.fill();
+    g.fillStyle = "#ffb35c";
+    g.beginPath(); g.arc(side * 66, -30, 4, 0, Math.PI * 2); g.fill();
+  }
+  // Номер и чёрный бампер-труба
+  roundRect(g, -21, -40, 42, 11, 2, "#f0f0f0");
+  g.fillStyle = "#222";
+  g.font = "bold 7px Verdana";
+  g.textAlign = "center";
+  g.fillText("САША", 0, -31.5);
+  roundRect(g, -80, -20, 160, 10, 5, "#26292d");
+}
+
+// --- РАФ-2203: белый рижский микроавтобус (по фото Саши) ---
+function drawRaf(g) {
+  g.fillStyle = "rgba(0,0,0,0.38)";
+  g.beginPath(); g.ellipse(0, 8, 88, 12, 0, 0, Math.PI * 2); g.fill();
+  roundRect(g, -74, -26, 26, 32, 6, "#121212");
+  roundRect(g,  48, -26, 26, 32, 6, "#121212");
+  // Белый кузов с покатой крышей
+  roundRect(g, -76, -124, 152, 118, 12, "#f2f3f0");
+  g.fillStyle = "rgba(0,0,0,0.06)";
+  g.fillRect(-76, -50, 152, 3);
+  // Огромное заднее стекло во всю ширину
+  roundRect(g, -62, -114, 124, 38, 6, "#1a2026");
+  g.fillStyle = "rgba(255,255,255,0.12)";
+  g.fillRect(-54, -108, 46, 26);
+  // Фирменная оранжевая полоса с надписью RAF-2203 (как на фото!)
+  roundRect(g, -76, -70, 152, 14, 2, "#f0a11c");
+  g.fillStyle = "#20304c";
+  g.font = "italic bold 9px Verdana";
+  g.textAlign = "center";
+  g.fillText("RAF-2203", 0, -59.5);
+  // Шашечки такси на жёлтой табличке
+  roundRect(g, -18, -50, 36, 8, 2, "#ffd23f");
+  g.fillStyle = "#222";
+  for (let i = 0; i < 6; i++)
+    if (i % 2 === 0) g.fillRect(-15 + i * 5, -49, 5, 6);
+  // Вертикальные фонари по краям
+  for (const side of [-1, 1]) {
+    roundRect(g, side * 68 - 5, -66, 10, 22, 3, "#1c1f23");
+    roundRect(g, side * 68 - 3, -64, 6, 9, 2, "#d42323");
+    roundRect(g, side * 68 - 3, -54, 6, 8, 2, "#ffb35c");
+  }
+  // Номер и бампер
+  roundRect(g, -21, -38, 42, 11, 2, "#f0f0f0");
+  g.fillStyle = "#222";
+  g.font = "bold 7px Verdana";
+  g.fillText("САША", 0, -29.5);
+  roundRect(g, -78, -20, 156, 10, 5, "#8a9096");
+}
+
 const CAR_DRAWERS = {
   aveo: drawAveo, picanto: drawPicanto, focus: drawFocus,
   delorean: drawDelorean, corsa: drawCorsa,
@@ -4028,6 +4127,7 @@ const CAR_DRAWERS = {
   shelby: drawShelby, darkhorse: drawDarkHorse,
   fford: drawFFord, f1: drawF1, zis: drawZis,
   disco: drawDisco, hilux: drawHilux, rav4: drawRav4,
+  buhanka: drawBuhanka, raf: drawRaf,
 };
 
 // Огненный след: два пылающих следа за колёсами, три слоя пламени
