@@ -321,6 +321,27 @@ const CARS = [
     offroadSoft: true,
     desc: "Белый купе-внедорожник: покатая крыша, широкие плечи.",
   },
+  // ---- Четвёрка №47–50: Пежо и династия Волг! ----
+  {
+    id: "pejo308", name: "Pejo 308 R", gearbox: "С",
+    topKmh: 250, zeroTo100: 6.0,
+    desc: "Матовый хот-хэтч с красной крышей: лев на корме рычит.",
+  },
+  {
+    id: "volga3110", name: "Волга 3110", gearbox: "М",
+    topKmh: 147, zeroTo100: 13.5,
+    desc: "Белая рабочая лошадка: большие оранжевые фонари, стальной характер.",
+  },
+  {
+    id: "volga24", name: "Волга 24", gearbox: "М",
+    topKmh: 145, zeroTo100: 19.0,
+    desc: "Серебристая классика: хром по кругу и багажник-чемодан.",
+  },
+  {
+    id: "volga21", name: "Волга 21", gearbox: "М",
+    topKmh: 130, zeroTo100: 34.0,  // честно: она никуда не торопится
+    desc: "Розовая с белой крышей: олень на капоте, «Три тополя» на Плющихе.",
+  },
   {
     id: "tuatara", name: "ZSC Tuatara", gearbox: "А",
     topKmh: 320,      // ограничение Саши: «MAX 320 км час»
@@ -351,6 +372,7 @@ const BRAKE_100_0 = {
   lincoln60: 4.0, navigator: 3.2, zephyr: 2.9, mkz: 2.6,
   gemera: 1.7, wayra: 1.6, tuatara: 1.6,
   merc190: 3.0, amggt53: 2.3, maybach: 2.5, gle: 2.7,
+  pejo308: 2.6, volga3110: 3.9, volga24: 4.1, volga21: 4.4,
 };
 
 // Досчитываем игровые характеристики из реальных цифр.
@@ -383,6 +405,7 @@ const CAR_PRICES = {
   continental17: 1900, challenger: 2200, sixteen: 3500, fordgt: 5500,
   gemera: 8000, wayra: 9000, tuatara: 8500,
   merc190: 1400, amggt53: 2600, maybach: 2800, gle: 1500,
+  pejo308: 1300, volga3110: 320, volga24: 300, volga21: 380,
   zis: -1,   // −1 = не продаётся, только код «вечная ностальгия»
 };
 
@@ -1982,6 +2005,10 @@ const PAINT_SLOTS = {
   amggt53: ["#5a5e63", "#4d5156"],
   maybach: ["#ece9e2", "#dcd9d2"],
   gle: ["#f2f3f0", "#e2e4e0"],
+  pejo308: ["#4d5156", "#42464b"],
+  volga3110: ["#f2f3f0", "#e2e4e0"],
+  volga24: ["#c9ccd1", "#b8bcc2"],
+  volga21: ["#e8a8c8", "#d897b8"],
 };
 
 const PAINT_PALETTE = ["#d5121e", "#ff8c1a", "#ffd23f", "#57d977", "#1f8f4d",
@@ -1999,7 +2026,8 @@ const RIM_X = { aveo: 66, picanto: 56, corsa: 59, focus: 73, delorean: 75,
   fordgt: 80, nautilus: 68, continental17: 73, mark5: 72,
   lincoln60: 74, navigator: 68, zephyr: 69, mkz: 72,
   gemera: 80, wayra: 82, tuatara: 80,
-  merc190: 70, amggt53: 76, maybach: 72, gle: 70 };
+  merc190: 70, amggt53: 76, maybach: 72, gle: 70,
+  pejo308: 68, volga3110: 66, volga24: 66, volga21: 64 };
 
 // ---------- ИГРОВАЯ ВАЛЮТА 🪙 ----------
 // Зарабатывается в гонках (по месту на финише), тратится на железо.
@@ -5094,6 +5122,120 @@ function drawGle(g) {
   roundRect(g,  34, -20, 26, 8, 3, "#b9bec6");
 }
 
+// --- Peugeot 308 R: матовый хот-хэтч с красной крышей ---
+function drawPejo308(g) {
+  carBase(g, -28, 34);
+  // Красная крыша (фишка концепта R!)
+  roundRect(g, -54, -108, 108, 12, 5, "#c22020");
+  roundRect(g, -52, -98, 104, 30, 6, "#1a2026");
+  g.fillStyle = "rgba(255,255,255,0.10)"; g.fillRect(-44, -93, 40, 20);
+  roundRect(g, -82, -70, 164, 64, 10, "#4d5156");
+  g.fillStyle = "rgba(255,255,255,0.12)"; g.fillRect(-74, -69, 148, 3);
+  // Чёрная панель с фонарями-когтями и львом
+  roundRect(g, -70, -62, 140, 16, 5, "#191b1e");
+  for (const side of [-1, 1]) {
+    roundRect(g, side * 48 - 18, -59, 36, 10, 3, "#5c1216");
+    for (const dx of [-12, -2, 8])   // три «когтя» льва
+      roundRect(g, side * 48 + dx, -57, 4, 6, 1, "#e82121");
+  }
+  // Лев на чёрном щитке
+  g.fillStyle = "#c9d0d7"; g.font = "bold 7px Verdana"; g.textAlign = "center";
+  g.fillText("🦁", 0, -52);
+  g.fillStyle = "#e82121"; g.font = "italic bold 9px Verdana";
+  g.fillText("308 R", -52, -38);
+  plate(g, -40, 40);
+  // Бампер с двумя овальными трубами в красной окантовке
+  roundRect(g, -82, -24, 164, 15, 6, "#3a3f45");
+  for (const side of [-1, 1]) {
+    g.strokeStyle = "#c22020"; g.lineWidth = 2;
+    g.beginPath(); g.ellipse(side * 56, -16, 13, 6, 0, 0, Math.PI * 2); g.stroke();
+    g.fillStyle = "#8a9096";
+    g.beginPath(); g.ellipse(side * 56, -16, 10, 4, 0, 0, Math.PI * 2); g.fill();
+  }
+}
+
+// --- ГАЗ-3110 Волга: белая рабочая лошадка ---
+function drawVolga3110(g) {
+  carBase(g);
+  roundRect(g, -56, -100, 112, 36, 6, "#1a2026");
+  g.fillStyle = "rgba(255,255,255,0.10)"; g.fillRect(-48, -95, 42, 26);
+  roundRect(g, -84, -66, 168, 60, 9, "#f2f3f0");
+  g.fillStyle = "rgba(0,0,0,0.05)"; g.fillRect(-84, -42, 168, 3);
+  // БОЛЬШИЕ оранжево-красные фонари (фишка 3110!)
+  for (const side of [-1, 1]) {
+    roundRect(g, side * 58 - 24, -60, 48, 18, 4, "#1c1f23");
+    roundRect(g, side * 58 - 21, -57, 20, 12, 2, "#e85a1a");
+    roundRect(g, side * 58 + 1,  -57, 20, 12, 2, "#c22020");
+  }
+  // Эмблема-олень в овале
+  g.strokeStyle = "#8a9096"; g.lineWidth = 1.5;
+  g.beginPath(); g.ellipse(0, -56, 6, 8, 0, 0, Math.PI * 2); g.stroke();
+  g.fillStyle = "#8a9096"; g.font = "bold 6px Verdana"; g.textAlign = "center";
+  g.fillText("ВОЛГА", -55, -34);
+  g.fillText("3110", 55, -34);
+  plate(g, -44);
+  roundRect(g, -84, -24, 168, 13, 5, "#26292d");
+}
+
+// --- ГАЗ-24 Волга: серебристая классика ---
+function drawVolga24(g) {
+  carBase(g);
+  // Огромное стекло в хромовой рамке
+  roundRect(g, -60, -104, 120, 40, 5, "#1a2026");
+  g.strokeStyle = "#d7dce2"; g.lineWidth = 2;
+  g.strokeRect(-60, -104, 120, 40);
+  g.fillStyle = "rgba(255,255,255,0.12)"; g.fillRect(-52, -99, 46, 30);
+  roundRect(g, -86, -66, 172, 60, 6, "#c9ccd1");
+  g.fillStyle = "rgba(255,255,255,0.3)"; g.fillRect(-78, -65, 156, 3);
+  // Хромовый молдинг через корму
+  roundRect(g, -80, -46, 160, 3, 1, "#d7dce2");
+  // Вертикальные фонари по углам: красный + янтарь
+  for (const side of [-1, 1]) {
+    roundRect(g, side * 74 - 7, -62, 14, 24, 2, "#1c1f23");
+    roundRect(g, side * 74 - 5, -60, 10, 11, 1, "#c22020");
+    roundRect(g, side * 74 - 5, -48, 10, 8, 1, "#ffb35c");
+    // Оранжевые катафоты ближе к центру
+    roundRect(g, side * 44 - 6, -42, 12, 8, 2, "#e85a1a");
+  }
+  g.fillStyle = "#8a9096"; g.font = "italic bold 6px Verdana"; g.textAlign = "center";
+  g.fillText("Волга", 48, -52);
+  plate(g, -58, 40);
+  // Массивный хромовый бампер с чёрными клыками
+  roundRect(g, -90, -30, 180, 12, 4, "#d7dce2");
+  roundRect(g, -60, -32, 10, 6, 2, "#26292d");
+  roundRect(g,  50, -32, 10, 6, 2, "#26292d");
+}
+
+// --- ГАЗ-21 Волга: розовая с белой крышей ---
+function drawVolga21(g) {
+  carBase(g);
+  // Белая округлая крыша
+  roundRect(g, -54, -108, 108, 18, 9, "#f2f3f0");
+  roundRect(g, -50, -100, 100, 32, 8, "#1a2026");
+  g.fillStyle = "rgba(255,255,255,0.12)"; g.fillRect(-42, -95, 38, 22);
+  // Округлый розовый кузов
+  roundRect(g, -82, -70, 164, 64, 14, "#e8a8c8");
+  g.fillStyle = "rgba(255,255,255,0.3)"; g.fillRect(-74, -69, 148, 3);
+  // Хромовая полоска и «чайка» на багажнике
+  roundRect(g, -60, -52, 120, 2.5, 1, "#d7dce2");
+  g.strokeStyle = "#d7dce2"; g.lineWidth = 2;
+  g.beginPath();
+  g.moveTo(-14, -58); g.quadraticCurveTo(0, -66, 0, -58);
+  g.quadraticCurveTo(0, -66, 14, -58);
+  g.stroke();
+  // Круглые фонарики
+  for (const side of [-1, 1]) {
+    g.fillStyle = "#7a1216";
+    g.beginPath(); g.arc(side * 64, -50, 7, 0, Math.PI * 2); g.fill();
+    g.fillStyle = "#d42323";
+    g.beginPath(); g.arc(side * 64, -50, 4.5, 0, Math.PI * 2); g.fill();
+  }
+  plate(g, -44, 40);
+  // Пузатый хромовый бампер
+  roundRect(g, -88, -28, 176, 14, 7, "#d7dce2");
+  g.fillStyle = "rgba(0,0,0,0.15)"; g.fillRect(-88, -21, 176, 2);
+}
+
 const CAR_DRAWERS = {
   aveo: drawAveo, picanto: drawPicanto, focus: drawFocus,
   delorean: drawDelorean, corsa: drawCorsa,
@@ -5114,6 +5256,8 @@ const CAR_DRAWERS = {
   gemera: drawGemera, wayra: drawWayra, tuatara: drawTuatara,
   merc190: drawMerc190, amggt53: drawAmgGt53, maybach: drawMaybach,
   gle: drawGle,
+  pejo308: drawPejo308, volga3110: drawVolga3110,
+  volga24: drawVolga24, volga21: drawVolga21,
 };
 
 // Огненный след: два пылающих следа за колёсами, три слоя пламени
