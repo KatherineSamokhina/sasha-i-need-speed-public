@@ -700,13 +700,37 @@ function buildTrack(id) {
 // шагов карандаша складывается контур трассы — вид сверху!
 let trackMapPts = null;
 function buildTrackMap() {
+  const N = segments.length;
+  if (!N) return;
+  // Шаг поворота на каждом сегменте — из изгиба дороги
+  let turns = segments.map((s) => s.curve * 0.004);
+  if (raceKind === "circuit") {
+    // ЗАМЫКАНИЕ КОЛЬЦА (фикс Саши «работает только извилистая»):
+    // движок хранит лишь изгибы, и сами по себе они кольцо не
+    // образуют. Но мы-то ЗНАЕМ, что трасса кольцевая! Значит,
+    // повороты в сумме должны дать ровно один оборот (360°) —
+    // добавляем каждому сегменту одинаковую крошечную поправку.
+    const total = turns.reduce((a, b) => a + b, 0);
+    const goal = total >= 0 ? 2 * Math.PI : -2 * Math.PI;
+    const fix = (goal - total) / N;
+    turns = turns.map((d) => d + fix);
+  }
   const pts = [];
   let heading = 0, mpx = 0, mpy = 0;
-  for (const s of segments) {
-    heading += s.curve * 0.004;
+  for (const d of turns) {
+    heading += d;
     mpx += Math.sin(heading);
     mpy -= Math.cos(heading);
     pts.push([mpx, mpy]);
+  }
+  if (raceKind === "circuit") {
+    // И вторая поправка: конец обязан СОЙТИСЬ с началом. Остаточный
+    // сдвиг размазываем по всем точкам — как чинят дрейф GPS-трека
+    const ex = pts[N - 1][0], ey = pts[N - 1][1];
+    for (let i = 0; i < N; i++) {
+      pts[i][0] -= (ex * (i + 1)) / N;
+      pts[i][1] -= (ey * (i + 1)) / N;
+    }
   }
   // Вписываем контур в квадрат 0…1, сохранив пропорции по центру
   let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
