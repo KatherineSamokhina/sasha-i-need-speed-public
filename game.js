@@ -2404,10 +2404,25 @@ function renderTuning() {
     t.neon = neons[(neons.indexOf(t.neon) + 1) % neons.length];
   }));
 
-  // ⚙️ Железо: покупается за монеты! Клик = купить следующий уровень
+  // ⚙️ Железо: покупается за монеты! Клик = купить следующий уровень.
+  // Ревизия реалистики (заказ Саши): ЗИСу тормоза не продаются
+  // (их НЕТ — платить не за что!), а болидам и гиперкарам не
+  // продаётся мотор — он и так выжат заводом до предела.
   const hw = document.getElementById("hardware");
   hw.innerHTML = "";
   for (const key of ["engine", "brakes", "tires"]) {
+    if (key === "brakes" && c.noBrakes) {
+      const b = chip("тормоза: НЕТ (и не будет!)", false, () => {});
+      b.classList.add("locked");
+      hw.appendChild(b);
+      continue;
+    }
+    if (key === "engine" && c.noNpc) {
+      const b = chip("мотор: заводской максимум", false, () => {});
+      b.classList.add("locked");
+      hw.appendChild(b);
+      continue;
+    }
     const lvl = t[key];
     const bars = "▮".repeat(lvl) + "▯".repeat(3 - lvl);
     let label, locked = false;
@@ -2519,7 +2534,7 @@ addEventListener("keydown", (e) => {
     if (hit("gearbox") && car.gearbox === "С") {
       manualMode = !manualMode;
       if (manualMode)
-        manualGear = clamp(Math.floor(speed / car.maxSpeed * GEARS) + 1, 1, GEARS);
+        manualGear = clamp(Math.floor(speed / tunedMaxSpeed() * GEARS) + 1, 1, GEARS);
     }
     // Передачи (работают только на ручной)
     if (hit("gearDown") && manualMode)
@@ -2730,13 +2745,22 @@ let soundVolume = 0.3;
 // (manualMode и manualGear объявлены наверху, рядом с машинами —
 // они нужны applyCar уже при загрузке!)
 
+// Максималка С УЧЁТОМ прокачки мотора (ревизия реалистики, заказ
+// Саши): чип-тюнинг даёт +2.5% максималки за уровень — как в жизни
+// (+8% мощности ≈ +2.5% скорости: воздух сопротивляется в кубе!).
+// Болидам и гиперкарам (noNpc) бонуса нет: их моторы уже выжаты.
+function tunedMaxSpeed() {
+  const bonus = car.noNpc ? 0 : 0.025 * getTun(car.id).engine;
+  return car.maxSpeed * (1 + bonus);
+}
+
 // Диапазон скоростей передачи g: от gearLow(g) до gearHigh(g)
-const gearLow  = (g) => (g - 1) / GEARS * car.maxSpeed;
-const gearHigh = (g) =>  g      / GEARS * car.maxSpeed;
+const gearLow  = (g) => (g - 1) / GEARS * tunedMaxSpeed();
+const gearHigh = (g) =>  g      / GEARS * tunedMaxSpeed();
 
 // Какая сейчас передача и "обороты" (0..1, на отсечке чуть больше 1)
 function getGearAndRpm() {
-  const p = speed / car.maxSpeed;
+  const p = speed / tunedMaxSpeed();
   // Электромобиль (Э): передач нет, "обороты" растут плавно со скоростью
   if (car.gearbox === "Э") return { gear: 1, rpm: clamp(p, 0, 1) };
   if (manualMode) {
@@ -2905,7 +2929,7 @@ function update(dt) {
   }
 
   const seg = findSegment(position);
-  const speedPercent = speed / car.maxSpeed;
+  const speedPercent = speed / tunedMaxSpeed();
   // Чем быстрее едем, тем резче реагирует руль (как в жизни!)
   const dx = dt * 2 * speedPercent;
 
@@ -3010,7 +3034,7 @@ function update(dt) {
     speed += OFFROAD_DECEL * dt;
 
   playerX = clamp(playerX, -2.2, 2.2);
-  speed = clamp(speed, 0, car.maxSpeed);   // максималка у каждой машины своя!
+  speed = clamp(speed, 0, tunedMaxSpeed());   // максималка своя + чип-тюнинг!
 
   // Едем вперёд! Трасса — кольцо, поэтому после финиша снова старт
   const prevPosForHit = position;   // откуда стартовал этот кадр (для столкновений)
