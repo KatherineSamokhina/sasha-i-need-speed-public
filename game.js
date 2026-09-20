@@ -5523,26 +5523,27 @@ function drawTucson(g) {
   g.fillStyle = "rgba(255,255,255,0.14)"; g.fillRect(-72, -71, 144, 3);
   // Тонкая красная полоса ВО ВСЮ ширину — соединяет фонари
   roundRect(g, -74, -68, 148, 4, 2, "#c22020");
-  // КРУПНЫЕ зигзаги-стрелки ◀ ▶ (смотрят внутрь), по два с каждой стороны
+  // Фонари-ЛЕЗВИЯ (версия 3, правка Саши): от полосы вниз к центру
+  // свисают по два тонких косых лезвия с острым кончиком
+  g.lineCap = "butt";
   for (const side of [-1, 1]) {
-    for (const [cx, cy, s] of [[60, -56, 11], [47, -44, 8]]) {
-      g.fillStyle = "#2a0d0d";
+    for (const [xt, xb, yb] of [[72, 53, -38], [58, 43, -46]]) {
+      // тёмная окантовка
+      g.strokeStyle = "#2a0d0d"; g.lineWidth = 8;
       g.beginPath();
-      g.moveTo(side * (cx + s), -68);
-      g.lineTo(side * cx, cy);
-      g.lineTo(side * (cx + s), cy + s);
-      g.lineTo(side * (cx + s + 7), cy + s);
-      g.lineTo(side * (cx + 7), cy);
-      g.lineTo(side * (cx + s + 7), -68);
-      g.closePath(); g.fill();
+      g.moveTo(side * xt, -66); g.lineTo(side * xb, yb);
+      g.stroke();
+      // красное свечение
+      g.strokeStyle = "#e82121"; g.lineWidth = 4;
+      g.beginPath();
+      g.moveTo(side * xt, -66); g.lineTo(side * (xb + 1), yb - 2);
+      g.stroke();
+      // острый кончик, смотрящий к номеру
       g.fillStyle = "#e82121";
       g.beginPath();
-      g.moveTo(side * (cx + s + 2), -66);
-      g.lineTo(side * (cx + 3), cy);
-      g.lineTo(side * (cx + s + 2), cy + s - 2);
-      g.lineTo(side * (cx + s + 5), cy + s - 2);
-      g.lineTo(side * (cx + 6), cy);
-      g.lineTo(side * (cx + s + 5), -66);
+      g.moveTo(side * (xb + 2), yb - 4);
+      g.lineTo(side * (xb - 6), yb + 3);
+      g.lineTo(side * (xb + 5), yb + 1);
       g.closePath(); g.fill();
     }
   }
