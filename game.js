@@ -2138,15 +2138,27 @@ const pressRight = () => down("right") || touchState.right;
 // =====================================================================
 
 const touchState = { gas: false, brake: false, left: false, right: false };
-// Телефон или комп? Раньше спрашивали «умеешь касания?» — но многие
-// Windows-компы отвечают «умею», и их принимали за телефоны (баг Саши
-// «на компе стало всё телефонным»). Теперь спрашиваем правильнее:
-// «какой у тебя ГЛАВНЫЙ указатель?» Палец (coarse — «грубый») — телефон,
-// мышка (fine — «точный») — комп, даже если у него есть сенсорный экран.
-const isTouchDevice = window.matchMedia("(pointer: coarse)").matches;
-// На телефонах игра ВСЕГДА горизонтальная (решение Саши): если
-// телефон держат вертикально — CSS повернёт игру на 90°!
-if (isTouchDevice) document.body.classList.add("touch-device");
+// Телефон или комп? Анкеты («умеешь касания?», «какой главный
+// указатель?») компы Саши заполняли враньём — то всё телефонное на
+// компе, то наоборот. Новый принцип: СМОТРИМ, ЧЕМ ИГРАЮТ на самом
+// деле. Коснулся экрана пальцем — телефонный режим. Нажал клавишу
+// на клавиатуре — компьютерный. Само исправляется в обе стороны!
+let isTouchDevice = window.matchMedia("(pointer: coarse) and (hover: none)").matches;
+function setTouchMode(on) {
+  isTouchDevice = on;
+  // На телефонах игра ВСЕГДА горизонтальная (решение Саши): если
+  // телефон держат вертикально — CSS повернёт игру на 90°!
+  document.body.classList.toggle("touch-device", on);
+}
+setTouchMode(isTouchDevice);
+window.addEventListener("touchstart", () => {
+  if (!isTouchDevice) setTouchMode(true);
+}, { passive: true });
+window.addEventListener("keydown", (e) => {
+  // e.isTrusted отсеивает «поддельные» нажатия от наших же
+  // сенсорных кнопок — они тоже шлют события клавиш!
+  if (isTouchDevice && e.isTrusted) setTouchMode(false);
+});
 
 // Кнопка-держалка: жмёшь — работает, отпустил — перестала
 function bindHold(id, prop) {
