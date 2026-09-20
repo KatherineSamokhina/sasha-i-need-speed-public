@@ -6160,12 +6160,12 @@ function drawM5(g) {
   roundRect(g, -56, -68, 112, 4, 2, "#8f171f");
   roundRect(g, -86, -66, 172, 60, 10, "#c5232c");
   g.fillStyle = "rgba(255,255,255,0.18)"; g.fillRect(-78, -65, 156, 3);
-  // Узкие Г-образные фонари: «отросток» смотрит ВНУТРЬ (правка Саши)
+  // Узкие Г-образные фонари: «отростки» ВВЕРХ СНАРУЖИ (правка Саши v2)
   for (const side of [-1, 1]) {
     roundRect(g, side * 58 - 24, -60, 48, 8, 4, "#2a0d0d");
     roundRect(g, side * 58 - 21, -58, 42, 4, 2, "#e82121");
-    roundRect(g, side * 36 - 4, -58, 8, 16, 3, "#2a0d0d");
-    roundRect(g, side * 36 - 2, -56, 4, 12, 2, "#e82121");
+    roundRect(g, side * 76 - 4, -74, 8, 18, 3, "#2a0d0d");
+    roundRect(g, side * 76 - 2, -72, 4, 14, 2, "#e82121");
   }
   bnwBadge(g, 0, -56, 8);
   g.fillStyle = "#c9d0d7"; g.font = "italic bold 7px Verdana"; g.textAlign = "center";
