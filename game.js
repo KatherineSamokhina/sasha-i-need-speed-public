@@ -5799,24 +5799,39 @@ function drawI30(g) {
 
 // ==================== БРАТЬЯ ОДИНОЧКАМ (идея Саши) ====================
 
-// --- Opel Astra: серебристый хэтчбек, брат Корзы ---
+// --- Opel Astra: серебристый хэтчбек (по фото Саши) — покатое
+// стекло с козырьком и фонари-капли ---
 function drawAstro(g) {
   carBase(g, -26, 32);
-  roundRect(g, -56, -102, 112, 40, 12, "#1a2026");
-  g.fillStyle = "rgba(255,255,255,0.12)"; g.fillRect(-48, -96, 44, 28);
-  roundRect(g, -78, -68, 156, 62, 12, "#8f979e");
-  g.fillStyle = "rgba(255,255,255,0.25)"; g.fillRect(-70, -67, 140, 3);
-  // Молния Опаля в круге
-  g.strokeStyle = "#d7dce2"; g.lineWidth = 2;
-  g.beginPath(); g.arc(0, -54, 9, 0, Math.PI * 2); g.stroke();
-  g.beginPath(); g.moveTo(-6, -54); g.lineTo(2, -58); g.lineTo(-2, -50); g.lineTo(6, -54); g.stroke();
+  // Козырёк-спойлер над стеклом
+  roundRect(g, -58, -108, 116, 9, 4, "#8f979e");
+  // Большое покатое стекло на весь люк
+  roundRect(g, -54, -100, 108, 40, 11, "#1a2026");
+  g.fillStyle = "rgba(255,255,255,0.12)"; g.fillRect(-46, -94, 44, 28);
+  roundRect(g, -78, -64, 156, 58, 12, "#8f979e");
+  g.fillStyle = "rgba(255,255,255,0.25)"; g.fillRect(-70, -63, 140, 3);
+  // Молния Опаля в хромовом круге на люке
+  g.strokeStyle = "#d7dce2"; g.lineWidth = 2.5;
+  g.beginPath(); g.arc(0, -50, 10, 0, Math.PI * 2); g.stroke();
+  g.fillStyle = "#d7dce2"; g.fillRect(-7, -51.5, 14, 3);
+  g.fillRect(-2, -56, 4, 12);
+  // Фонари-КАПЛИ, обнимающие углы (как на фото)
   for (const side of [-1, 1]) {
-    roundRect(g, side * 62 - 14, -62, 28, 20, 6, "#7a1216");
-    roundRect(g, side * 62 - 11, -58, 22, 8, 3, "#d42323");
-    roundRect(g, side * 62 - 11, -49, 22, 5, 2, "#e8e6df");
+    g.fillStyle = "#7a1216";
+    g.beginPath();
+    g.ellipse(side * 60, -52, 20, 13, side * 0.25, 0, Math.PI * 2);
+    g.fill();
+    g.fillStyle = "#d42323";
+    g.beginPath();
+    g.ellipse(side * 60, -54, 14, 7, side * 0.25, 0, Math.PI * 2);
+    g.fill();
+    g.fillStyle = "#e8e6df";
+    g.beginPath();
+    g.ellipse(side * 54, -46, 7, 3.5, side * 0.25, 0, Math.PI * 2);
+    g.fill();
   }
-  plate(g, -40, 40);
-  roundRect(g, -78, -20, 156, 10, 5, "#7d858c");
+  plate(g, -32, 40);
+  roundRect(g, -78, -18, 156, 9, 5, "#7d858c");
 }
 
 // --- Shelby Cobra: открытая ракета 60-х с боковыми трубами ---
@@ -6096,11 +6111,12 @@ function drawAero(g) {
   }
 }
 
-// Круглая эмблема-пропеллер BNW: чёрное кольцо, сине-белые четвертинки
+// Круглая эмблема-пропеллер BNW — ПОДДЕЛЬНАЯ (правка Саши):
+// у настоящей четвертинки сине-белые, у нашей — ЗЕЛЁНО-белые!
 function bnwBadge(g, x, y, r) {
   g.fillStyle = "#17191c";
   g.beginPath(); g.arc(x, y, r, 0, Math.PI * 2); g.fill();
-  g.fillStyle = "#3b7bd4";
+  g.fillStyle = "#2f9e41";
   g.beginPath(); g.moveTo(x, y); g.arc(x, y, r * 0.62, -Math.PI / 2, 0); g.fill();
   g.beginPath(); g.moveTo(x, y); g.arc(x, y, r * 0.62, Math.PI / 2, Math.PI); g.fill();
   g.fillStyle = "#e8e6df";
@@ -6144,11 +6160,12 @@ function drawM5(g) {
   roundRect(g, -56, -68, 112, 4, 2, "#8f171f");
   roundRect(g, -86, -66, 172, 60, 10, "#c5232c");
   g.fillStyle = "rgba(255,255,255,0.18)"; g.fillRect(-78, -65, 156, 3);
-  // Узкие Г-образные фонари
+  // Узкие Г-образные фонари: «отросток» смотрит ВНУТРЬ (правка Саши)
   for (const side of [-1, 1]) {
     roundRect(g, side * 58 - 24, -60, 48, 8, 4, "#2a0d0d");
     roundRect(g, side * 58 - 21, -58, 42, 4, 2, "#e82121");
-    roundRect(g, side * (78) - 4, -58, 8, 16, 3, "#2a0d0d");
+    roundRect(g, side * 36 - 4, -58, 8, 16, 3, "#2a0d0d");
+    roundRect(g, side * 36 - 2, -56, 4, 12, 2, "#e82121");
   }
   bnwBadge(g, 0, -56, 8);
   g.fillStyle = "#c9d0d7"; g.font = "italic bold 7px Verdana"; g.textAlign = "center";
