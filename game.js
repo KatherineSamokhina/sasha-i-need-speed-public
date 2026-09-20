@@ -1324,8 +1324,8 @@ function makeSparks(colors) {
     const a = -Math.PI / 2 + (Math.random() - 0.5) * 2.4;
     const sp = 160 + Math.random() * 480;
     sparks.push({
-      x: W / 2 + (Math.random() - 0.5) * 80,
-      y: H - 145,   // перед носом машины (она теперь меньше и выше)
+      x: W / 2 + (Math.random() - 0.5) * 60,
+      y: H - 140,   // перед носом машины (она теперь меньше и выше)
       vx: Math.cos(a) * sp,
       vy: Math.sin(a) * sp,
       life: 0.5 + Math.random() * 0.6,
@@ -3992,14 +3992,14 @@ function renderFireTrail() {
   ctx.save();
   ctx.globalAlpha = fade;
   for (const side of [-1, 1]) {
-    const xTop = W / 2 + side * 76;    // под колесом (машина теперь меньше)
-    const xBot = W / 2 + side * 150;   // расходится к краю экрана
+    const xTop = W / 2 + side * 58;    // под колесом (машина теперь меньше)
+    const xBot = W / 2 + side * 135;   // расходится к краю экрана
     const flick = Math.sin(t / 38 + side * 7) * 5;  // пламя дрожит!
     for (const [w, color] of layers) {
       ctx.fillStyle = color;
       ctx.beginPath();
-      ctx.moveTo(xTop - w / 2 + flick / 2, H - 76);
-      ctx.lineTo(xTop + w / 2 + flick / 2, H - 76);
+      ctx.moveTo(xTop - w / 2 + flick / 2, H - 64);
+      ctx.lineTo(xTop + w / 2 + flick / 2, H - 64);
       ctx.lineTo(xBot + w * 1.7 + flick, H);
       ctx.lineTo(xBot - w * 1.7 + flick, H);
       ctx.closePath();
@@ -4011,7 +4011,7 @@ function renderFireTrail() {
       ctx.fillStyle = Math.random() < 0.5 ? "#ffd23f" : "#ff8c1a";
       ctx.fillRect(
         xTop + (xBot - xTop) * p + (Math.random() - 0.5) * 26,
-        H - 76 + 76 * p - Math.random() * 14, 3, 3);
+        H - 64 + 64 * p - Math.random() * 14, 3, 3);
     }
   }
   // Надпись-пасхалка — только у Делориана (у ЗИСа своя, про ускоритель)
@@ -4035,11 +4035,12 @@ function renderPlayer() {
   const bounceY = (Math.random() - 0.5) * 2 * shake;
 
   ctx.save();
-  // Машина чуть меньше и выше (правка Саши): как будто камера
-  // отъехала назад — впереди видно больше дороги и соперников
-  ctx.translate(W / 2 + bounceX, H - 64 + bounceY);
+  // Машина меньше и выше (правка Саши): как будто камера отъехала
+  // назад. Размер подобран ПО ПЕРСПЕКТИВЕ: на этой строке экрана
+  // соперники ~165 px шириной — и мы такие же, никто не великан
+  ctx.translate(W / 2 + bounceX, H - 56 + bounceY);
   ctx.rotate(steer * 0.05);          // наклон в повороте
-  ctx.scale(0.95, 0.95);
+  ctx.scale(0.72, 0.72);
   drawCarTuned(ctx, car.id, getTun(car.id));   // со всем тюнингом!
   ctx.restore();
 
@@ -4050,7 +4051,7 @@ function renderPlayer() {
     ctx.fillStyle = "rgba(90, 190, 255, 0.10)";
     ctx.lineWidth = 3;
     ctx.beginPath();
-    ctx.ellipse(W / 2, H - 130, 112 * pulse, 66 * pulse, 0, 0, Math.PI * 2);
+    ctx.ellipse(W / 2, H - 108, 88 * pulse, 52 * pulse, 0, 0, Math.PI * 2);
     ctx.fill();
     ctx.stroke();
   }
