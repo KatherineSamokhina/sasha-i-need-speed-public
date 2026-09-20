@@ -29,7 +29,8 @@ const ROAD_WIDTH  = 2100;   // половина ширины дороги (в м
 const SEG_LEN     = 200;    // длина одного сегмента дороги
 const RUMBLE_LEN  = 3;      // сколько сегментов в одной цветной полосе
 const DRAW_DIST   = 300;    // сколько сегментов видно вдаль
-const CAM_HEIGHT  = 1000;   // высота камеры над дорогой
+const CAM_HEIGHT  = 1150;   // высота камеры над дорогой (повыше —
+                            // видно дальше, соперники заметны заранее)
 const FOV         = 100;    // угол обзора камеры (в градусах)
 const CAM_DEPTH   = 1 / Math.tan((FOV / 2) * Math.PI / 180);
 const FOG_DENSITY = 5;      // насколько быстро дорога "тает" вдали
@@ -454,6 +455,36 @@ function buildTrack(id) {
   decorateTrack(id);
   setupAnimals(id);   // коровы на полях, страусы в пустыне!
   traffic = [];       // трафик живёт только на шоссе
+  buildTrackMap();    // мини-карта под спидометром (идея Саши)
+}
+
+// ---------- МИНИ-КАРТА ТРАССЫ (идея Саши) ----------
+// Проходим трассу сегмент за сегментом, как штурман с блокнотом:
+// каждый изгиб чуть поворачивает наш «карандаш» (heading), и из
+// шагов карандаша складывается контур трассы — вид сверху!
+let trackMapPts = null;
+function buildTrackMap() {
+  const pts = [];
+  let heading = 0, mpx = 0, mpy = 0;
+  for (const s of segments) {
+    heading += s.curve * 0.004;
+    mpx += Math.sin(heading);
+    mpy -= Math.cos(heading);
+    pts.push([mpx, mpy]);
+  }
+  // Вписываем контур в квадрат 0…1, сохранив пропорции по центру
+  let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
+  for (const [px, py] of pts) {
+    if (px < minX) minX = px;
+    if (px > maxX) maxX = px;
+    if (py < minY) minY = py;
+    if (py > maxY) maxY = py;
+  }
+  const span = Math.max(maxX - minX, maxY - minY, 1e-6);
+  const offX = (1 - (maxX - minX) / span) / 2;
+  const offY = (1 - (maxY - minY) / span) / 2;
+  trackMapPts = pts.map(([px, py]) =>
+    [(px - minX) / span + offX, (py - minY) / span + offY]);
 }
 
 // В каком сегменте находится точка z на трассе?
@@ -523,6 +554,7 @@ function buildDragTrack() {
 
   // Финишная арка с шахматным баннером
   addSprite(segments.length - 6, "farch", 0);
+  buildTrackMap();   // карта драг-полосы — прямая линия, но пусть будет!
 
   // БОЧКИ-ПРЕПЯТСТВИЯ! Начинаются после зоны разгона, стоят в
   // случайных полосах со случайными промежутками — каждый драг разный
@@ -568,6 +600,7 @@ function buildHighwayTrack() {
   // ЗАПРАВКИ вдоль шоссе (уточнение Саши: топливо есть на заправках!)
   // Остановись рядом с колонкой — и бак наполнится за монеты
   for (const n of [150, 400, 650]) addSprite(n, "gas", -1.75);
+  buildTrackMap();
   setupTraffic();   // и выпускаем на шоссе гражданские машины!
   // Редкие деревья — простор!
   for (let n = 14; n < segments.length; n += 5) {
@@ -629,6 +662,7 @@ function reverseTrack() {
   }
   for (let i = 0; i < 2 * RUMBLE_LEN; i++) segments[i].color = PAL.START;
   trackLength = segments.length * SEG_LEN;
+  buildTrackMap();   // после разворота карта смотрит в другую сторону
 }
 
 function doUTurn() {
@@ -1290,8 +1324,8 @@ function makeSparks(colors) {
     const a = -Math.PI / 2 + (Math.random() - 0.5) * 2.4;
     const sp = 160 + Math.random() * 480;
     sparks.push({
-      x: W / 2 + (Math.random() - 0.5) * 90,
-      y: H - 118,
+      x: W / 2 + (Math.random() - 0.5) * 80,
+      y: H - 145,   // перед носом машины (она теперь меньше и выше)
       vx: Math.cos(a) * sp,
       vy: Math.sin(a) * sp,
       life: 0.5 + Math.random() * 0.6,
@@ -3958,14 +3992,14 @@ function renderFireTrail() {
   ctx.save();
   ctx.globalAlpha = fade;
   for (const side of [-1, 1]) {
-    const xTop = W / 2 + side * 92;    // под колесом
-    const xBot = W / 2 + side * 165;   // расходится к краю экрана
+    const xTop = W / 2 + side * 76;    // под колесом (машина теперь меньше)
+    const xBot = W / 2 + side * 150;   // расходится к краю экрана
     const flick = Math.sin(t / 38 + side * 7) * 5;  // пламя дрожит!
     for (const [w, color] of layers) {
       ctx.fillStyle = color;
       ctx.beginPath();
-      ctx.moveTo(xTop - w / 2 + flick / 2, H - 46);
-      ctx.lineTo(xTop + w / 2 + flick / 2, H - 46);
+      ctx.moveTo(xTop - w / 2 + flick / 2, H - 76);
+      ctx.lineTo(xTop + w / 2 + flick / 2, H - 76);
       ctx.lineTo(xBot + w * 1.7 + flick, H);
       ctx.lineTo(xBot - w * 1.7 + flick, H);
       ctx.closePath();
@@ -3977,7 +4011,7 @@ function renderFireTrail() {
       ctx.fillStyle = Math.random() < 0.5 ? "#ffd23f" : "#ff8c1a";
       ctx.fillRect(
         xTop + (xBot - xTop) * p + (Math.random() - 0.5) * 26,
-        H - 46 + 46 * p - Math.random() * 14, 3, 3);
+        H - 76 + 76 * p - Math.random() * 14, 3, 3);
     }
   }
   // Надпись-пасхалка — только у Делориана (у ЗИСа своя, про ускоритель)
@@ -4001,9 +4035,11 @@ function renderPlayer() {
   const bounceY = (Math.random() - 0.5) * 2 * shake;
 
   ctx.save();
-  ctx.translate(W / 2 + bounceX, H - 34 + bounceY);
+  // Машина чуть меньше и выше (правка Саши): как будто камера
+  // отъехала назад — впереди видно больше дороги и соперников
+  ctx.translate(W / 2 + bounceX, H - 64 + bounceY);
   ctx.rotate(steer * 0.05);          // наклон в повороте
-  ctx.scale(1.15, 1.15);
+  ctx.scale(0.95, 0.95);
   drawCarTuned(ctx, car.id, getTun(car.id));   // со всем тюнингом!
   ctx.restore();
 
@@ -4014,7 +4050,7 @@ function renderPlayer() {
     ctx.fillStyle = "rgba(90, 190, 255, 0.10)";
     ctx.lineWidth = 3;
     ctx.beginPath();
-    ctx.ellipse(W / 2, H - 90, 135 * pulse, 80 * pulse, 0, 0, Math.PI * 2);
+    ctx.ellipse(W / 2, H - 130, 112 * pulse, 66 * pulse, 0, 0, Math.PI * 2);
     ctx.fill();
     ctx.stroke();
   }
@@ -4038,6 +4074,44 @@ function renderHUD() {
   ctx.font = "bold 15px Verdana";
   ctx.textAlign = "left";
   ctx.fillText("км/ч", 126, 52);
+
+  // ---------- Мини-карта трассы под спидометром (идея Саши) ----------
+  if (trackMapPts && trackMapPts.length > 1) {
+    const mx = 16, my = 76, mw = 168, mh = 116, pad = 14;
+    ctx.fillStyle = "rgba(10, 10, 20, 0.45)";
+    ctx.beginPath();
+    ctx.roundRect(mx, my, mw, mh, 10);
+    ctx.fill();
+    const mapX = (i) => mx + pad + trackMapPts[i][0] * (mw - 2 * pad);
+    const mapY = (i) => my + pad + trackMapPts[i][1] * (mh - 2 * pad);
+    // Контур трассы
+    ctx.strokeStyle = "rgba(255,255,255,0.75)";
+    ctx.lineWidth = 3;
+    ctx.lineJoin = "round";
+    ctx.beginPath();
+    ctx.moveTo(mapX(0), mapY(0));
+    for (let i = 1; i < trackMapPts.length; i++) ctx.lineTo(mapX(i), mapY(i));
+    if (raceKind === "circuit") ctx.closePath();  // кольцо замыкаем
+    ctx.stroke();
+    // Старт/финиш — жёлтая метка
+    ctx.fillStyle = "#ffd23f";
+    ctx.fillRect(mapX(0) - 3, mapY(0) - 3, 6, 6);
+    const dotAt = (z, r, fill) => {
+      const i = Math.min(trackMapPts.length - 1,
+        Math.max(0, Math.floor(((z % trackLength) + trackLength) % trackLength / SEG_LEN)));
+      ctx.fillStyle = fill;
+      ctx.beginPath();
+      ctx.arc(mapX(i), mapY(i), r, 0, Math.PI * 2);
+      ctx.fill();
+    };
+    // Соперники — тёмные точки, друг — зелёная, мы — красная с обводкой
+    for (const o of opponents) dotAt(o.z, 3, "#20242e");
+    if (mpRemote) dotAt(mpRemote.z, 3.5, "#57d977");
+    dotAt(position, 4.5, "#ff3131");
+    ctx.strokeStyle = "#ffffff";
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+  }
 
   // Название игры
   ctx.fillStyle = "rgba(255,255,255,0.85)";
