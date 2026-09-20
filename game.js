@@ -248,39 +248,39 @@ const CARS = [
     desc: "Синий гиперкар: круглые фонари-турбины и 348 км/ч!",
   },
   {
-    id: "nautilus", name: "Linkoln Nautilas", gearbox: "А",
+    id: "nautilus", name: "Linkorn Nautilas", gearbox: "А",
     topKmh: 210, zeroTo100: 6.5,
     offroadSoft: true,
     desc: "Синий люкс-кроссовер с фонарём через всю корму.",
   },
   {
-    id: "continental17", name: "Linkoln Kontinental", gearbox: "А",
+    id: "continental17", name: "Linkorn Kontinental", gearbox: "А",
     topKmh: 240, zeroTo100: 5.8,
     desc: "Чёрный лимузин-джентльмен: тонкая полоса света и тишина.",
   },
   {
-    id: "mark5", name: "Linkoln Марк V 1979", gearbox: "А",
+    id: "mark5", name: "Linkorn Марк V 1979", gearbox: "А",
     topKmh: 190, zeroTo100: 11.5,
     desc: "Голубой корабль 70-х: горб запаски на багажнике — фирменный знак.",
   },
   {
-    id: "lincoln60", name: "Linkoln Kontinental 1960", gearbox: "А",
+    id: "lincoln60", name: "Linkorn Kontinental 1960", gearbox: "А",
     topKmh: 175, zeroTo100: 11.0,
     desc: "Белый крейсер с плавниками и четырьмя круглыми огнями.",
   },
   {
-    id: "navigator", name: "Linkoln Navigador", gearbox: "А",
+    id: "navigator", name: "Linkorn Navigador", gearbox: "А",
     topKmh: 175, zeroTo100: 7.5,
     offroadSoft: true,
     desc: "Серый гигант: три ряда сидений и капитанский мостик.",
   },
   {
-    id: "zephyr", name: "Linkoln Zefir", gearbox: "А",
+    id: "zephyr", name: "Linkorn Zefir", gearbox: "А",
     topKmh: 210, zeroTo100: 7.8,
     desc: "Серебристый зефир: мягкий, сладкий, быстрее, чем кажется.",
   },
   {
-    id: "mkz", name: "Linkoln MKZ", gearbox: "А",
+    id: "mkz", name: "Linkorn MKZ", gearbox: "А",
     topKmh: 250, zeroTo100: 5.6,
     desc: "Белый красавец: светящаяся дуга через всю корму.",
   },
@@ -4618,7 +4618,7 @@ function drawNautilus(g) {
   roundRect(g, -56, -104, 112, 36, 7, "#151d28");
   g.fillStyle = "rgba(255,255,255,0.08)"; g.fillRect(-48, -98, 44, 24);
   g.fillStyle = "#c9d0d7"; g.font = "bold 6px Verdana"; g.textAlign = "center";
-  g.fillText("L I N K O L N", 0, -62);
+  g.fillText("L I N K O R N", 0, -62);
   // Фонарь во всю ширину
   roundRect(g, -72, -58, 144, 12, 6, "#2a0d0d");
   roundRect(g, -68, -55, 136, 6, 3, "#e82121");
@@ -4638,7 +4638,7 @@ function drawContinental17(g) {
   roundRect(g, -86, -66, 172, 60, 9, "#101214");
   g.fillStyle = "rgba(255,255,255,0.10)"; g.fillRect(-78, -65, 156, 3);
   g.fillStyle = "#c9d0d7"; g.font = "bold 6px Verdana"; g.textAlign = "center";
-  g.fillText("L I N K O L N", 0, -58);
+  g.fillText("L I N K O R N", 0, -58);
   // Тонкая световая полоса от края до края в хромовой оправе
   roundRect(g, -78, -54, 156, 10, 5, "#2a0d0d");
   roundRect(g, -74, -52, 148, 5, 2, "#e82121");
@@ -4762,7 +4762,7 @@ function drawMkz(g) {
   roundRect(g, -86, -66, 172, 60, 10, "#e8e6df");
   g.fillStyle = "rgba(255,255,255,0.35)"; g.fillRect(-78, -65, 156, 3);
   g.fillStyle = "#8a9096"; g.font = "bold 6px Verdana"; g.textAlign = "center";
-  g.fillText("L I N K O L N", 0, -58);
+  g.fillText("L I N K O R N", 0, -58);
   // Светящаяся ДУГА: чуть изогнутая красная лента с хвостиками вверх
   g.strokeStyle = "#2a0d0d"; g.lineWidth = 11; g.lineCap = "round";
   g.beginPath(); g.moveTo(-76, -46); g.quadraticCurveTo(0, -56, 76, -46); g.stroke();
