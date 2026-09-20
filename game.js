@@ -284,6 +284,34 @@ const CARS = [
     topKmh: 250, zeroTo100: 5.6,
     desc: "Белый красавец: светящаяся дуга через всю корму.",
   },
+  // ---- Корейский день (5 фото от Саши) ----
+  {
+    id: "sportage", name: "Kiwi Sportage", gearbox: "А",
+    topKmh: 201, zeroTo100: 9.1,
+    offroadSoft: true,
+    desc: "Красный кроссовер: бодрый, семейный и не боится обочин.",
+  },
+  {
+    id: "k5", name: "Kiwi K5", gearbox: "А",
+    topKmh: 210, zeroTo100: 7.6,
+    desc: "Синий красавец: фонарь-пунктир через всю корму.",
+  },
+  {
+    id: "sonata", name: "Hyondai Sonata", gearbox: "А",
+    topKmh: 210, zeroTo100: 8.0,
+    desc: "Чёрный стиляга: светящаяся лента и имя по буквам.",
+  },
+  {
+    id: "tucson", name: "Hyondai Tucson", gearbox: "А",
+    topKmh: 185, zeroTo100: 9.4,
+    offroadSoft: true,
+    desc: "Серый гибрид с фонарями-когтями. Дворник спрятан под спойлер!",
+  },
+  {
+    id: "i30", name: "Hyondai i30", gearbox: "С",
+    topKmh: 192, zeroTo100: 10.5,
+    desc: "Серебристый хэтчбек-кругляш: честный работяга.",
+  },
   // ---- Гиперкары (восторг Саши: «СКОРОСТЬ ГЕМЕРЫ!!!») ----
   {
     id: "gemera", name: "Konisegg Gemera", gearbox: "А",
@@ -373,6 +401,7 @@ const BRAKE_100_0 = {
   gemera: 1.7, wayra: 1.6, tuatara: 1.6,
   merc190: 3.0, amggt53: 2.3, maybach: 2.5, gle: 2.7,
   pejo308: 2.6, volga3110: 3.9, volga24: 4.1, volga21: 4.4,
+  sportage: 2.9, k5: 2.8, sonata: 2.8, tucson: 2.9, i30: 2.9,
 };
 
 // Досчитываем игровые характеристики из реальных цифр.
@@ -406,6 +435,7 @@ const CAR_PRICES = {
   gemera: 8000, wayra: 9000, tuatara: 8500,
   merc190: 1400, amggt53: 2600, maybach: 2800, gle: 1500,
   pejo308: 1300, volga3110: 320, volga24: 300, volga21: 380,
+  sportage: 850, k5: 950, sonata: 900, tucson: 800, i30: 600,
   zis: -1,   // −1 = не продаётся, только код «вечная ностальгия»
 };
 
@@ -1899,12 +1929,15 @@ const CAR_CATEGORY = {
   chetverka: "ussr", volga21: "ussr", volga24: "ussr", volga3110: "ussr",
   fford: "hyper", f1: "hyper", fordgt: "hyper", gemera: "hyper",
   wayra: "hyper", tuatara: "hyper",
+  sportage: "suv", k5: "city", sonata: "city", tucson: "suv", i30: "city",
 };
 // Марка каждой машины — для вкладки «По марке» (заказ Саши)
 const CAR_BRAND = {
   aveo: "Chevalet", camaro70: "Chevalet", camaroNew: "Chevalet",
   vetteC1: "Chevalet", vetteC8: "Chevalet", cruze: "Chevalet",
-  picanto: "Kiwi", corsa: "Opal", delorean: "TMC", shelby: "Shelbee",
+  picanto: "Kiwi", sportage: "Kiwi", k5: "Kiwi",
+  sonata: "Hyondai", tucson: "Hyondai", i30: "Hyondai",
+  corsa: "Opal", delorean: "TMC", shelby: "Shelbee",
   focus: "Fjord", darkhorse: "Fjord", fford: "Fjord", ecosport: "Fjord",
   kuga: "Fjord", fordgt: "Fjord",
   disco: "Sand Hover", hilux: "Tayoda", rav4: "Tayoda",
@@ -2158,6 +2191,11 @@ const PAINT_SLOTS = {
   volga3110: ["#f2f3f0", "#e2e4e0"],
   volga24: ["#c9ccd1", "#b8bcc2"],
   volga21: ["#e8a8c8", "#d897b8"],
+  sportage: ["#c5232c", "#ad1e26"],
+  k5: ["#1d3f96", "#173482"],
+  sonata: ["#17191c", "#101214"],
+  tucson: ["#5c6a68", "#4e5a58"],
+  i30: ["#c9ccd1", "#b8bcc2"],
 };
 
 const PAINT_PALETTE = ["#d5121e", "#ff8c1a", "#ffd23f", "#57d977", "#1f8f4d",
@@ -2176,7 +2214,8 @@ const RIM_X = { aveo: 66, picanto: 56, corsa: 59, focus: 73, delorean: 75,
   lincoln60: 74, navigator: 68, zephyr: 69, mkz: 72,
   gemera: 80, wayra: 82, tuatara: 80,
   merc190: 70, amggt53: 76, maybach: 72, gle: 70,
-  pejo308: 68, volga3110: 66, volga24: 66, volga21: 64 };
+  pejo308: 68, volga3110: 66, volga24: 66, volga21: 64,
+  sportage: 66, k5: 71, sonata: 71, tucson: 66, i30: 65 };
 
 // ---------- ИГРОВАЯ ВАЛЮТА 🪙 ----------
 // Зарабатывается в гонках (по месту на финише), тратится на железо.
@@ -5385,6 +5424,147 @@ function drawVolga21(g) {
   g.fillStyle = "rgba(0,0,0,0.15)"; g.fillRect(-88, -21, 176, 2);
 }
 
+// --- Kia Sportage: красный кроссовер ---
+function drawSportage(g) {
+  carBase(g, -28, 34);
+  roundRect(g, -54, -106, 108, 34, 9, "#1a2026");
+  g.fillStyle = "rgba(255,255,255,0.10)"; g.fillRect(-46, -100, 42, 22);
+  roundRect(g, -80, -76, 160, 70, 11, "#c5232c");
+  g.fillStyle = "rgba(255,255,255,0.18)"; g.fillRect(-72, -75, 144, 3);
+  // Хромовая планка над эмблемой KIWI
+  roundRect(g, -46, -68, 92, 3, 1, "#d7dce2");
+  g.strokeStyle = "#d7dce2"; g.lineWidth = 1.5;
+  g.beginPath(); g.ellipse(0, -58, 11, 6, 0, 0, Math.PI * 2); g.stroke();
+  g.fillStyle = "#d7dce2"; g.font = "bold 6px Verdana"; g.textAlign = "center";
+  g.fillText("KIWI", 0, -56);
+  // Узкие фонари-уголки
+  for (const side of [-1, 1]) {
+    roundRect(g, side * 62 - 16, -66, 32, 12, 4, "#5c1216");
+    roundRect(g, side * 62 - 13, -63, 26, 6, 2, "#e82121");
+  }
+  g.fillStyle = "#d7a8ac"; g.font = "bold 5px Verdana";
+  g.fillText("SPORTAGE", -52, -44);
+  plate(g, -46, 40);
+  // Чёрный низ и серебристая защита с овальными трубами
+  roundRect(g, -80, -26, 160, 17, 6, "#26292d");
+  roundRect(g, -36, -20, 72, 8, 4, "#b9bec6");
+  for (const side of [-1, 1]) {
+    g.fillStyle = "#8a9096";
+    g.beginPath(); g.ellipse(side * 58, -17, 11, 5, 0, 0, Math.PI * 2); g.fill();
+    g.fillStyle = "#26292d";
+    g.beginPath(); g.ellipse(side * 58, -17, 8, 3, 0, 0, Math.PI * 2); g.fill();
+  }
+}
+
+// --- Kia K5: синий, фонарь-пунктир через корму ---
+function drawK5(g) {
+  carBase(g);
+  roundRect(g, -52, -96, 104, 32, 9, "#1a2026");
+  g.fillStyle = "rgba(255,255,255,0.10)"; g.fillRect(-44, -91, 40, 22);
+  roundRect(g, -86, -66, 172, 60, 10, "#1d3f96");
+  g.fillStyle = "rgba(255,255,255,0.16)"; g.fillRect(-78, -65, 156, 3);
+  // Лента-пунктир: тёмная ниша и косые красные чёрточки ////
+  roundRect(g, -76, -58, 152, 12, 6, "#141827");
+  g.fillStyle = "#e82121";
+  for (let x = -70; x <= 64; x += 9) {
+    g.beginPath();
+    g.moveTo(x, -49); g.lineTo(x + 4, -56); g.lineTo(x + 7, -56); g.lineTo(x + 3, -49);
+    g.closePath(); g.fill();
+  }
+  g.fillStyle = "#9bb0e8"; g.font = "bold 5px Verdana"; g.textAlign = "center";
+  g.fillText("K5", -62, -38); g.fillText("GT", 62, -38);
+  plate(g, -40);
+  // Чёрный диффузор с двумя трапециями труб
+  roundRect(g, -86, -22, 172, 14, 6, "#191b1e");
+  roundRect(g, -62, -17, 28, 7, 2, "#8a9096");
+  roundRect(g,  34, -17, 28, 7, 2, "#8a9096");
+}
+
+// --- Hyundai Sonata: чёрный, лента и имя по буквам ---
+function drawSonata(g) {
+  carBase(g);
+  roundRect(g, -54, -96, 108, 32, 10, "#1a2026");
+  g.fillStyle = "rgba(255,255,255,0.08)"; g.fillRect(-46, -91, 40, 22);
+  roundRect(g, -86, -66, 172, 60, 10, "#17191c");
+  g.fillStyle = "rgba(255,255,255,0.10)"; g.fillRect(-78, -65, 156, 3);
+  // Светящаяся лента с загнутыми вверх краями
+  g.strokeStyle = "#e82121"; g.lineWidth = 4; g.lineCap = "round";
+  g.beginPath();
+  g.moveTo(-74, -60); g.quadraticCurveTo(-70, -52, -58, -52);
+  g.lineTo(58, -52); g.quadraticCurveTo(70, -52, 74, -60);
+  g.stroke();
+  g.lineCap = "butt";
+  // Эмблема H в овале и S O N A T A по буквам
+  g.strokeStyle = "#c9d0d7"; g.lineWidth = 1.5;
+  g.beginPath(); g.ellipse(0, -60, 9, 5.5, 0, 0, Math.PI * 2); g.stroke();
+  g.fillStyle = "#c9d0d7"; g.font = "italic bold 6px Verdana"; g.textAlign = "center";
+  g.fillText("H", 0, -58);
+  g.font = "bold 7px Verdana";
+  g.fillText("S O N A T A", 0, -42);
+  plate(g, -38);
+  roundRect(g, -86, -20, 172, 11, 5, "#101214");
+  roundRect(g,  40, -16, 26, 6, 3, "#8a9096");   // двойная труба справа
+}
+
+// --- Hyundai Tucson: серый, фонари-когти ---
+function drawTucson(g) {
+  carBase(g, -28, 34);
+  roundRect(g, -60, -110, 120, 10, 4, "#3d4247");   // спойлер (дворник под ним!)
+  roundRect(g, -54, -102, 108, 32, 7, "#1a2026");
+  g.fillStyle = "rgba(255,255,255,0.08)"; g.fillRect(-46, -97, 42, 22);
+  roundRect(g, -80, -74, 160, 68, 10, "#5c6a68");
+  g.fillStyle = "rgba(255,255,255,0.14)"; g.fillRect(-72, -73, 144, 3);
+  // Тонкая полоса через корму и КОГТИ по бокам
+  roundRect(g, -66, -64, 132, 3, 1, "#2a2d31");
+  for (const side of [-1, 1]) {
+    g.fillStyle = "#c22020";
+    for (const [dx, dy] of [[0, 0], [10, 7]]) {
+      g.beginPath();
+      g.moveTo(side * (48 + dx), -62 + dy);
+      g.lineTo(side * (72 + dx), -54 + dy);
+      g.lineTo(side * (66 + dx), -48 + dy);
+      g.lineTo(side * (46 + dx), -56 + dy);
+      g.closePath(); g.fill();
+    }
+  }
+  g.fillStyle = "#c9d0d7"; g.font = "bold 5px Verdana"; g.textAlign = "center";
+  g.fillText("HYONDAI", -50, -34);
+  g.fillText("TUCSON", 50, -34);
+  plate(g, -58, 40);
+  // Чёрный низ, серебристая защита, квадратные трубы справа
+  roundRect(g, -80, -28, 160, 19, 6, "#26292d");
+  roundRect(g, -38, -22, 76, 9, 4, "#b9bec6");
+  roundRect(g, 44, -20, 22, 8, 2, "#8a9096");
+  g.fillStyle = "#101214"; g.fillRect(47, -18, 7, 4); g.fillRect(56, -18, 7, 4);
+}
+
+// --- Hyundai i30: серебристый хэтчбек-кругляш ---
+function drawI30(g) {
+  carBase(g, -26, 32);
+  roundRect(g, -58, -104, 116, 42, 16, "#1a2026");
+  g.fillStyle = "rgba(255,255,255,0.12)"; g.fillRect(-48, -98, 44, 30);
+  roundRect(g, -78, -70, 156, 64, 14, "#c9ccd1");
+  g.fillStyle = "rgba(255,255,255,0.3)"; g.fillRect(-70, -69, 140, 3);
+  // Эмблема H
+  g.strokeStyle = "#8a9096"; g.lineWidth = 1.5;
+  g.beginPath(); g.ellipse(0, -56, 9, 5.5, 0, 0, Math.PI * 2); g.stroke();
+  g.fillStyle = "#8a9096"; g.font = "italic bold 6px Verdana"; g.textAlign = "center";
+  g.fillText("H", 0, -54);
+  g.fillText("i30", 58, -50);
+  // Округлые красно-оранжевые фонари
+  for (const side of [-1, 1]) {
+    roundRect(g, side * 64 - 11, -62, 22, 20, 8, "#7a1216");
+    roundRect(g, side * 64 - 8,  -59, 16, 8, 3, "#d42323");
+    roundRect(g, side * 64 - 8,  -50, 16, 5, 2, "#ffb35c");
+  }
+  // Синяя табличка HYONDAI i30 под номером
+  plate(g, -42, 40);
+  roundRect(g, -24, -27, 48, 7, 2, "#1d3f96");
+  g.fillStyle = "#fff"; g.font = "bold 5px Verdana";
+  g.fillText("HYONDAI i30", 0, -21.5);
+  roundRect(g, -78, -18, 156, 9, 4, "#b8bcc2");
+}
+
 const CAR_DRAWERS = {
   aveo: drawAveo, picanto: drawPicanto, focus: drawFocus,
   delorean: drawDelorean, corsa: drawCorsa,
@@ -5407,6 +5587,8 @@ const CAR_DRAWERS = {
   gle: drawGle,
   pejo308: drawPejo308, volga3110: drawVolga3110,
   volga24: drawVolga24, volga21: drawVolga21,
+  sportage: drawSportage, k5: drawK5, sonata: drawSonata,
+  tucson: drawTucson, i30: drawI30,
 };
 
 // Огненный след: два пылающих следа за колёсами, три слоя пламени
