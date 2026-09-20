@@ -6164,8 +6164,9 @@ function drawM5(g) {
   for (const side of [-1, 1]) {
     roundRect(g, side * 58 - 24, -60, 48, 8, 4, "#2a0d0d");
     roundRect(g, side * 58 - 21, -58, 42, 4, 2, "#e82121");
-    roundRect(g, side * 76 - 4, -74, 8, 18, 3, "#2a0d0d");
-    roundRect(g, side * 76 - 2, -72, 4, 14, 2, "#e82121");
+    // Отросток от кромки кузова ВНИЗ вдоль угла — не выше крыши!
+    roundRect(g, side * 76 - 4, -65, 8, 19, 3, "#2a0d0d");
+    roundRect(g, side * 76 - 2, -63, 4, 15, 2, "#e82121");
   }
   bnwBadge(g, 0, -56, 8);
   g.fillStyle = "#c9d0d7"; g.font = "italic bold 7px Verdana"; g.textAlign = "center";
