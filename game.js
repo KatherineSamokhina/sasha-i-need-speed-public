@@ -1922,7 +1922,10 @@ function renderGarage() {
   document.getElementById("garage-name").textContent =
     `${c.name}  (${pos + 1}/${list.length})`;
   const catBtn = document.getElementById("btn-cat");
-  if (catBtn) catBtn.textContent = "📂 " + CATEGORIES[garageCat][1];
+  if (catBtn) catBtn.textContent = "📂 Категория: " + CATEGORIES[garageCat][1];
+  // Подсветить выбранный раздел в открытом списке
+  document.querySelectorAll("#cat-list button").forEach((b, i) =>
+    b.classList.toggle("active", i === garageCat));
   document.getElementById("garage-desc").textContent = c.desc;
   document.getElementById("garage-stats").innerHTML =
     statBar("Максималка", c.topKmh / 360, c.topKmh + " км/ч") +
@@ -1955,6 +1958,7 @@ function openGarage() {
   inGarage = true;
   garageCat = 0;         // открываем всегда с раздела «Все»
   garageIndex = carIndex;
+  document.getElementById("cat-list").classList.add("hidden");
   renderGarage();
   show("menu", false);
   show("garage", true);
@@ -1979,11 +1983,22 @@ function garageStep(dir) {
 }
 wireButton("btn-prev", () => garageStep(-1));
 wireButton("btn-next", () => garageStep(1));
-wireButton("btn-cat", () => {
-  garageCat = (garageCat + 1) % CATEGORIES.length;
-  garageIndex = garageList()[0];     // начинаем раздел с самой дешёвой
-  renderGarage();
+// Кнопка «Категория» ОТКРЫВАЕТ список разделов (правка Саши):
+// выбираешь любой сразу, а не листаешь по кругу
+const catListEl = document.getElementById("cat-list");
+CATEGORIES.forEach(([key, label], i) => {
+  const b = document.createElement("button");
+  b.className = "chip";
+  b.textContent = label;
+  b.addEventListener("click", () => {
+    garageCat = i;
+    garageIndex = garageList()[0];   // раздел начинается с самой дешёвой
+    catListEl.classList.add("hidden");
+    renderGarage();
+  });
+  catListEl.appendChild(b);
 });
+wireButton("btn-cat", () => catListEl.classList.toggle("hidden"));
 wireButton("btn-select", () => {
   const c = CARS[garageIndex];
   if (garageIndex === carIndex) return;
