@@ -76,6 +76,7 @@ body {
 .menu-grid {
   display: grid;
   grid-template-columns: 340px;
+  grid-gap: 10px;   /* старое имя — для старых WebView */
   gap: 10px;
   margin-top: 6px;
 }
@@ -137,6 +138,29 @@ body {
    у телефона её нет — там свои кнопки (решение Саши) */
 body.touch-device .overlay button .k,
 body.touch-device .pc-hint { display: none; }
+
+/* Меню на телефоне — 2 столбца, экран-то низкий! Между столбцами —
+   промежуток («хоть капля расстояния» — правка Саши). После бага
+   «соединились столбцы» строим не грид, а флекс с margin у кнопок:
+   margin работает в ЛЮБОМ браузере, ему нечем сломаться */
+body.touch-device .menu-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+body.touch-device .menu-grid button {
+  min-width: 0;   /* отменяем общий min-width:320 — он-то и «съедал» промежуток! */
+  width: 224px;
+  margin: 5px 7px;
+}
+
+/* И сами заголовки на телефоне компактнее — чтобы меню влезало
+   в низкий экран целиком */
+body.touch-device .overlay { gap: 8px; }
+body.touch-device .overlay h1 { font-size: 32px; letter-spacing: 2px; }
+body.touch-device .overlay h2 { font-size: 15px; letter-spacing: 6px; margin-bottom: 2px; }
+body.touch-device .overlay .car { font-size: 15px; margin-bottom: 2px; }
+body.touch-device .menu-grid button { font-size: 14px; padding: 11px 4px; }
 
 /* ---- Сенсорное управление (телефоны и планшеты) ---- */
 #touch {
