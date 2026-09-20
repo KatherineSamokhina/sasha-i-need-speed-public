@@ -284,6 +284,27 @@ const CARS = [
     topKmh: 250, zeroTo100: 5.6,
     desc: "Белый красавец: светящаяся дуга через всю корму.",
   },
+  // ---- Гиперкары (восторг Саши: «СКОРОСТЬ ГЕМЕРЫ!!!») ----
+  {
+    id: "gemera", name: "Кёнисег Гемера", gearbox: "А",
+    topKmh: 344,      // ограничение Саши: «у гемеры ограничь 344»
+    zeroTo100: 1.9,   // 1700 гибридных лошадей!
+    noNpc: true,      // соперникам гиперкары не выдаются — нечестно!
+    desc: "1700 сил и 0–100 за 1.9 сек. Электроника держит 344 км/ч.",
+  },
+  {
+    id: "wayra", name: "Paganny Wayra BC", gearbox: "М",
+    topKmh: 380, zeroTo100: 2.8,
+    noNpc: true,      // соперникам гиперкары не выдаются — нечестно!
+    desc: "Роскошь: крыло-этажерка, четыре трубы букетом. Король гаража!",
+  },
+  {
+    id: "tuatara", name: "ЦСЦ Туатара", gearbox: "А",
+    topKmh: 320,      // ограничение Саши: «MAX 320 км час»
+    zeroTo100: 2.5,
+    noNpc: true,      // соперникам гиперкары не выдаются — нечестно!
+    desc: "Белая капля-ракета: плавники, лента огня и электроника на 320.",
+  },
 ];
 
 // Режимы поездки (фишка Корсы — идея Саши): меняют тягу и голос мотора.
@@ -305,6 +326,7 @@ const BRAKE_100_0 = {
   escalade: 3.1, sixteen: 2.4, cruze: 2.9, ecosport: 3.0, kuga: 2.9,
   fordgt: 1.5, nautilus: 2.8, continental17: 2.6, mark5: 3.8,
   lincoln60: 4.0, navigator: 3.2, zephyr: 2.9, mkz: 2.6,
+  gemera: 1.7, wayra: 1.6, tuatara: 1.6,
 };
 
 // Досчитываем игровые характеристики из реальных цифр.
@@ -335,6 +357,7 @@ const CAR_PRICES = {
   mark5: 1000, durango: 1100, navigator: 1150, nautilus: 1200,
   escalade: 1300, mkz: 1600, charger69: 1700, charger14: 1800,
   continental17: 1900, challenger: 2200, sixteen: 3500, fordgt: 5500,
+  gemera: 8000, wayra: 9000, tuatara: 8500,
   zis: -1,   // −1 = не продаётся, только код «вечная ностальгия»
 };
 
@@ -1927,6 +1950,9 @@ const PAINT_SLOTS = {
   navigator: ["#5c6166", "#4d5257"],
   zephyr: ["#c9ccd1", "#b8bcc2"],
   mkz: ["#e8e6df", "#d8d6cf"],
+  gemera: ["#2e3436", "#262b2d"],
+  wayra: ["#c9ccd1", "#b8bcc2"],
+  tuatara: ["#f2f3f0", "#e2e4e0"],
 };
 
 const PAINT_PALETTE = ["#d5121e", "#ff8c1a", "#ffd23f", "#57d977", "#1f8f4d",
@@ -1942,7 +1968,8 @@ const RIM_X = { aveo: 66, picanto: 56, corsa: 59, focus: 73, delorean: 75,
   challenger: 78, charger14: 74, charger69: 78, durango: 68,
   escalade: 68, sixteen: 76, cruze: 68, ecosport: 63, kuga: 67,
   fordgt: 80, nautilus: 68, continental17: 73, mark5: 72,
-  lincoln60: 74, navigator: 68, zephyr: 69, mkz: 72 };
+  lincoln60: 74, navigator: 68, zephyr: 69, mkz: 72,
+  gemera: 80, wayra: 82, tuatara: 80 };
 
 // ---------- ИГРОВАЯ ВАЛЮТА 🪙 ----------
 // Зарабатывается в гонках (по месту на финише), тратится на железо.
@@ -2740,6 +2767,7 @@ function update(dt) {
   speed = clamp(speed, 0, car.maxSpeed);   // максималка у каждой машины своя!
 
   // Едем вперёд! Трасса — кольцо, поэтому после финиша снова старт
+  const prevPosForHit = position;   // откуда стартовал этот кадр (для столкновений)
   position += speed * dt;
   while (position >= trackLength) {
     position -= trackLength;
@@ -2758,7 +2786,14 @@ function update(dt) {
   // Врезаемся, только если реально едем (быстрее 5 км/ч).
   // В ГОРОДЕ (на шоссе) столкновений нет вообще — решение Саши!
   if (speed > KMH * 5 && raceKind !== "highway") {
-    const here = findSegment(position);
+    // Гиперкары (Гемера — 400 км/ч!) пролетают за кадр БОЛЬШЕ одного
+    // сегмента. Проверяем каждый пройденный сегмент, а не только
+    // текущий — иначе можно проскочить СКВОЗЬ бочку, не заметив её!
+    const fromSeg = Math.floor(prevPosForHit / SEG_LEN);
+    const passedSegs = Math.max(0,
+      Math.floor((prevPosForHit + speed * dt) / SEG_LEN) - fromSeg);
+    for (let k = 0; k <= passedSegs && !crashed; k++) {
+    const here = segments[(fromSeg + k) % segments.length];
     // Идём с конца, чтобы можно было БЕЗОПАСНО удалять снесённые объекты
     for (let i = here.sprites.length - 1; i >= 0; i--) {
       const spr = here.sprites[i];
@@ -2782,6 +2817,7 @@ function update(dt) {
       crash();
       break;
     }
+    }   // конец прохода по сегментам, пройденным за кадр
   }
 
   // ---------- Трафик на шоссе: просто едет рядом ----------
@@ -2796,7 +2832,8 @@ function update(dt) {
     if (speed > KMH * 5 && !crashed) {
       for (const a of animals) {
         const relZ = ((a.z % trackLength) - position + trackLength) % trackLength;
-        const near = relZ < 200 || relZ > trackLength - 200;
+        // Окно 240 (было 200): гиперкары проезжают 200+ единиц за кадр
+        const near = relZ < 240 || relZ > trackLength - 240;
         if (near && Math.abs(a.x - playerX) < 0.45) {
           if (car.ram) {
             // ЗЫС! Животное в шоке отпрыгивает на обочину (не пострадало!)
@@ -4775,6 +4812,143 @@ function drawMkz(g) {
   roundRect(g,  26, -15, 34, 6, 3, "#8a9096");
 }
 
+// --- Koenigsegg Gemera: тёмный гиперкар с глазами-турбинами ---
+function drawGemera(g) {
+  carBase(g, -24, 30);
+  // Крошечное стекло на макушке
+  roundRect(g, -30, -94, 60, 18, 8, "#161b20");
+  // Широченное покатое тело
+  roundRect(g, -92, -78, 184, 72, 16, "#2e3436");
+  g.fillStyle = "rgba(255,255,255,0.14)"; g.fillRect(-82, -77, 164, 3);
+  // Жёлтый значок на макушке
+  roundRect(g, -4, -86, 8, 7, 2, "#e8c11c");
+  g.fillStyle = "#8a9096"; g.font = "bold 5px Verdana"; g.textAlign = "center";
+  g.fillText("K O N I S E G", 0, -66);
+  // Два овальных «глаза»: красное кольцо, внутри — труба!
+  for (const side of [-1, 1]) {
+    g.fillStyle = "#15171a";
+    g.beginPath(); g.ellipse(side * 52, -62, 13, 10, 0, 0, Math.PI * 2); g.fill();
+    g.strokeStyle = "#e82121"; g.lineWidth = 3;
+    g.beginPath(); g.ellipse(side * 52, -62, 10, 7.5, 0, 0, Math.PI * 2); g.stroke();
+    g.fillStyle = "#000";
+    g.beginPath(); g.arc(side * 52, -62, 4, 0, Math.PI * 2); g.fill();
+  }
+  // Огромные чёрные воздухозаборники по бокам
+  roundRect(g, -86, -52, 34, 24, 10, "#0e1012");
+  roundRect(g,  52, -52, 34, 24, 10, "#0e1012");
+  // Подпись Gemera на центральной панели
+  g.fillStyle = "#c9d0d7"; g.font = "italic bold 8px Verdana";
+  g.fillText("Gemera", 0, -42);
+  plate(g, -36, 36);
+  // Диффузор с плавниками
+  roundRect(g, -70, -20, 140, 12, 4, "#101214");
+  g.fillStyle = "#0a0c0e";
+  for (const x of [-52, -28, -4, 20, 44]) {
+    g.beginPath();
+    g.moveTo(x, -6); g.lineTo(x + 10, -6); g.lineTo(x + 7, -22); g.lineTo(x + 3, -22);
+    g.closePath(); g.fill();
+  }
+}
+
+// --- Pagani Huayra BC: роскошь с крылом-этажеркой ---
+function drawWayra(g) {
+  carBase(g, -24, 30);
+  // ОГРОМНОЕ крыло на стойках
+  roundRect(g, -88, -108, 176, 10, 4, "#15171a");
+  roundRect(g, -56, -98, 8, 22, 3, "#26292d");
+  roundRect(g,  48, -98, 8, 22, 3, "#26292d");
+  // Зеркальца-ушки над крылом
+  g.fillStyle = "#39c2d7";
+  g.beginPath(); g.ellipse(-80, -112, 7, 4, -0.4, 0, Math.PI * 2); g.fill();
+  g.beginPath(); g.ellipse( 80, -112, 7, 4,  0.4, 0, Math.PI * 2); g.fill();
+  // Серебристое стекло-купол
+  roundRect(g, -34, -96, 68, 20, 9, "#1a2026");
+  // Широкое серебристое тело
+  roundRect(g, -92, -80, 184, 74, 15, "#c9ccd1");
+  g.fillStyle = "rgba(255,255,255,0.35)"; g.fillRect(-82, -79, 164, 3);
+  // Полоса-триколор по центру капота
+  g.fillStyle = "#1f5fd6"; g.fillRect(-4, -80, 3, 22);
+  g.fillStyle = "#e8e6df"; g.fillRect(-1, -80, 2, 22);
+  g.fillStyle = "#c22020"; g.fillRect(1, -80, 3, 22);
+  // Четыре круглых фонаря — по два в чёрных нишах
+  for (const side of [-1, 1]) {
+    roundRect(g, side * 62 - 20, -74, 40, 22, 8, "#15171a");
+    for (const dx of [-9, 9]) {
+      g.fillStyle = "#3d0a0a";
+      g.beginPath(); g.arc(side * 62 + dx, -63, 7.5, 0, Math.PI * 2); g.fill();
+      g.strokeStyle = "#e82121"; g.lineWidth = 2.5;
+      g.beginPath(); g.arc(side * 62 + dx, -63, 5.5, 0, Math.PI * 2); g.stroke();
+    }
+  }
+  // ЧЕТЫРЕ трубы букетом в центре (фирменный знак Пагани!)
+  roundRect(g, -16, -72, 32, 26, 8, "#0e1012");
+  g.fillStyle = "#26292d";
+  for (const [dx, dy] of [[-6, -64], [6, -64], [-6, -54], [6, -54]]) {
+    g.beginPath(); g.arc(dx, dy, 5, 0, Math.PI * 2); g.fill();
+    g.fillStyle = "#000";
+    g.beginPath(); g.arc(dx, dy, 3, 0, Math.PI * 2); g.fill();
+    g.fillStyle = "#26292d";
+  }
+  // Подпись-росчерк
+  g.fillStyle = "#e8e6df"; g.font = "italic bold 8px Verdana"; g.textAlign = "center";
+  g.fillText("Wayra BC", 0, -34);
+  // Карбоновый низ и диффузор-гребёнка
+  roundRect(g, -92, -28, 184, 20, 8, "#141618");
+  g.fillStyle = "#0a0c0e";
+  for (const x of [-72, -50, -28, 20, 42, 64]) {
+    g.beginPath();
+    g.moveTo(x, -4); g.lineTo(x + 10, -4); g.lineTo(x + 7, -26); g.lineTo(x + 3, -26);
+    g.closePath(); g.fill();
+  }
+  // Красный стоп-огонёк по центру диффузора
+  g.fillStyle = "#e82121";
+  g.beginPath(); g.arc(0, -22, 4, 0, Math.PI * 2); g.fill();
+  plate(g, -46, 34);
+}
+
+// --- SSC Tuatara: белая капля-ракета (по фото Саши, MAX 320) ---
+function drawTuatara(g) {
+  carBase(g, -24, 30);
+  // Два плавника-гребня, спускающиеся с крыши на корму
+  g.fillStyle = "#e2e4e0";
+  for (const side of [-1, 1]) {
+    g.beginPath();
+    g.moveTo(side * 26, -104);
+    g.lineTo(side * 40, -60);
+    g.lineTo(side * 30, -58);
+    g.lineTo(side * 20, -100);
+    g.closePath(); g.fill();
+  }
+  // Узкое стекло-купол между плавниками
+  roundRect(g, -22, -102, 44, 18, 8, "#1a2026");
+  // Обтекаемое белое тело-капля
+  roundRect(g, -90, -78, 180, 72, 16, "#f2f3f0");
+  g.fillStyle = "rgba(255,255,255,0.45)"; g.fillRect(-80, -77, 160, 3);
+  // Тёмная ниша во всю корму и ЛЕНТА огня от края до края
+  roundRect(g, -78, -68, 156, 20, 8, "#1d2023");
+  roundRect(g, -72, -63, 144, 7, 3, "#e82121");
+  g.fillStyle = "#ff6b4a";
+  g.fillRect(-72, -61, 144, 2);
+  // Эмблемка по центру над лентой
+  roundRect(g, -8, -74, 16, 5, 2, "#8a9096");
+  // Две круглые трубы по центру под нишей
+  g.fillStyle = "#15171a";
+  g.beginPath(); g.arc(-9, -38, 7, 0, Math.PI * 2); g.fill();
+  g.beginPath(); g.arc( 9, -38, 7, 0, Math.PI * 2); g.fill();
+  g.fillStyle = "#000";
+  g.beginPath(); g.arc(-9, -38, 4.5, 0, Math.PI * 2); g.fill();
+  g.beginPath(); g.arc( 9, -38, 4.5, 0, Math.PI * 2); g.fill();
+  // Чёрный диффузор-гребёнка
+  roundRect(g, -88, -26, 176, 18, 7, "#141618");
+  g.fillStyle = "#0a0c0e";
+  for (const x of [-68, -46, -24, 16, 38, 60]) {
+    g.beginPath();
+    g.moveTo(x, -4); g.lineTo(x + 10, -4); g.lineTo(x + 7, -24); g.lineTo(x + 3, -24);
+    g.closePath(); g.fill();
+  }
+  plate(g, -22, 34);
+}
+
 const CAR_DRAWERS = {
   aveo: drawAveo, picanto: drawPicanto, focus: drawFocus,
   delorean: drawDelorean, corsa: drawCorsa,
@@ -4792,6 +4966,7 @@ const CAR_DRAWERS = {
   nautilus: drawNautilus, continental17: drawContinental17,
   mark5: drawMark5, lincoln60: drawLincoln60, navigator: drawNavigator,
   zephyr: drawZephyr, mkz: drawMkz,
+  gemera: drawGemera, wayra: drawWayra, tuatara: drawTuatara,
 };
 
 // Огненный след: два пылающих следа за колёсами, три слоя пламени
