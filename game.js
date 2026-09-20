@@ -1873,10 +1873,56 @@ function statBar(label, fraction, text) {
 const GEARBOX_FULL = { "А": "А — автомат", "М": "М — механика",
                        "С": "С — смешанная", "Э": "Э — электро (без коробки!)" };
 
+// ---------- КАТЕГОРИИ И СОРТИРОВКА ГАРАЖА (заказ Саши) ----------
+// Гараж вырос до 50 машин — листаем по цене (дешёвые сначала),
+// а кнопка «Категория» показывает только один раздел
+const CATEGORIES = [
+  ["all",   "Все"],
+  ["city",  "Городские"],
+  ["sport", "Спорт"],
+  ["lux",   "Люкс"],
+  ["suv",   "Вездеходы"],
+  ["ussr",  "СССР"],
+  ["hyper", "Болиды и гиперкары"],
+];
+const CAR_CATEGORY = {
+  aveo: "city", picanto: "city", corsa: "city", focus: "city", cruze: "city",
+  pejo308: "city",
+  camaro70: "sport", camaroNew: "sport", vetteC1: "sport", vetteC8: "sport",
+  shelby: "sport", darkhorse: "sport", challenger: "sport", charger14: "sport",
+  charger69: "sport", merc190: "sport", amggt53: "sport", delorean: "sport",
+  maybach: "lux", continental17: "lux", mark5: "lux", lincoln60: "lux",
+  zephyr: "lux", mkz: "lux", sixteen: "lux",
+  disco: "suv", hilux: "suv", rav4: "suv", durango: "suv", escalade: "suv",
+  kuga: "suv", ecosport: "suv", navigator: "suv", nautilus: "suv", gle: "suv",
+  zis: "ussr", buhanka: "ussr", raf: "ussr", kopeyka: "ussr", semerka: "ussr",
+  chetverka: "ussr", volga21: "ussr", volga24: "ussr", volga3110: "ussr",
+  fford: "hyper", f1: "hyper", fordgt: "hyper", gemera: "hyper",
+  wayra: "hyper", tuatara: "hyper",
+};
+let garageCat = 0;   // номер выбранной категории в CATEGORIES
+
+// Список индексов CARS для текущей категории, по цене (ЗИС — в конец:
+// его цена −1 означает «бесценный», такому место последнее)
+function garageList() {
+  const [key] = CATEGORIES[garageCat];
+  return CARS
+    .map((c, i) => i)
+    .filter((i) => key === "all" || CAR_CATEGORY[CARS[i].id] === key)
+    .sort((a, b) => {
+      const pa = CAR_PRICES[CARS[a].id], pb = CAR_PRICES[CARS[b].id];
+      return (pa === -1 ? Infinity : pa) - (pb === -1 ? Infinity : pb);
+    });
+}
+
 function renderGarage() {
   const c = CARS[garageIndex];
+  const list = garageList();
+  const pos = list.indexOf(garageIndex);
   document.getElementById("garage-name").textContent =
-    `${c.name}  (${garageIndex + 1}/${CARS.length})`;
+    `${c.name}  (${pos + 1}/${list.length})`;
+  const catBtn = document.getElementById("btn-cat");
+  if (catBtn) catBtn.textContent = "📂 " + CATEGORIES[garageCat][1];
   document.getElementById("garage-desc").textContent = c.desc;
   document.getElementById("garage-stats").innerHTML =
     statBar("Максималка", c.topKmh / 360, c.topKmh + " км/ч") +
@@ -1907,6 +1953,7 @@ function renderGarage() {
 
 function openGarage() {
   inGarage = true;
+  garageCat = 0;         // открываем всегда с раздела «Все»
   garageIndex = carIndex;
   renderGarage();
   show("menu", false);
@@ -1921,12 +1968,20 @@ function closeGarage() {
 
 wireButton("btn-garage", openGarage);
 wireButton("btn-garage-back", closeGarage);
-wireButton("btn-prev", () => {
-  garageIndex = (garageIndex - 1 + CARS.length) % CARS.length;
+// Листаем ПО СПИСКУ КАТЕГОРИИ (он отсортирован по цене)
+function garageStep(dir) {
+  const list = garageList();
+  let pos = list.indexOf(garageIndex);
+  if (pos === -1) pos = 0;           // сменили категорию — с начала
+  else pos = (pos + dir + list.length) % list.length;
+  garageIndex = list[pos];
   renderGarage();
-});
-wireButton("btn-next", () => {
-  garageIndex = (garageIndex + 1) % CARS.length;
+}
+wireButton("btn-prev", () => garageStep(-1));
+wireButton("btn-next", () => garageStep(1));
+wireButton("btn-cat", () => {
+  garageCat = (garageCat + 1) % CATEGORIES.length;
+  garageIndex = garageList()[0];     // начинаем раздел с самой дешёвой
   renderGarage();
 });
 wireButton("btn-select", () => {
