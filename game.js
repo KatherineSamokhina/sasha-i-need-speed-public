@@ -159,6 +159,12 @@ const CARS = [
     offroadSoft: true,  // пикап-вездеход: трава НЕ тормозит (но аварии убивают!)
     desc: "Пикап-вездеход: по траве как по асфальту. Только деревья не таранит!",
   },
+  {
+    id: "rav4", name: "Tayoda REV4", gearbox: "А",
+    topKmh: 195, zeroTo100: 8.4,   // реальные цифры RAV4 2.5 AWD
+    offroadSoft: true,  // кроссовер: трава НЕ тормозит (но аварии убивают!)
+    desc: "Современный кроссовер: быстрый на шоссе и не боится травы.",
+  },
 ];
 
 // Режимы поездки (фишка Корсы — идея Саши): меняют тягу и голос мотора.
@@ -174,7 +180,7 @@ const BRAKE_100_0 = {
   aveo: 3.0, picanto: 2.9, corsa: 2.8, focus: 2.7, delorean: 3.2,
   camaro70: 3.4, camaroNew: 2.4, vetteC1: 3.5, vetteC8: 2.1,
   shelby: 3.3, darkhorse: 2.3, fford: 1.8, f1: 1.2,
-  zis: 5.5, disco: 3.1, hilux: 4.0,
+  zis: 5.5, disco: 3.1, hilux: 4.0, rav4: 2.9,
 };
 
 // Досчитываем игровые характеристики из реальных цифр.
@@ -197,7 +203,7 @@ let car = CARS[0];   // текущая машина (по умолчанию —
 // ---------- МАГАЗИН МАШИН (решение Саши: всё платное, кроме Авио!) ----------
 // ЗЫС не продаётся ни за какие деньги — только секретный код.
 const CAR_PRICES = {
-  aveo: 0, picanto: 300, hilux: 500, disco: 700, corsa: 600, focus: 800,
+  aveo: 0, picanto: 300, hilux: 500, disco: 700, rav4: 900, corsa: 600, focus: 800,
   camaro70: 1000, vetteC1: 1200, delorean: 1500, shelby: 1600,
   camaroNew: 2000, darkhorse: 2400, vetteC8: 3000, fford: 4000, f1: 6000,
   zis: -1,   // −1 = не продаётся, только код «вечная ностальгия»
@@ -934,7 +940,7 @@ function trackBanReason() {
   if (currentTrack === 3 && (car.id === "fford" || car.id === "f1"))
     return "🏜 В пустыне болиды не работают: песок в моторе! Возьми другую машину.";
   if (currentTrack === 4 && !car.offroadSoft && !car.ram)
-    return "⛰ Офроуд — только внедорожники и броня (Discoverry, Highlux, ЗИС)!";
+    return "⛰ Офроуд — только внедорожники и броня (Discoverry, Highlux, REV4, ЗИС)!";
   return null;
 }
 
@@ -1769,6 +1775,7 @@ const PAINT_SLOTS = {
   zis:       ["#16181c", "#101214", "#0d0f11"],
   disco:     ["#9aa0a6", "#8a9096"],
   hilux:     ["#b3202a", "#a01b24", "#8f171f"],
+  rav4:      ["#4a4f57", "#42474e", "#3d4249"],
 };
 
 const PAINT_PALETTE = ["#d5121e", "#ff8c1a", "#ffd23f", "#57d977", "#1f8f4d",
@@ -1779,7 +1786,7 @@ const HW_NAMES = { engine: "Мотор", brakes: "Тормоза", tires: "Ши�
 // Где у каждой машины колёса (для золотых дисков)
 const RIM_X = { aveo: 66, picanto: 56, corsa: 59, focus: 73, delorean: 75,
   camaro70: 77, camaroNew: 78, vetteC1: 73, vetteC8: 79, shelby: 75,
-  darkhorse: 76, fford: 84, f1: 85, zis: 66, disco: 68, hilux: 67 };
+  darkhorse: 76, fford: 84, f1: 85, zis: 66, disco: 68, hilux: 67, rav4: 67 };
 
 // ---------- ИГРОВАЯ ВАЛЮТА 🪙 ----------
 // Зарабатывается в гонках (по месту на финише), тратится на железо.
@@ -3965,6 +3972,54 @@ function drawHilux(g) {
   g.fillText("САША", 0, -10.5);
 }
 
+// --- Toyota RAV4: тёмно-серый кроссовер (по фото Саши) ---
+function drawRav4(g) {
+  g.fillStyle = "rgba(0,0,0,0.38)";
+  g.beginPath(); g.ellipse(0, 8, 94, 12, 0, 0, Math.PI * 2); g.fill();
+  // Колёса с чёрными пластиковыми арками
+  roundRect(g, -82, -30, 30, 36, 7, "#121212");
+  roundRect(g,  52, -30, 30, 36, 7, "#121212");
+  // Стекло багажника со спойлером-козырьком и стоп-сигналом в нём
+  roundRect(g, -54, -112, 108, 42, 8, "#161b20");
+  g.fillStyle = "rgba(255,255,255,0.10)";
+  g.fillRect(-46, -106, 36, 26);
+  roundRect(g, -62, -119, 124, 9, 4, "#3d4249");
+  roundRect(g, -16, -116, 32, 3, 1, "#d42323");   // стоп-сигнал в спойлере
+  // Рейлинги на крыше
+  roundRect(g, -56, -123, 20, 5, 2, "#5c6166");
+  roundRect(g,  36, -123, 20, 5, 2, "#5c6166");
+  // Высокий кузов графитового цвета, плечи чуть шире стёкол
+  roundRect(g, -86, -76, 172, 70, 10, "#4a4f57");
+  g.fillStyle = "rgba(255,255,255,0.14)";
+  g.fillRect(-78, -75, 156, 3);
+  // Узкие фонари, СОЕДИНЁННЫЕ серебристой планкой (фишка RAV4!)
+  roundRect(g, -42, -64, 84, 7, 3, "#c9d0d7");
+  for (const side of [-1, 1]) {
+    roundRect(g, side * 62 - 22, -68, 44, 14, 4, "#1c1f23");
+    roundRect(g, side * 62 - 19, -65, 38, 8, 3, "#d42323");
+  }
+  // Эмблема по центру планки
+  g.fillStyle = "#8a9096";
+  g.beginPath(); g.ellipse(0, -60.5, 8, 5, 0, 0, Math.PI * 2); g.fill();
+  g.fillStyle = "#4a4f57";
+  g.beginPath(); g.ellipse(0, -60.5, 5, 2.6, 0, 0, Math.PI * 2); g.fill();
+  // Название модели на двери багажника
+  g.fillStyle = "#c9d0d7";
+  g.font = "bold 8px Verdana";
+  g.textAlign = "center";
+  g.fillText("R E V 4", 0, -46);
+  // Номер
+  roundRect(g, -22, -42, 44, 12, 2, "#f0f0f0");
+  g.fillStyle = "#222";
+  g.font = "bold 7px Verdana";
+  g.fillText("САША", 0, -33);
+  // Чёрный бампер с серебристой защитой и катафотами
+  roundRect(g, -86, -26, 172, 18, 6, "#1d2023");
+  roundRect(g, -32, -16, 64, 8, 4, "#b9bec6");
+  roundRect(g, -78, -22, 6, 10, 2, "#a11c1c");
+  roundRect(g,  72, -22, 6, 10, 2, "#a11c1c");
+}
+
 const CAR_DRAWERS = {
   aveo: drawAveo, picanto: drawPicanto, focus: drawFocus,
   delorean: drawDelorean, corsa: drawCorsa,
@@ -3972,7 +4027,7 @@ const CAR_DRAWERS = {
   vetteC1: drawVetteC1, vetteC8: drawVetteC8,
   shelby: drawShelby, darkhorse: drawDarkHorse,
   fford: drawFFord, f1: drawF1, zis: drawZis,
-  disco: drawDisco, hilux: drawHilux,
+  disco: drawDisco, hilux: drawHilux, rav4: drawRav4,
 };
 
 // Огненный след: два пылающих следа за колёсами, три слоя пламени
