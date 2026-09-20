@@ -215,13 +215,13 @@ const CARS = [
     desc: "Белый семейный танк: фонарь во всю корму, как гоночный трек.",
   },
   {
-    id: "escalade", name: "Kadillak Eskalade", gearbox: "А",
+    id: "escalade", name: "Kadillark Eskalade", gearbox: "А",
     topKmh: 180, zeroTo100: 6.8,
     offroadSoft: true,
     desc: "Чёрный небоскрёб на колёсах с фонарями до самой крыши.",
   },
   {
-    id: "sixteen", name: "Kadillak Sixteen", gearbox: "А",
+    id: "sixteen", name: "Kadillark Sixteen", gearbox: "А",
     topKmh: 300, zeroTo100: 4.0,
     desc: "Концепт с мотором V16: шестнадцать цилиндров роскоши.",
   },
