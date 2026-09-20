@@ -1910,7 +1910,7 @@ const CAR_BRAND = {
   disco: "Sand Hover", hilux: "Tayoda", rav4: "Tayoda",
   kopeyka: "ВАЗ", semerka: "ВАЗ", chetverka: "ВАЗ",
   volga21: "Волга", volga24: "Волга", volga3110: "Волга",
-  buhanka: "УАЗ", raf: "РАФ", zis: "ЗИС", f1: "Ф-1",
+  buhanka: "УАЗ", raf: "РАФ", zis: "ЗИС", f1: "Нет марки",
   challenger: "Dodgee", charger14: "Dodgee", charger69: "Dodgee",
   durango: "Dodgee",
   escalade: "Kadillark", sixteen: "Kadillark",
@@ -2049,7 +2049,9 @@ function renderCats() {
     grid.style.flexWrap = "wrap";
     grid.style.justifyContent = "center";
     grid.style.maxWidth = "640px";
-    const brands = [...new Set(Object.values(CAR_BRAND))];
+    // «Нет марки» (безымянные болиды) — всегда в конце списка
+    const brands = [...new Set(Object.values(CAR_BRAND))]
+      .sort((a, b) => (a === "Нет марки") - (b === "Нет марки"));
     for (const brand of brands) {
       const count = CARS.filter((c) => CAR_BRAND[c.id] === brand).length;
       const b = document.createElement("button");
