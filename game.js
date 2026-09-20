@@ -177,6 +177,21 @@ const CARS = [
     offroadSoft: true,  // решение Саши: УАЗ и РАФ — внедорожники!
     desc: "Рижский микроавтобус: возил такси и скорую. Теперь — гоняет!",
   },
+  {
+    id: "kopeyka", name: "Копейка 2101", gearbox: "М",
+    topKmh: 142, zeroTo100: 20.0,  // честные заводские цифры ВАЗ-2101
+    desc: "Вишнёвая классика: хром, честная механика и вечная любовь.",
+  },
+  {
+    id: "semerka", name: "Семёрка 2107", gearbox: "М",
+    topKmh: 150, zeroTo100: 16.0,  // заводские цифры ВАЗ-2107
+    desc: "Белая семёрка: большие фонари, дворовый престиж высшей пробы.",
+  },
+  {
+    id: "chetverka", name: "Четвёрка 2104", gearbox: "М",
+    topKmh: 143, zeroTo100: 19.0,  // заводские цифры ВАЗ-2104
+    desc: "Красный универсал: багажник размером с дачу. Везёт ВСЁ.",
+  },
 ];
 
 // Режимы поездки (фишка Корсы — идея Саши): меняют тягу и голос мотора.
@@ -193,6 +208,7 @@ const BRAKE_100_0 = {
   camaro70: 3.4, camaroNew: 2.4, vetteC1: 3.5, vetteC8: 2.1,
   shelby: 3.3, darkhorse: 2.3, fford: 1.8, f1: 1.2,
   zis: 5.5, disco: 3.1, hilux: 4.0, rav4: 2.9, buhanka: 4.6, raf: 4.2,
+  kopeyka: 4.0, semerka: 3.8, chetverka: 3.9,
 };
 
 // Досчитываем игровые характеристики из реальных цифр.
@@ -215,7 +231,7 @@ let car = CARS[0];   // текущая машина (по умолчанию —
 // ---------- МАГАЗИН МАШИН (решение Саши: всё платное, кроме Авио!) ----------
 // ЗЫС не продаётся ни за какие деньги — только секретный код.
 const CAR_PRICES = {
-  aveo: 0, picanto: 300, buhanka: 350, raf: 400, hilux: 500, disco: 700, rav4: 900, corsa: 600, focus: 800,
+  aveo: 0, kopeyka: 250, chetverka: 270, semerka: 280, picanto: 300, buhanka: 350, raf: 400, hilux: 500, disco: 700, rav4: 900, corsa: 600, focus: 800,
   camaro70: 1000, vetteC1: 1200, delorean: 1500, shelby: 1600,
   camaroNew: 2000, darkhorse: 2400, vetteC8: 3000, fford: 4000, f1: 6000,
   zis: -1,   // −1 = не продаётся, только код «вечная ностальгия»
@@ -1790,6 +1806,9 @@ const PAINT_SLOTS = {
   rav4:      ["#4a4f57", "#42474e", "#3d4249"],
   buhanka:   ["#c9ccd1", "#b8bcc2"],
   raf:       ["#f2f3f0", "#e2e4e0"],
+  kopeyka:   ["#a51e24", "#8f171f"],
+  semerka:   ["#f2f3f0", "#e4e6e2"],
+  chetverka: ["#c5342c", "#ad2b25"],
 };
 
 const PAINT_PALETTE = ["#d5121e", "#ff8c1a", "#ffd23f", "#57d977", "#1f8f4d",
@@ -1801,7 +1820,7 @@ const HW_NAMES = { engine: "Мотор", brakes: "Тормоза", tires: "Ши�
 const RIM_X = { aveo: 66, picanto: 56, corsa: 59, focus: 73, delorean: 75,
   camaro70: 77, camaroNew: 78, vetteC1: 73, vetteC8: 79, shelby: 75,
   darkhorse: 76, fford: 84, f1: 85, zis: 66, disco: 68, hilux: 67, rav4: 67,
-  buhanka: 62, raf: 64 };
+  buhanka: 62, raf: 64, kopeyka: 64, semerka: 64, chetverka: 64 };
 
 // ---------- ИГРОВАЯ ВАЛЮТА 🪙 ----------
 // Зарабатывается в гонках (по месту на финише), тратится на железо.
@@ -4119,6 +4138,116 @@ function drawRaf(g) {
   roundRect(g, -78, -20, 156, 10, 5, "#8a9096");
 }
 
+// --- ВАЗ-2101 «Копейка»: вишнёвая классика с хромом (по фото Саши) ---
+function drawKopeyka(g) {
+  g.fillStyle = "rgba(0,0,0,0.38)";
+  g.beginPath(); g.ellipse(0, 8, 90, 12, 0, 0, Math.PI * 2); g.fill();
+  roundRect(g, -74, -26, 26, 32, 6, "#121212");
+  roundRect(g,  48, -26, 26, 32, 6, "#121212");
+  // Заднее стекло с тонкими хромовыми стойками
+  roundRect(g, -54, -100, 108, 38, 6, "#1a2026");
+  g.fillStyle = "rgba(255,255,255,0.12)";
+  g.fillRect(-46, -94, 40, 26);
+  roundRect(g, -58, -104, 116, 6, 3, "#a51e24");
+  // Низкий аккуратный кузов
+  roundRect(g, -84, -66, 168, 60, 8, "#a51e24");
+  g.fillStyle = "rgba(255,255,255,0.18)";
+  g.fillRect(-76, -65, 152, 3);
+  // Хромовая кромка багажника
+  roundRect(g, -66, -50, 132, 3, 1, "#d7dce2");
+  // Маленькие прямоугольные фонари по углам
+  for (const side of [-1, 1]) {
+    roundRect(g, side * 66 - 12, -44, 24, 12, 2, "#1c1f23");
+    roundRect(g, side * 66 - 10, -42, 12, 8, 1, "#d42323");
+    roundRect(g, side * 66 + 3, -42, 6, 8, 1, "#e8e6df");
+  }
+  // Шильдик слева, номер по центру
+  g.fillStyle = "#d7dce2";
+  g.font = "bold 6px Verdana";
+  g.textAlign = "center";
+  g.fillText("ВАЗ 2101", -52, -34);
+  roundRect(g, -22, -42, 44, 12, 2, "#f0f0f0");
+  g.fillStyle = "#222";
+  g.font = "bold 7px Verdana";
+  g.fillText("САША", 0, -33);
+  // Хромовый бампер с клыками
+  roundRect(g, -88, -22, 176, 9, 4, "#d7dce2");
+  roundRect(g, -60, -26, 8, 6, 2, "#c0c6cd");
+  roundRect(g,  52, -26, 8, 6, 2, "#c0c6cd");
+}
+
+// --- ВАЗ-2107 «Семёрка»: белая, большие фонари (по фото Саши) ---
+function drawSemerka(g) {
+  g.fillStyle = "rgba(0,0,0,0.38)";
+  g.beginPath(); g.ellipse(0, 8, 90, 12, 0, 0, Math.PI * 2); g.fill();
+  roundRect(g, -74, -26, 26, 32, 6, "#121212");
+  roundRect(g,  48, -26, 26, 32, 6, "#121212");
+  roundRect(g, -54, -102, 108, 38, 6, "#1a2026");
+  g.fillStyle = "rgba(255,255,255,0.12)";
+  g.fillRect(-46, -96, 40, 26);
+  roundRect(g, -58, -106, 116, 6, 3, "#e4e6e2");
+  // Кузов повыше копейки, угловатый
+  roundRect(g, -84, -68, 168, 62, 7, "#f2f3f0");
+  g.fillStyle = "rgba(0,0,0,0.05)";
+  g.fillRect(-84, -46, 168, 3);
+  // БОЛЬШИЕ прямоугольные фонари (фишка семёрки!)
+  for (const side of [-1, 1]) {
+    roundRect(g, side * 58 - 24, -60, 48, 16, 2, "#1c1f23");
+    roundRect(g, side * 58 - 22, -58, 18, 12, 1, "#ffb35c");
+    roundRect(g, side * 58 - 2,  -58, 22, 12, 1, "#d42323");
+  }
+  // Чёрная планка между фонарями
+  roundRect(g, -32, -58, 64, 12, 2, "#26292d");
+  g.fillStyle = "#c9d0d7";
+  g.font = "bold 6px Verdana";
+  g.textAlign = "center";
+  g.fillText("LADA 2107", 0, -50);
+  // Номер ниже планки
+  roundRect(g, -22, -42, 44, 12, 2, "#f0f0f0");
+  g.fillStyle = "#222";
+  g.font = "bold 7px Verdana";
+  g.fillText("САША", 0, -33);
+  // Чёрный бампер с серой вставкой
+  roundRect(g, -88, -24, 176, 12, 4, "#26292d");
+  roundRect(g, -80, -20, 160, 4, 2, "#8a9096");
+}
+
+// --- ВАЗ-2104 «Четвёрка»: красный универсал (по фото Саши) ---
+function drawChetverka(g) {
+  g.fillStyle = "rgba(0,0,0,0.38)";
+  g.beginPath(); g.ellipse(0, 8, 90, 12, 0, 0, Math.PI * 2); g.fill();
+  roundRect(g, -74, -26, 26, 32, 6, "#121212");
+  roundRect(g,  48, -26, 26, 32, 6, "#121212");
+  // Высокий кузов-универсал: дверь багажника почти до крыши
+  roundRect(g, -82, -112, 164, 106, 8, "#c5342c");
+  g.fillStyle = "rgba(255,255,255,0.20)";
+  g.fillRect(-74, -110, 148, 3);
+  // Огромное стекло двери багажника с дворником
+  roundRect(g, -60, -104, 120, 44, 6, "#1a2026");
+  g.fillStyle = "rgba(255,255,255,0.12)";
+  g.fillRect(-52, -98, 46, 30);
+  g.strokeStyle = "#26292d";
+  g.lineWidth = 3;
+  g.beginPath(); g.moveTo(30, -64); g.lineTo(2, -92); g.stroke();  // дворник
+  // Вертикальные фонарики по краям двери
+  for (const side of [-1, 1]) {
+    roundRect(g, side * 70 - 5, -56, 10, 20, 2, "#1c1f23");
+    roundRect(g, side * 70 - 3, -54, 6, 8, 1, "#d42323");
+    roundRect(g, side * 70 - 3, -45, 6, 7, 1, "#ffb35c");
+  }
+  // Номер прямо НА двери багажника (как на фото)
+  roundRect(g, -24, -56, 48, 13, 2, "#f0f0f0");
+  g.fillStyle = "#222";
+  g.font = "bold 8px Verdana";
+  g.textAlign = "center";
+  g.fillText("САША", 0, -46);
+  g.fillStyle = "#e4e6e2";
+  g.font = "bold 6px Verdana";
+  g.fillText("ВАЗ 2104", -52, -34);
+  // Хромовый бампер
+  roundRect(g, -86, -20, 172, 9, 4, "#d7dce2");
+}
+
 const CAR_DRAWERS = {
   aveo: drawAveo, picanto: drawPicanto, focus: drawFocus,
   delorean: drawDelorean, corsa: drawCorsa,
@@ -4128,6 +4257,7 @@ const CAR_DRAWERS = {
   fford: drawFFord, f1: drawF1, zis: drawZis,
   disco: drawDisco, hilux: drawHilux, rav4: drawRav4,
   buhanka: drawBuhanka, raf: drawRaf,
+  kopeyka: drawKopeyka, semerka: drawSemerka, chetverka: drawChetverka,
 };
 
 // Огненный след: два пылающих следа за колёсами, три слоя пламени
