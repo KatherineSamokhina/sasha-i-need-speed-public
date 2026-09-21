@@ -379,6 +379,15 @@ const CARS = [
     topKmh: 305, zeroTo100: 3.4,
     desc: "Красный семейный седан… с мотором монстра. Волк в костюме.",
   },
+  // ---- ПОЛИЦИЯ (блокнот Саши: «бодает деревья, но трава проблема») ----
+  {
+    id: "police", name: "Dodgee Charjer ПОЛИЦИЯ", gearbox: "А",
+    topKmh: 250, zeroTo100: 5.8,
+    ram: true,        // бодает деревья, коров и соперников!
+    grassSlow: true,  // …но трава — его проблема (не съезжай с дороги!)
+    noNpc: true,      // соперником не бывает (ждёт режима ПОГОНЬ)
+    desc: "Служебный таран: сносит деревья с мигалкой. Но трава — его слабость!",
+  },
   // ---- Гиперкары (восторг Саши: «СКОРОСТЬ ГЕМЕРЫ!!!») ----
   {
     id: "gemera", name: "Konisegg Gemera", gearbox: "А",
@@ -492,7 +501,7 @@ const BRAKE_100_0 = {
   astro: 2.9, cobra: 3.2, defendor: 4.2, pejo206: 3.0,
   raf977: 4.4, uaz469: 4.5, zis101: 5.0, f2: 1.5,
   agera: 1.6, zonta: 1.8, aero: 1.7, m3e30: 3.0, m5: 2.2,
-  timemachine: 3.2,
+  timemachine: 3.2, police: 2.6,
 };
 
 // Досчитываем игровые характеристики из реальных цифр.
@@ -529,6 +538,7 @@ const CAR_PRICES = {
   raf977: 350, uaz469: 400, zis101: 500, f2: 3500,
   agera: 8200, zonta: 7000, aero: 7800, m3e30: 1500, m5: 2700,
   timemachine: -2,   // −2 = не продаётся, только за ДОСТИЖЕНИЕ!
+  police: 2200,
   pejo308: 1300, volga3110: 320, volga24: 300, volga21: 380,
   sportage: 850, k5: 950, sonata: 900, tucson: 800, i30: 600,
   zis: -1,   // −1 = не продаётся, только код «вечная ностальгия»
@@ -2071,7 +2081,7 @@ const CAR_CATEGORY = {
   astro: "city", cobra: "sport", defendor: "suv", pejo206: "city",
   raf977: "ussr", uaz469: "ussr", zis101: "ussr", f2: "hyper",
   agera: "hyper", zonta: "hyper", aero: "hyper",
-  m3e30: "sport", m5: "sport", timemachine: "sport",
+  m3e30: "sport", m5: "sport", timemachine: "sport", police: "sport",
 };
 // Марка каждой машины — для вкладки «По марке» (заказ Саши)
 const CAR_BRAND = {
@@ -2098,7 +2108,7 @@ const CAR_BRAND = {
   astro: "Opal", cobra: "Shelbee", defendor: "Sand Hover",
   pejo206: "Pejo", raf977: "РАФ", uaz469: "УАЗ", zis101: "ЗИС",
   f2: "Нет марки", agera: "Konisegg", zonta: "Paganny", aero: "ZSC",
-  m3e30: "BNW", m5: "BNW", timemachine: "TMC",
+  m3e30: "BNW", m5: "BNW", timemachine: "TMC", police: "Dodgee",
 };
 let garageCat = 0;      // номер выбранной категории в CATEGORIES
 let garageBrand = null; // выбранная марка (null = фильтруем по типу)
@@ -2451,7 +2461,7 @@ const RIM_X = { aveo: 66, picanto: 56, corsa: 59, focus: 73, delorean: 75,
   sportage: 66, k5: 71, sonata: 71, tucson: 66, i30: 65,
   astro: 64, cobra: 74, defendor: 64, pejo206: 62, raf977: 62,
   uaz469: 64, zis101: 66, f2: 84, agera: 80, zonta: 80, aero: 80,
-  m3e30: 70, m5: 74, timemachine: 75 };
+  m3e30: 70, m5: 74, timemachine: 75, police: 74 };
 
 // ---------- ИГРОВАЯ ВАЛЮТА 🪙 ----------
 // Зарабатывается в гонках (по месту на финише), тратится на железо.
@@ -3316,8 +3326,10 @@ function update(dt) {
   // тормозить! Уточнение Саши: броневик (ram) И внедорожники
   // (offroadSoft) по траве едут как по асфальту — совсем без потерь.
   // Разница: аварии внедорожники НЕ прощают, а броневик таранит.
+  // Полицейский Додж (grassSlow): таранит как ЗИС, но трава — его
+  // проблема (формула Саши из блокнота)!
   if ((playerX < -1 || playerX > 1) && speed > OFFROAD_LIMIT
-      && !car.ram && !car.offroadSoft)
+      && ((!car.ram && !car.offroadSoft) || car.grassSlow))
     speed += OFFROAD_DECEL * dt;
 
   playerX = clamp(playerX, -2.2, 2.2);
@@ -6380,6 +6392,45 @@ function drawTimeMachine(g) {
   g.beginPath(); g.ellipse(0, -100, 6, 4, 0, 0, Math.PI * 2); g.fill();
 }
 
+// --- ПОЛИЦЕЙСКИЙ ДОДЖ: чёрный, мигалка, POLICE (блокнот Саши) ---
+function drawPolice(g) {
+  carBase(g);
+  // МИГАЛКА на крыше: синий и красный плафоны на планке
+  roundRect(g, -32, -106, 64, 6, 2, "#26292d");
+  roundRect(g, -28, -114, 24, 9, 3, "#2a6db8");
+  roundRect(g,   4, -114, 24, 9, 3, "#d42323");
+  g.fillStyle = "rgba(90, 160, 255, 0.35)";
+  g.beginPath(); g.ellipse(-16, -116, 14, 7, 0, 0, Math.PI * 2); g.fill();
+  g.fillStyle = "rgba(255, 80, 80, 0.35)";
+  g.beginPath(); g.ellipse( 16, -116, 14, 7, 0, 0, Math.PI * 2); g.fill();
+  // Стекло и чёрный кузов Чарджера
+  roundRect(g, -54, -98, 108, 34, 7, "#1a2026");
+  g.fillStyle = "rgba(255,255,255,0.09)"; g.fillRect(-46, -93, 40, 24);
+  roundRect(g, -86, -68, 172, 62, 8, "#17191c");
+  g.fillStyle = "rgba(255,255,255,0.10)"; g.fillRect(-78, -67, 156, 3);
+  // Красная лента фонарей (как у Чарджера)
+  roundRect(g, -72, -62, 144, 12, 5, "#8f0f0f");
+  roundRect(g, -68, -59, 136, 6, 3, "#e82121");
+  // БЕЛАЯ полоса со звездой и надписью POLICE
+  roundRect(g, -78, -44, 156, 16, 3, "#e8e6df");
+  g.fillStyle = "#17191c";
+  g.font = "bold 10px Verdana";
+  g.textAlign = "center";
+  g.fillText("P O L I C E", 0, -32);
+  g.fillStyle = "#c9a11c";                       // золотая звезда слева
+  g.beginPath();
+  for (let i = 0; i < 10; i++) {
+    const r = i % 2 === 0 ? 5.5 : 2.4;
+    const a = -Math.PI / 2 + (i * Math.PI) / 5;
+    g[i === 0 ? "moveTo" : "lineTo"](-64 + Math.cos(a) * r, -36 + Math.sin(a) * r);
+  }
+  g.closePath(); g.fill();
+  // Номер на бампере и усиленный чёрный бампер-таран
+  plate(g, -24, 38);
+  roundRect(g, -88, -26, 176, 6, 3, "#26292d");
+  roundRect(g, -86, -12, 172, 6, 3, "#101214");
+}
+
 const CAR_DRAWERS = {
   aveo: drawAveo, picanto: drawPicanto, focus: drawFocus,
   delorean: drawDelorean, corsa: drawCorsa,
@@ -6409,6 +6460,7 @@ const CAR_DRAWERS = {
   zis101: drawZis101, f2: drawF2, agera: drawAgera,
   zonta: drawZonta, aero: drawAero,
   m3e30: drawM3e30, m5: drawM5, timemachine: drawTimeMachine,
+  police: drawPolice,
 };
 
 // Огненный след: два пылающих следа за колёсами, три слоя пламени
