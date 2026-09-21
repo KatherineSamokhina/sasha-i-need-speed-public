@@ -1661,11 +1661,13 @@ wireButton("poi-hw", goHighway);
 wireButton("poi-race", () => { if (goRaceMode()) { inCity = false; show("city", false); } });
 wireButton("poi-drag", () => { inCity = false; show("city", false); goDragMode(); });
 wireButton("poi-chase", () => { goChase("cop"); });   // в городе — служба
-// В ЗАЕЗДАХ (правило Саши): купил полицию — ты полиция, нет — ты ВОР!
+// В ЗАЕЗДАХ (правило Саши, уточнено): роль решает ВЫБРАННАЯ машина!
+// Сел на полицию — ты полиция. Пришёл на любой другой (хоть на
+// ДМС!) — ты ВОР. Купить полицию нужно, чтобы её выбрать.
 wireButton("btn-chase", () => {
   inRaces = false;
   show("races", false);
-  goChase(isOwned("police") ? "cop" : "thief");
+  goChase(car.id === "police" ? "cop" : "thief");
 });
 wireButton("poi-ta",   () => { if (goTimeAttack()) { inCity = false; show("city", false); } });
 wireButton("poi-fuel", () => {
