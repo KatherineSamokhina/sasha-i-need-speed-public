@@ -3608,7 +3608,7 @@ function update(dt) {
       }
     }
     const left = 45 - (performance.now() - chaseStart) / 1000;
-    if (gap < 120) {
+    if (gap < 10) {   // 0 метров — ловит только КАСАНИЕМ (правка Саши)
       chaseOver = true;
       raceOver = true;
       if (!adminCode) { money = Math.max(0, money - 150); saveMoney(); }
