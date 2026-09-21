@@ -1391,6 +1391,7 @@ function goTimeAttack() {
 function goMenu() {
   raceMode = false;
   taMode = false;
+  endChase();       // если уходили из погони — вернуть свою машину
   opponents = [];
   saveFuel();       // бензин запоминается между поездками
   ensureCircuit();
@@ -1399,6 +1400,84 @@ function goMenu() {
   engineOn = false;
   engineStarting = false;
   show("menu", true);
+}
+
+// ---------- 🚓 ПОГОНЯ (спецификация Саши, 21.09) ----------
+// «Полиция будет на карте с разными дорогами, развилками, догони
+// преступника. Старт 60 км/ч». Ты — на служебном Додже, впереди
+// удирает преступник. На развилках выбирай сторону: ошибся —
+// он оторвался!
+let chaseMode = false;
+let chaseOver = false;
+let chasePrevCar = -1;
+let chaseForks = [];
+
+function buildChaseTrack() {
+  raceKind = "chase";
+  setTheme(0);
+  setupAnimals(-1);
+  traffic = [];
+  segments = [];
+  chaseForks = [];
+  addRoad(40, 40, 40, 0, 0);   // разгонная прямая
+  while (segments.length < 1300) {
+    const dir = Math.random() < 0.5 ? -1 : 1;
+    // подъезд к развилке
+    addRoad(18, 26, 18, Math.random() * 2 - 1, Math.random() * 10 - 5);
+    const forkSeg = segments.length - 1;
+    chaseForks.push({ seg: forkSeg, dir, resolved: false });
+    addSprite(forkSeg, "fork", 0);
+    // выбранная ветка: дорога круто уходит в сторону dir
+    addRoad(14, 22, 14, dir * (3.5 + Math.random() * 1.5),
+            Math.random() * 12 - 6);
+    addRoad(18, 34, 18, Math.random() * 4 - 2, 0);
+  }
+  trackLength = segments.length * SEG_LEN;
+  buildTrackMap();
+}
+
+function goChase() {
+  buildChaseTrack();
+  raceMode = false;
+  taMode = false;
+  chaseMode = true;
+  chaseOver = false;
+  inCity = false;
+  show("city", false);
+  // Полицейскую машину ВЫДАЮТ на время службы (покупать не нужно)
+  chasePrevCar = carIndex;
+  carIndex = CARS.findIndex((c) => c.id === "police");
+  car = CARS[carIndex];
+  restartRace();
+  // ПРЕСТУПНИК: случайная машина впереди, быстрая, но досягаемая
+  const pool = CARS.filter((c) => !c.noNpc && c.topKmh >= 150 && c.topKmh <= 250);
+  const cc = pool[Math.floor(Math.random() * pool.length)];
+  opponents = [{ car: cc, canvas: prerenderCar(cc.id),
+                 z: SEG_LEN * 10, x: 0.4, speed: KMH * 80,
+                 skill: 0.84 + Math.random() * 0.06 }];
+  // СТАРТ С ХОДА: 60 км/ч (спецификация Саши)
+  engineOn = true;
+  engineStarting = false;
+  speed = KMH * 60;
+  manualGear = 2;
+  started = true;
+  show("menu", false);
+  initEngineSound();
+  if (engine && engine.ac.state === "suspended") engine.ac.resume();
+  lapMsg = { text: `🚓 ДОГОНИ ПРЕСТУПНИКА! Он на ${cc.name}!`,
+             until: performance.now() + 3000 };
+}
+
+// Вернуть игроку его машину после службы
+function endChase() {
+  if (!chaseMode) return;
+  chaseMode = false;
+  chaseOver = false;
+  if (chasePrevCar >= 0) {
+    carIndex = chasePrevCar;
+    car = CARS[carIndex];
+    chasePrevCar = -1;
+  }
 }
 
 // Esc — пауза (только во время заезда, не на экране финиша)
@@ -1552,6 +1631,7 @@ wireButton("btn-city-back", closeCity);
 wireButton("poi-hw", goHighway);
 wireButton("poi-race", () => { if (goRaceMode()) { inCity = false; show("city", false); } });
 wireButton("poi-drag", () => { inCity = false; show("city", false); goDragMode(); });
+wireButton("poi-chase", () => { goChase(); });
 wireButton("poi-ta",   () => { if (goTimeAttack()) { inCity = false; show("city", false); } });
 wireButton("poi-fuel", () => {
   // Цены Саши: полный бак — 2 🪙 (как по кнопке V у колонки)
@@ -1688,16 +1768,25 @@ wireButton("btn-races-back", closeRaces);
 wireButton("btn-race", () => { if (goRaceMode()) { inRaces = false; show("races", false); } });
 wireButton("btn-drag", () => { inRaces = false; show("races", false); goDragMode(); });
 wireButton("btn-ta",   () => { if (goTimeAttack()) { inRaces = false; show("races", false); } });
-wireButton("btn-finish-again", restartRace);
+wireButton("btn-finish-again", () => {
+  if (chaseMode) { endChase(); goChase(); }   // новая погоня!
+  else restartRace();
+});
 wireButton("btn-finish-menu", goMenu);
 wireButton("btn-track", () => {
   buildTrack((currentTrack + 1) % TRACK_NAMES.length);
   restartRace();
   updateTrackButton();
 });
-wireButton("btn-restart", restartRace);
+wireButton("btn-restart", () => {
+  if (chaseMode) { endChase(); goChase(); }
+  else restartRace();
+});
 wireButton("btn-crash-menu", goMenu);
-wireButton("btn-pause-restart", restartRace);
+wireButton("btn-pause-restart", () => {
+  if (chaseMode) { endChase(); goChase(); }
+  else restartRace();
+});
 wireButton("btn-pause-menu", goMenu);
 
 // Сноп искр: летят вверх-в стороны, падают под тяжестью, гаснут.
@@ -2138,6 +2227,8 @@ const ACHIEVEMENTS = [
     desc: "Собери ВСЕ машины СССР (да, даже ЗИС!)" },
   { id: "friend", icon: "🌐", name: "Друг на связи",
     desc: "Сыграй с другом в мультиплеере" },
+  { id: "arrest", icon: "🚓", name: "Именем закона!",
+    desc: "Задержи преступника в погоне" },
 ];
 // (сам объект achv объявлен наверху, рядом с owned — порядок загрузки!)
 function unlockAchv(id) {
@@ -3428,6 +3519,48 @@ function update(dt) {
     }
   }
 
+  // ---------- 🚓 ПОГОНЯ: развилки, задержание, побег ----------
+  if (chaseMode && !chaseOver && !crashed && opponents[0]) {
+    updateOpponents(dt);
+    const crim = opponents[0];
+    const gap = crim.z - position;
+    // РАЗВИЛКИ: на сегменте развилки надо быть на стороне преступника
+    for (const f of chaseForks) {
+      if (!f.resolved && position >= f.seg * SEG_LEN) {
+        f.resolved = true;
+        if (gap < 400) continue;   // он прямо перед носом — развилка не в счёт
+        const side = playerX < 0 ? -1 : 1;
+        if (side === f.dir) {
+          crim.speed *= 0.72;      // преступник запаниковал!
+          lapMsg = { text: "✅ Верная дорога!", until: performance.now() + 1400 };
+        } else {
+          crim.z += 1600;          // ушёл по другой ветке!
+          lapMsg = { text: "❌ Не туда! Преступник оторвался!",
+                     until: performance.now() + 1800 };
+        }
+      }
+    }
+    // ЗАДЕРЖАНИЕ: догнал вплотную
+    if (gap < 160 && Math.abs(crim.x - playerX) < 0.5) {
+      chaseOver = true;
+      raceOver = true;
+      const reward = 600;
+      money += reward; saveMoney(); updateMoneyUI();
+      unlockAchv("arrest");
+      makeSparks(["#5aa0ff", "#ff5050", "#ffffff"]);   // мигалка салютует!
+      document.getElementById("finish-text").textContent =
+        `🚓 ЗАДЕРЖАН! Приз: +${reward} 🪙 (всего: ${adminCode ? "АДМИН" : money})`;
+      show("finish", true);
+    } else if (gap > 24000) {
+      // Оторвался безнадёжно — побег удался
+      chaseOver = true;
+      raceOver = true;
+      document.getElementById("finish-text").textContent =
+        "😞 Преступник скрылся… Попробуй ещё раз!";
+      show("finish", true);
+    }
+  }
+
   // ---------- Гонка: соперники, столкновения, финиш ----------
   if (raceMode) {
     updateOpponents(dt);
@@ -3943,6 +4076,22 @@ function drawSprite(spr, x, y, scale, clipY) {
     ctx.font = `bold ${px(260)}px Verdana`;
     ctx.textAlign = "center";
     ctx.fillText("⛽", x, y - h - px(60));
+  } else if (spr.type === "fork") {
+    // ЗНАК РАЗВИЛКИ (режим погони): синий щит над дорогой со
+    // стрелками влево-вправо — выбирай сторону!
+    const sw = px(1500), sh = px(620), poleH = px(1500);
+    ctx.fillStyle = "#c9cdd4";
+    ctx.fillRect(x - px(70), y - poleH, px(140), poleH);
+    ctx.fillStyle = "#1f5fd6";
+    ctx.fillRect(x - sw / 2, y - poleH - sh, sw, sh);
+    ctx.strokeStyle = "#f2f2f2";
+    ctx.lineWidth = Math.max(1, px(40));
+    ctx.strokeRect(x - sw / 2 + px(30), y - poleH - sh + px(30),
+                   sw - px(60), sh - px(60));
+    ctx.fillStyle = "#f2f2f2";
+    ctx.font = `bold ${px(400)}px Verdana`;
+    ctx.textAlign = "center";
+    ctx.fillText("⬅ ➡", x, y - poleH - sh / 2 + px(140));
   } else if (spr.type === "farch") {
     // ФИНИШНАЯ арка: шахматный баннер над полосой!
     const half = px(ROAD_WIDTH * 1.12);
@@ -6569,6 +6718,19 @@ function renderHUD() {
   ctx.textAlign = "left";
   ctx.fillText("км/ч", 126, 52);
 
+  // ---------- 🚓 Табло погони: дистанция до преступника ----------
+  if (chaseMode && opponents[0] && !chaseOver) {
+    const gapM = Math.max(0, Math.round((opponents[0].z - position) / 10));
+    ctx.fillStyle = "rgba(10, 10, 20, 0.6)";
+    ctx.beginPath();
+    ctx.roundRect(W / 2 - 150, 14, 300, 36, 10);
+    ctx.fill();
+    ctx.fillStyle = gapM < 60 ? "#57d977" : gapM > 1200 ? "#ff5050" : "#ffffff";
+    ctx.font = "bold 17px Verdana";
+    ctx.textAlign = "center";
+    ctx.fillText(`🚓 До преступника: ${gapM} м`, W / 2, 38);
+  }
+
   // ---------- Мини-карта трассы под спидометром (идея Саши) ----------
   if (trackMapPts && trackMapPts.length > 1) {
     const mx = 16, my = 76, mw = 168, mh = 116, pad = 14;
@@ -6621,7 +6783,8 @@ function renderHUD() {
   // Текущая трасса (или драг-полоса)
   ctx.fillStyle = "rgba(255,255,255,0.75)";
   ctx.fillText("Трасса: " + (raceKind === "drag" ? "Драг-полоса"
-    : raceKind === "highway" ? "Шоссе" : TRACK_NAMES[currentTrack]),
+    : raceKind === "highway" ? "Шоссе"
+    : raceKind === "chase" ? "Погоня" : TRACK_NAMES[currentTrack]),
     W - 18, 88);
   // Подсказки про клавиши — только там, где есть клавиатура!
   // На телефоне их прячем (решение Саши): там свои кнопки
