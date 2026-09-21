@@ -1430,19 +1430,18 @@ function buildChaseTrack() {
     const forkSeg = segments.length - 1;
     chaseForks.push({ seg: forkSeg, dir, resolved: false });
     addSprite(forkSeg, "fork", 0);
-    // выбранная ветка: дорога РЕЗКО уходит в сторону dir (V-образно,
-    // как на фото-референсе Саши)
-    addRoad(5, 24, 16, dir * (4.5 + Math.random() * 1.2),
+    // выбранная ветка: дорога уходит в сторону dir
+    addRoad(6, 22, 14, dir * (3.2 + Math.random() * 1),
             Math.random() * 12 - 6);
     addRoad(10, 18, 10, Math.random() * 4 - 2, 0);
-    // ВТОРАЯ ДОРОГА (правки Саши: «развилка как 2 дороги», «это
-    // развилка» + фото): ветка отслаивается КРУТО, зеркально
-    // настоящей — вместе они образуют букву V с травой в клину
-    for (let k = 0; k < 14 && forkSeg + k < segments.length; k++) {
+    // ВТОРАЯ ДОРОГА (правка Саши: «перед тобой 2 путя и оба
+    // продолжение трассы»): полноценная ветка — с бордюрами И
+    // разметкой — расходится зеркально, длинной плавной вилкой
+    for (let k = 0; k < 20 && forkSeg + k < segments.length; k++) {
       segments[forkSeg + k].branch = {
         side: -dir,                    // в противоположную сторону
-        o1: k * 0.55,
-        o2: (k + 1) * 0.55,
+        o1: k * 0.42,
+        o2: (k + 1) * 0.42,
       };
     }
   }
@@ -3579,13 +3578,10 @@ function update(dt) {
     const cop = opponents[0];
     const playerTotalC = (playerLap - 1) * trackLength + position;
     const gap = playerTotalC - cop.z;
-    // Баланс (финальное правило Саши): полиция НЕ ДОЛЖНА нагонять
-    // никого, кто жмёт газ в пол — её потолок на 3% НИЖЕ твоей
-    // максималки. Но БЕЗДЕЙСТВИЕ нагоняется: стоишь, разбился или
-    // ползёшь — она надвигается (не медленнее 70 км/ч)!
-    const copMax = tunedMaxSpeed() * 0.97;
-    const target = gap > 800 ? speed + KMH * 8 : speed + KMH * 1;
-    cop.speed = Math.min(copMax, Math.max(KMH * 70, target));
+    // ПРАВИЛО 85 (Саша): полиция не быстрее 85 км/ч. Едешь 85 —
+    // держится рядом, быстрее 85 — ОТДАЛЯЕШЬСЯ (на любой машине,
+    // хоть на Буханке!). Но встал или ползёшь — настигает (мин. 70).
+    cop.speed = clamp(speed + KMH * 8, KMH * 70, KMH * 85);
     cop.z += cop.speed * dt;
     // РАЗВИЛКИ — настоящий выбор пути: свернул на другую ветку —
     // дорога перегибается за тобой! Полиция далеко — потеряла след,
@@ -3790,6 +3786,17 @@ function renderSegment(seg) {
             p2.x + o2 + p2.w, p2.y, p2.x + o2 + p2.w + r2, p2.y, c.rumble);
     polygon(p1.x + o1 - p1.w, p1.y, p1.x + o1 + p1.w, p1.y,
             p2.x + o2 + p2.w, p2.y, p2.x + o2 - p2.w, p2.y, c.road);
+    // И разметка — чтобы ветка выглядела ПРОДОЛЖЕНИЕМ трассы!
+    if (c.lane) {
+      const l1 = p1.w / 32, l2 = p2.w / 32;
+      const lw1 = p1.w * 2 / LANES, lw2 = p2.w * 2 / LANES;
+      let lx1 = p1.x + o1 - p1.w + lw1, lx2 = p2.x + o2 - p2.w + lw2;
+      for (let lane = 1; lane < LANES; lane++) {
+        polygon(lx1 - l1 / 2, p1.y, lx1 + l1 / 2, p1.y,
+                lx2 + l2 / 2, p2.y, lx2 - l2 / 2, p2.y, c.lane);
+        lx1 += lw1; lx2 += lw2;
+      }
+    }
   }
 
   // Прерывистая разметка (только на "светлых" полосах — так она мигает)
