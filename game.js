@@ -2577,7 +2577,7 @@ const PAINT_SLOTS = {
   wayra: ["#c9ccd1", "#b8bcc2"],
   tuatara: ["#f2f3f0", "#e2e4e0"],
   cybercraft: ["#c9ccd1", "#b8bcc2"],
-  models: ["#a51e28", "#8f171f"],
+  models: ["#17191c", "#101214"],
   merc190: ["#1a1c20", "#131519"],
   amggt53: ["#5a5e63", "#4d5156"],
   maybach: ["#ece9e2", "#dcd9d2"],
@@ -6770,39 +6770,46 @@ function drawCybercraft(g) {
   g.beginPath();
   g.moveTo(90, -6); g.lineTo(85, -38); g.lineTo(56, -38); g.lineTo(48, -6);
   g.closePath(); g.fill();
-  // Логотип-глиф и надпись CYBERCRAFT (как на фото!)
-  g.fillStyle = "#5c6166";
-  g.fillRect(-2, -66, 4, 10); g.fillRect(-6, -62, 4, 6); g.fillRect(2, -70, 4, 6);
-  g.font = "bold 7px Verdana"; g.textAlign = "center";
-  g.fillText("c y b e r c r a f t", 0, -46);
+  // Чистая корма без надписей — Саша попросил убрать глиф и имя
   plate(g, -38, 40);
   // Тёмный низ-бампер
   roundRect(g, -70, -18, 140, 9, 3, "#2a2e33");
 }
 
-// --- Tesla Model S: тихая красная молния ---
+// --- Tesla Model S: ЧЁРНАЯ тихая молния (по фото Саши) ---
 function drawModelS(g) {
   carBase(g);
-  roundRect(g, -52, -96, 104, 32, 11, "#1a2026");
-  g.fillStyle = "rgba(255,255,255,0.10)"; g.fillRect(-44, -91, 40, 22);
-  roundRect(g, -86, -66, 172, 60, 12, "#a51e28");
-  g.fillStyle = "rgba(255,255,255,0.18)"; g.fillRect(-78, -65, 156, 3);
-  // Тонкая световая полоса во всю корму
-  roundRect(g, -74, -56, 148, 8, 4, "#2a0d0d");
-  roundRect(g, -70, -54, 140, 4, 2, "#e82121");
-  // Эмблема "T"
-  g.fillStyle = "#c9d0d7";
-  g.fillRect(-6, -66, 12, 2.5);
-  g.beginPath();
-  g.moveTo(-4, -63.5); g.lineTo(4, -63.5); g.lineTo(1.5, -60); g.lineTo(1.5, -52);
-  g.lineTo(-1.5, -52); g.lineTo(-1.5, -60);
-  g.closePath(); g.fill();
+  // Огромное покатое стекло
+  roundRect(g, -58, -98, 116, 36, 13, "#1a2026");
+  g.fillStyle = "rgba(255,255,255,0.08)"; g.fillRect(-50, -93, 44, 26);
+  // Губа-спойлер на кромке багажника
+  roundRect(g, -50, -64, 100, 4, 2, "#0b0d0f");
+  roundRect(g, -86, -62, 172, 56, 12, "#17191c");
+  g.fillStyle = "rgba(255,255,255,0.10)"; g.fillRect(-78, -61, 156, 3);
+  // Раздельные фонари-уголки, обнимающие края
+  for (const side of [-1, 1]) {
+    g.fillStyle = "#3d0a0a";
+    g.beginPath();
+    g.ellipse(side * 66, -52, 17, 9, side * 0.18, 0, Math.PI * 2);
+    g.fill();
+    g.fillStyle = "#c22020";
+    g.beginPath();
+    g.ellipse(side * 66, -53, 12, 5, side * 0.18, 0, Math.PI * 2);
+    g.fill();
+  }
+  // ХРОМОВАЯ планка через багажник с буквами T E S L Y
+  roundRect(g, -46, -54, 92, 6, 3, "#c9d0d7");
+  g.fillStyle = "#15171a"; // не цвет кузова — чтобы буквы не перекрашивались
   g.font = "bold 5px Verdana"; g.textAlign = "center";
-  g.fillText("MODEL S", 55, -40);
+  g.fillText("T E S L Y", 0, -49.5);
+  // Эмблема "T" над планкой
+  g.fillStyle = "#c9d0d7";
+  g.fillRect(-5, -61, 10, 2);
+  g.fillRect(-1.5, -59, 3, 6);
   plate(g, -40);
   // Гладкий низ БЕЗ выхлопных труб — электричество же!
-  roundRect(g, -86, -20, 172, 11, 5, "#3d4247");
-  roundRect(g, -40, -15, 80, 4, 2, "#5c6166");
+  roundRect(g, -86, -18, 172, 10, 5, "#26292d");
+  roundRect(g, -40, -13, 80, 3.5, 2, "#5c6166");
 }
 
 const CAR_DRAWERS = {
