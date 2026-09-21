@@ -6312,13 +6312,13 @@ function drawTimeMachine(g) {
   g.quadraticCurveTo(26, -66, 52, -56);
   g.stroke();
   g.lineCap = "butt";
-  // Хромовые трубки-дуги по бокам палубы
+  // Хромовые трубки-дуги СНАРУЖИ кузова — мимо фар (правка Саши)!
   g.strokeStyle = "#c9d0d7"; g.lineWidth = 3;
-  g.beginPath(); g.moveTo(-86, -50); g.quadraticCurveTo(-84, -84, -60, -90); g.stroke();
-  g.beginPath(); g.moveTo( 86, -50); g.quadraticCurveTo( 84, -84,  60, -90); g.stroke();
+  g.beginPath(); g.moveTo(-93, -26); g.quadraticCurveTo(-98, -80, -60, -90); g.stroke();
+  g.beginPath(); g.moveTo( 93, -26); g.quadraticCurveTo( 98, -80,  60, -90); g.stroke();
   g.lineWidth = 2;
-  g.beginPath(); g.moveTo(-80, -50); g.quadraticCurveTo(-76, -76, -58, -82); g.stroke();
-  g.beginPath(); g.moveTo( 80, -50); g.quadraticCurveTo( 76, -76,  58, -82); g.stroke();
+  g.beginPath(); g.moveTo(-94, -20); g.quadraticCurveTo(-102, -74, -64, -94); g.stroke();
+  g.beginPath(); g.moveTo( 94, -20); g.quadraticCurveTo( 102, -74,  64, -94); g.stroke();
   // Жёлтые предупреждающие наклейки на углах
   roundRect(g, -88, -50, 9, 5, 1, "#e8c11c");
   roundRect(g,  79, -50, 9, 5, 1, "#e8c11c");
