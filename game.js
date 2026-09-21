@@ -6376,12 +6376,6 @@ function drawTimeMachine(g) {
   g.fillStyle = "#3d434a";
   for (const [bx, by] of [[-14, -84], [14, -84], [-14, -63], [14, -63]])
     circle(g, bx, by, 1.6, "#3d434a");
-  // MR. FUSION — белый цилиндр-мусоросжигатель справа (как в кино!)
-  roundRect(g, 60, -90, 20, 28, 6, "#e8e6df");
-  roundRect(g, 58, -95, 24, 8, 3, "#d0cec6");
-  g.fillStyle = "#17191c"; g.fillRect(60, -78, 20, 5);
-  circle(g, 70, -98, 2.2, "#8a9096");
-  g.fillStyle = "#c22020"; g.fillRect(63, -71, 14, 3);
   // Голубое свечение потокового конденсатора над реактором
   g.fillStyle = "rgba(80, 180, 255, 0.30)";
   g.beginPath(); g.ellipse(0, -100, 15, 10, 0, 0, Math.PI * 2); g.fill();
