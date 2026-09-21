@@ -421,7 +421,7 @@ const CARS = [
   {
     id: "mc20", name: "Mazerati MC20", gearbox: "А",
     topKmh: 325, zeroTo100: 2.9,
-    desc: "Младший брат MC12: синий суперкар с трезубцем на корме.",
+    desc: "Младший брат MC12: алый, чёрный низ, крыло и роспись на корме.",
   },
   // ---- Гиперкары (восторг Саши: «СКОРОСТЬ ГЕМЕРЫ!!!») ----
   {
@@ -2610,7 +2610,7 @@ const PAINT_SLOTS = {
   db5: ["#ccd2d6", "#b4bac0"],
   dbs: ["#c0242c", "#8f151c"],
   mc12: ["#f28a1e", "#c96e12"],
-  mc20: ["#2456a8", "#1a3f7e"],
+  mc20: ["#c8232b", "#96161d"],
   merc190: ["#1a1c20", "#131519"],
   amggt53: ["#5a5e63", "#4d5156"],
   maybach: ["#ece9e2", "#dcd9d2"],
@@ -2787,7 +2787,7 @@ const MOD_FIT = {
   db5: { noSpoiler: true, stripeTop: -60 },  // классике шпиона спойлер не к лицу
   dbs: { spoilerY: -100, stripeTop: -64 },
   mc12: { noSpoiler: true, stripeTop: -66 },  // заводское крыло выше крыши!
-  mc20: { spoilerY: -98, stripeTop: -62 },
+  mc20: { noSpoiler: true, stripeTop: -62 },  // крыло уже с завода (фото)
   f2: { noSpoiler: true },
   agera: { noSpoiler: true, stripeTop: -72 },
   zonta: { noSpoiler: true, stripeTop: -74 },
@@ -6967,29 +6967,34 @@ function drawMC12(g) {
   roundRect(g, -84, -14, 168, 8, 4, "#101214");
 }
 
-// --- Mazerati MC20: синий суперкар, младший брат MC12 ---
+// --- Mazerati MC20: алый суперкар с чёрным низом (по фото Саши) ---
 function drawMC20(g) {
   carBase(g);
   // Покатое стекло
   roundRect(g, -50, -94, 100, 30, 12, "#1a2026");
   g.fillStyle = "rgba(255,255,255,0.08)"; g.fillRect(-42, -89, 38, 20);
-  // Синий кузов
-  roundRect(g, -86, -66, 172, 56, 11, "#2456a8");
+  // Крыло на боковых стойках — поверх стекла, как на фото
+  roundRect(g, -62, -84, 8, 20, 3, "#15171a");
+  roundRect(g,  54, -84, 8, 20, 3, "#15171a");
+  roundRect(g, -70, -90, 140, 7, 3, "#101214");
+  g.fillStyle = "rgba(255,255,255,0.10)"; g.fillRect(-64, -89, 128, 2);
+  // Алый кузов
+  roundRect(g, -86, -66, 172, 56, 11, "#c8232b");
   g.fillStyle = "rgba(255,255,255,0.16)"; g.fillRect(-78, -65, 156, 3);
-  // Тонкие фонари по краям
+  // Широкие тёмные фонари с красной нитью
   for (const side of [-1, 1]) {
-    roundRect(g, side * 64 - 17, -58, 34, 7, 3.5, "#3d0a0a");
-    roundRect(g, side * 64 - 14, -56.5, 28, 4, 2, "#e82121");
+    roundRect(g, side * 58 - 26, -60, 52, 8, 4, "#2a0808");
+    roundRect(g, side * 58 - 23, -58, 46, 4, 2, "#e82121");
   }
-  trident(g, -62, "#d9dee2");
-  g.fillStyle = "#cdd8ea";
-  g.font = "bold 5px Verdana"; g.textAlign = "center";
-  g.fillText("MC20", 58, -38);
-  plate(g, -42);
-  // Диффузор и две широкие трубы
-  roundRect(g, -82, -22, 164, 12, 5, "#101214");
-  roundRect(g, -34, -18, 16, 6, 3, "#4a4f54");
-  roundRect(g,  18, -18, 16, 6, 3, "#4a4f54");
+  // Роспись-автограф через корму (как на фото)
+  g.fillStyle = "#2f3237";
+  g.font = "italic bold 8px Georgia"; g.textAlign = "center";
+  g.fillText("Mazerati", 0, -42);
+  // Чёрный глянцевый низ: номер и две КРУГЛЫЕ трубы
+  roundRect(g, -86, -36, 172, 28, 8, "#101214");
+  plate(g, -32);
+  circle(g, -30, -13, 6, "#26292d"); circle(g, -30, -13, 4, "#4a4f54");
+  circle(g,  30, -13, 6, "#26292d"); circle(g,  30, -13, 4, "#4a4f54");
 }
 
 const CAR_DRAWERS = {
