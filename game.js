@@ -388,6 +388,18 @@ const CARS = [
     noNpc: true,      // соперником не бывает (ждёт режима ПОГОНЬ)
     desc: "Служебный таран: сносит деревья с мигалкой. Но трава — его слабость!",
   },
+  // ---- ⚡ ЭЛЕКТРОМОБИЛИ: категория Э просыпается! (блокнот Саши) ----
+  {
+    id: "cybercraft", name: "Tesly Cybercraft", gearbox: "Э",
+    topKmh: 180, zeroTo100: 4.5,
+    offroadSoft: true,   // стальной пикап-вездеход
+    desc: "Стальной треугольник из будущего: свистит, а не рычит!",
+  },
+  {
+    id: "models", name: "Tesly Model S", gearbox: "Э",
+    topKmh: 250, zeroTo100: 3.2,
+    desc: "Тихая красная молния: ни рёва, ни труб — только свист и скорость.",
+  },
   // ---- Гиперкары (восторг Саши: «СКОРОСТЬ ГЕМЕРЫ!!!») ----
   {
     id: "gemera", name: "Konisegg Gemera", gearbox: "А",
@@ -501,7 +513,7 @@ const BRAKE_100_0 = {
   astro: 2.9, cobra: 3.2, defendor: 4.2, pejo206: 3.0,
   raf977: 4.4, uaz469: 4.5, zis101: 5.0, f2: 1.5,
   agera: 1.6, zonta: 1.8, aero: 1.7, m3e30: 3.0, m5: 2.2,
-  timemachine: 3.2, police: 2.6,
+  timemachine: 3.2, police: 2.6, cybercraft: 2.6, models: 2.4,
 };
 
 // Досчитываем игровые характеристики из реальных цифр.
@@ -538,7 +550,7 @@ const CAR_PRICES = {
   raf977: 350, uaz469: 400, zis101: 500, f2: 3500,
   agera: 8200, zonta: 7000, aero: 7800, m3e30: 1500, m5: 2700,
   timemachine: -2,   // −2 = не продаётся, только за ДОСТИЖЕНИЕ!
-  police: 2200,
+  police: 2200, cybercraft: 3000, models: 2600,
   pejo308: 1300, volga3110: 320, volga24: 300, volga21: 380,
   sportage: 850, k5: 950, sonata: 900, tucson: 800, i30: 600,
   zis: -1,   // −1 = не продаётся, только код «вечная ностальгия»
@@ -2227,6 +2239,7 @@ const CAR_CATEGORY = {
   raf977: "ussr", uaz469: "ussr", zis101: "ussr", f2: "hyper",
   agera: "hyper", zonta: "hyper", aero: "hyper",
   m3e30: "sport", m5: "sport", timemachine: "sport", police: "sport",
+  cybercraft: "suv", models: "lux",
 };
 // Марка каждой машины — для вкладки «По марке» (заказ Саши)
 const CAR_BRAND = {
@@ -2254,6 +2267,7 @@ const CAR_BRAND = {
   pejo206: "Pejo", raf977: "РАФ", uaz469: "УАЗ", zis101: "ЗИС",
   f2: "Нет марки", agera: "Konisegg", zonta: "Paganny", aero: "ZSC",
   m3e30: "BNW", m5: "BNW", timemachine: "TMC", police: "Dodgee",
+  cybercraft: "Tesly", models: "Tesly",
 };
 let garageCat = 0;      // номер выбранной категории в CATEGORIES
 let garageBrand = null; // выбранная марка (null = фильтруем по типу)
@@ -2562,6 +2576,8 @@ const PAINT_SLOTS = {
   gemera: ["#2e3436", "#262b2d"],
   wayra: ["#c9ccd1", "#b8bcc2"],
   tuatara: ["#f2f3f0", "#e2e4e0"],
+  cybercraft: ["#c9ccd1", "#b8bcc2"],
+  models: ["#a51e28", "#8f171f"],
   merc190: ["#1a1c20", "#131519"],
   amggt53: ["#5a5e63", "#4d5156"],
   maybach: ["#ece9e2", "#dcd9d2"],
@@ -2610,7 +2626,8 @@ const RIM_X = { aveo: 66, picanto: 56, corsa: 59, focus: 73, delorean: 75,
   sportage: 66, k5: 71, sonata: 71, tucson: 66, i30: 65,
   astro: 64, cobra: 74, defendor: 64, pejo206: 62, raf977: 62,
   uaz469: 64, zis101: 66, f2: 84, agera: 80, zonta: 80, aero: 80,
-  m3e30: 70, m5: 74, timemachine: 75, police: 74 };
+  m3e30: 70, m5: 74, timemachine: 75, police: 74,
+  cybercraft: 72, models: 72 };
 
 // ---------- ИГРОВАЯ ВАЛЮТА 🪙 ----------
 // Зарабатывается в гонках (по месту на финише), тратится на железо.
@@ -2733,6 +2750,7 @@ const MOD_FIT = {
   zis101: { spoilerY: -112, stripeTop: -64 },
   cobra: { noSpoiler: true, stripeTop: -60 },   // родстеру спойлер некуда!
   timemachine: { noSpoiler: true, stripeTop: -58 },  // решётки — не мешать!
+  cybercraft: { spoilerY: -92, stripeTop: -58 },
   f2: { noSpoiler: true },
   agera: { noSpoiler: true, stripeTop: -72 },
   zonta: { noSpoiler: true, stripeTop: -74 },
@@ -6719,6 +6737,74 @@ function drawPolice(g) {
   roundRect(g, -86, -12, 172, 6, 3, "#101214");
 }
 
+// --- Tesla Cybertruck: стальной треугольник (по фото Саши) ---
+function drawCybercraft(g) {
+  g.fillStyle = "rgba(0,0,0,0.38)";
+  g.beginPath(); g.ellipse(0, 8, 96, 12, 0, 0, Math.PI * 2); g.fill();
+  roundRect(g, -80, -30, 30, 36, 5, "#121212");
+  roundRect(g,  50, -30, 30, 36, 5, "#121212");
+  // Кузов-ТРАПЕЦИЯ из нержавейки: углы, только углы!
+  g.fillStyle = "#c9ccd1";
+  g.beginPath();
+  g.moveTo(-90, -6); g.lineTo(-76, -86); g.lineTo(76, -86); g.lineTo(90, -6);
+  g.closePath(); g.fill();
+  g.fillStyle = "rgba(255,255,255,0.3)";
+  g.beginPath();
+  g.moveTo(-74, -84); g.lineTo(74, -84); g.lineTo(73, -80); g.lineTo(-73, -80);
+  g.closePath(); g.fill();
+  // Крышка кузова — тёмная плоскость сверху
+  g.fillStyle = "#9aa0a6";
+  g.beginPath();
+  g.moveTo(-72, -86); g.lineTo(72, -86); g.lineTo(64, -96); g.lineTo(-64, -96);
+  g.closePath(); g.fill();
+  // ОРАНЖЕВАЯ полоса-фонарь во всю ширину со свечением
+  g.fillStyle = "rgba(255, 123, 42, 0.30)";
+  g.beginPath(); g.ellipse(0, -78, 84, 8, 0, 0, Math.PI * 2); g.fill();
+  roundRect(g, -75, -80, 150, 5, 2, "#3a1505");
+  roundRect(g, -73, -79, 146, 3, 1, "#ff7b2a");
+  // Угловатые чёрные арки колёс
+  g.fillStyle = "#141618";
+  g.beginPath();
+  g.moveTo(-90, -6); g.lineTo(-85, -38); g.lineTo(-56, -38); g.lineTo(-48, -6);
+  g.closePath(); g.fill();
+  g.beginPath();
+  g.moveTo(90, -6); g.lineTo(85, -38); g.lineTo(56, -38); g.lineTo(48, -6);
+  g.closePath(); g.fill();
+  // Логотип-глиф и надпись CYBERCRAFT (как на фото!)
+  g.fillStyle = "#5c6166";
+  g.fillRect(-2, -66, 4, 10); g.fillRect(-6, -62, 4, 6); g.fillRect(2, -70, 4, 6);
+  g.font = "bold 7px Verdana"; g.textAlign = "center";
+  g.fillText("c y b e r c r a f t", 0, -46);
+  plate(g, -38, 40);
+  // Тёмный низ-бампер
+  roundRect(g, -70, -18, 140, 9, 3, "#2a2e33");
+}
+
+// --- Tesla Model S: тихая красная молния ---
+function drawModelS(g) {
+  carBase(g);
+  roundRect(g, -52, -96, 104, 32, 11, "#1a2026");
+  g.fillStyle = "rgba(255,255,255,0.10)"; g.fillRect(-44, -91, 40, 22);
+  roundRect(g, -86, -66, 172, 60, 12, "#a51e28");
+  g.fillStyle = "rgba(255,255,255,0.18)"; g.fillRect(-78, -65, 156, 3);
+  // Тонкая световая полоса во всю корму
+  roundRect(g, -74, -56, 148, 8, 4, "#2a0d0d");
+  roundRect(g, -70, -54, 140, 4, 2, "#e82121");
+  // Эмблема "T"
+  g.fillStyle = "#c9d0d7";
+  g.fillRect(-6, -66, 12, 2.5);
+  g.beginPath();
+  g.moveTo(-4, -63.5); g.lineTo(4, -63.5); g.lineTo(1.5, -60); g.lineTo(1.5, -52);
+  g.lineTo(-1.5, -52); g.lineTo(-1.5, -60);
+  g.closePath(); g.fill();
+  g.font = "bold 5px Verdana"; g.textAlign = "center";
+  g.fillText("MODEL S", 55, -40);
+  plate(g, -40);
+  // Гладкий низ БЕЗ выхлопных труб — электричество же!
+  roundRect(g, -86, -20, 172, 11, 5, "#3d4247");
+  roundRect(g, -40, -15, 80, 4, 2, "#5c6166");
+}
+
 const CAR_DRAWERS = {
   aveo: drawAveo, picanto: drawPicanto, focus: drawFocus,
   delorean: drawDelorean, corsa: drawCorsa,
@@ -6748,7 +6834,7 @@ const CAR_DRAWERS = {
   zis101: drawZis101, f2: drawF2, agera: drawAgera,
   zonta: drawZonta, aero: drawAero,
   m3e30: drawM3e30, m5: drawM5, timemachine: drawTimeMachine,
-  police: drawPolice,
+  police: drawPolice, cybercraft: drawCybercraft, models: drawModelS,
 };
 
 // Огненный след: два пылающих следа за колёсами, три слоя пламени
