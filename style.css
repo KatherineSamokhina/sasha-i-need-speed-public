@@ -119,6 +119,23 @@ body {
   padding: 16px 0 14px;
 }
 
+/* Чёрный скролл (правка Саши) — в настройках и списке достижений */
+#settings, #achv-list {
+  scrollbar-color: #23283a #0b0d12;   /* Firefox */
+  scrollbar-width: thin;
+}
+#settings::-webkit-scrollbar, #achv-list::-webkit-scrollbar { width: 10px; }
+#settings::-webkit-scrollbar-track, #achv-list::-webkit-scrollbar-track {
+  background: #0b0d12;
+  border-radius: 6px;
+}
+#settings::-webkit-scrollbar-thumb, #achv-list::-webkit-scrollbar-thumb {
+  background: #23283a;
+  border-radius: 6px;
+}
+#settings::-webkit-scrollbar-thumb:hover,
+#achv-list::-webkit-scrollbar-thumb:hover { background: #3a4158; }
+
 /* ---- Достижения (блокнот Саши, 21.09) ---- */
 #achv-list {
   display: flex;
