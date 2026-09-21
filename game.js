@@ -1129,7 +1129,18 @@ function setupRace() {
     pool = pool.filter((c) => c.offroadSoft);
   const count = Math.min(raceKind === "drag" ? 1 : OPP_COUNT, pool.length);
   for (let i = 0; i < count; i++) {
-    const oc = pool.splice(Math.floor(Math.random() * pool.length), 1)[0];
+    // БАЛАНС (правило Саши): соперники НЕ БЫСТРЕЕ машины игрока.
+    // Но с шансом 15% на место всё же выпадает быстрая — интрига!
+    const slower = pool.filter((c) => c.topKmh <= car.topKmh);
+    const faster = pool.filter((c) => c.topKmh > car.topKmh);
+    const pickFrom =
+      (Math.random() < 0.15 && faster.length) ? faster
+      : slower.length ? slower
+      // медленных не осталось (ты на Буханке!) — берём 5 самых
+      // медленных из оставшихся, а не кого попало
+      : pool.slice().sort((a, b) => a.topKmh - b.topKmh).slice(0, 5);
+    const oc = pool.splice(pool.indexOf(
+      pickFrom[Math.floor(Math.random() * pickFrom.length)]), 1)[0];
     opponents.push({
       car: oc,
       canvas: prerenderCar(oc.id),
