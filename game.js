@@ -411,15 +411,15 @@ const CARS = [
     topKmh: 340, zeroTo100: 3.4,
     desc: "Супер-GT нового шпиона: 725 сил, алый, четыре трубы в диффузоре.",
   },
-  // ---- Mazerati из книжки Саши (названия только по-английски!) ----
+  // ---- Mazerety из книжки Саши (названия только по-английски!) ----
   {
-    id: "mc12", name: "Mazerati MC12 Corsa", gearbox: "М",
+    id: "mc12", name: "Mazerety MC12 Corsa", gearbox: "М",
     topKmh: 326, zeroTo100: 2.9,
     noNpc: true,   // гоночный гиперкар — соперникам не выдаётся!
     desc: "Гиперкар для трека из книжки: крыло выше крыши и четыре трубы по центру.",
   },
   {
-    id: "mc20", name: "Mazerati MC20", gearbox: "А",
+    id: "mc20", name: "Mazerety MC20", gearbox: "А",
     topKmh: 325, zeroTo100: 2.9,
     desc: "Младший брат MC12: алый, чёрный низ, крыло и роспись на корме.",
   },
@@ -1103,6 +1103,13 @@ let sparks = [];     // частицы искр от удара
 let fireTrailUntil = 0;  // до какого момента горит след
 let prevKmh = 0;         // скорость в прошлом кадре (ловим момент "коснулись 142")
 
+// ---------- 🔥 ТУРБО (блокнот Саши: «кнопка нитро в гонке») ----------
+// Покупается один раз в тюнинге. В заезде — 3 заряда: каждый даёт
+// 3 секунды бешеной тяги, +8% сверх максималки и СИНЕЕ пламя из труб.
+let nitroCharges = 3;    // заряды на заезд (новый заезд — новые баллоны)
+let nitroUntil = 0;      // до какого момента горит нитро
+const nitroActive = () => performance.now() < nitroUntil;
+
 // =====================================================================
 //  ГОНКА С СОПЕРНИКАМИ!
 //  Соперники — машины из нашего же гаража, с честной физикой своей
@@ -1334,6 +1341,8 @@ function restartRace() {
   finalPlace = 0;
   countdown = 0;
   shieldUntil = 0;
+  nitroCharges = 3;   // свежие баллоны турбо на новый заезд
+  nitroUntil = 0;
   lapTime = 0;
   taRecording = [];
   lapMsg = null;
@@ -1934,6 +1943,7 @@ const DEFAULT_BINDS = {
   uturn:      ["KeyZ", ""],
   refuelFull: ["KeyV", ""],
   refuelHalf: ["KeyC", ""],
+  nitro:      ["Space", ""],
 };
 const BIND_NAMES = {
   gas:      "Газ",
@@ -1948,6 +1958,7 @@ const BIND_NAMES = {
   uturn:      "Разворот (на шоссе)",
   refuelFull: "Заправка: полный бак — 2 🪙",
   refuelHalf: "Заправка: полбака — 1 🪙",
+  nitro:      "🔥 ТУРБО (нитро, если куплено)",
 };
 // Эти клавиши заняты игрой — их переназначать нельзя
 const RESERVED_KEYS = ["Escape", "Enter", "KeyR", "KeyT", "KeyM",
@@ -2296,7 +2307,7 @@ const CAR_BRAND = {
   m3e30: "BNW", m5: "BNW", timemachine: "TMC", police: "Dodgee",
   cybercraft: "Tesly", models: "Tesly",
   db5: "Astin Martun", dbs: "Astin Martun",
-  mc12: "Mazerati", mc20: "Mazerati",
+  mc12: "Mazerety", mc20: "Mazerety",
 };
 let garageCat = 0;      // номер выбранной категории в CATEGORIES
 let garageBrand = null; // выбранная марка (null = фильтруем по типу)
@@ -2667,6 +2678,7 @@ const RIM_X = { aveo: 66, picanto: 56, corsa: 59, focus: 73, delorean: 75,
 // Косметика — бесплатно: красота принадлежит народу!
 const PLACE_REWARD = [500, 300, 150, 50];   // 🥇 🥈 🥉 и 4-е место
 const HW_PRICE = [300, 600, 1000];          // цена уровней железа 1 / 2 / 3
+const TURBO_PRICE = 800;                    // 🔥 баллон нитро (покупается раз)
 
 let money = 100;   // стартовый капитал (решение Саши: сурово, но честно!)
 try {
@@ -2692,6 +2704,7 @@ function saveTuning() {
 function getTun(id) {
   if (!tuning[id]) tuning[id] = { paint: null, vinyl: "нет", spoiler: false,
                                   rims: false, neon: "нет", engine: 0, brakes: 0, tires: 0 };
+  if (tuning[id].turbo === undefined) tuning[id].turbo = false; // старые сейвы без турбо
   return tuning[id];
 }
 
@@ -2941,6 +2954,23 @@ function renderTuning() {
     if (locked) b.classList.add("locked");
     hw.appendChild(b);
   }
+  // 🔥 ТУРБО (блокнот Саши): баллон нитро — 3 заряда каждый заезд.
+  // Электричеству турбо не положено: выхлопа нет, дуть некуда!
+  if (c.gearbox === "Э") {
+    const b = chip("ТУРБО: электро и так пуляет!", false, () => {});
+    b.classList.add("locked");
+    hw.appendChild(b);
+  } else if (t.turbo) {
+    hw.appendChild(chip("ТУРБО: 🔥 стоит! Пробел в гонке", true, () => {}));
+  } else {
+    const b = chip(`ТУРБО: кнопка нитро · ${TURBO_PRICE} 🪙`, false, () => {
+      if (!canAfford(TURBO_PRICE)) return;
+      pay(TURBO_PRICE);
+      t.turbo = true;
+    });
+    if (!canAfford(TURBO_PRICE)) b.classList.add("locked");
+    hw.appendChild(b);
+  }
   updateMoneyUI();
 }
 
@@ -3052,6 +3082,9 @@ addEventListener("keydown", (e) => {
     if (hit("uturn") && raceKind === "highway")
       doUTurn();
 
+    // 🔥 ТУРБО: пробел — и нитро пуляет 3 секунды!
+    if (hit("nitro")) tryNitro();
+
     // Заправка у колонки (цены Саши: V — полный бак 2 🪙, C — полбака 1 🪙)
     if (raceKind === "highway" && nearGas && speed < KMH * 5) {
       if (hit("refuelFull")) {
@@ -3112,6 +3145,20 @@ addEventListener("blur", () => { for (const k in keys) keys[k] = false; });
 
 // Нажата ли функция: проверяем ОБЕ назначенные клавиши И сенсорные кнопки
 const down = (fn) => !!(keys[binds[fn][0]] || (binds[fn][1] !== "" && keys[binds[fn][1]]));
+
+// 🔥 Попытка включить турбо: нужен купленный баллон, живой мотор,
+// заряды и чтобы нитро уже не горело. Во время отсчёта — рано!
+function tryNitro() {
+  const t = getTun(car.id);
+  if (!t.turbo || car.gearbox === "Э") return;
+  if (!engineOn || countdown > 0 || nitroCharges <= 0 || nitroActive()) return;
+  nitroCharges--;
+  nitroUntil = performance.now() + 3000;
+  lapMsg = { text: nitroCharges > 0
+    ? `🔥 ТУРБО! Осталось зарядов: ${nitroCharges}`
+    : "🔥 ТУРБО! Это был последний заряд!",
+    until: performance.now() + 2000 };
+}
 const pressGas   = () => down("gas") || touchState.gas;
 const pressBrake = () => down("brake") || touchState.brake;
 const pressLeft  = () => down("left") || touchState.left;
@@ -3184,6 +3231,8 @@ const CTX_BUTTONS = [
   { label: "🔄",  code: () => binds.uturn[0],      show: () => raceKind === "highway" },
   { label: "⛽V", code: () => binds.refuelFull[0], show: () => raceKind === "highway" && nearGas },
   { label: "⛽C", code: () => binds.refuelHalf[0], show: () => raceKind === "highway" && nearGas },
+  { label: "🔥", code: () => binds.nitro[0],
+    show: () => getTun(car.id).turbo && car.gearbox !== "Э" && nitroCharges > 0 },
 ];
 const ctxBox = document.getElementById("t-context");
 for (const def of CTX_BUTTONS) {
@@ -3512,6 +3561,9 @@ function update(dt) {
     if (zisBoostActive())
       thrust = car.maxSpeed * Math.atanh(100 / car.topKmh) / 4
              * (1 - speedPercent * speedPercent);
+    // 🔥 ТУРБО: нитро пинает ПОВЕРХ всего — даже отсечка на механике
+    // не удержит ракету (это же чистый взрыв в трубе!)
+    if (nitroActive()) thrust += car.accel * 0.8;
     speed += thrust * (turning ? TURN_ACCEL_FACTOR : 1) * dt;
   } else if (pressBrake()) {
     // Прокачанные тормоза: +10% силы за уровень (ЗИСу не поможет: 0 × что угодно = 0)
@@ -3523,7 +3575,8 @@ function update(dt) {
   // Торможение двигателем: на ручной, если скорость выше диапазона
   // передачи, мотор ревёт и осаживает машину. Гоночный приём —
   // тормозить понижением передачи!
-  if (manualMode && engineOn && speed > gearHigh(manualGear) && !zisBoostActive())
+  if (manualMode && engineOn && speed > gearHigh(manualGear) && !zisBoostActive()
+      && !nitroActive())
     speed += ENGINE_BRAKE * dt;
 
   // Выехал на траву на большой скорости? Держись, будет трясти и
@@ -3537,7 +3590,12 @@ function update(dt) {
     speed += OFFROAD_DECEL * dt;
 
   playerX = clamp(playerX, -2.2, 2.2);
-  speed = clamp(speed, 0, tunedMaxSpeed());   // максималка своя + чип-тюнинг!
+  // Максималка своя + чип-тюнинг. ТУРБО даёт +8% СВЕРХ максималки,
+  // а когда нитро гаснет — лишняя скорость тает плавно, без обрыва
+  const speedCap = tunedMaxSpeed() * (nitroActive() ? 1.08 : 1);
+  speed = Math.max(0, speed);
+  if (speed > speedCap)
+    speed = Math.max(speedCap, speed - car.maxSpeed * 0.2 * dt);
 
   // Едем вперёд! Трасса — кольцо, поэтому после финиша снова старт
   const prevPosForHit = position;   // откуда стартовал этот кадр (для столкновений)
@@ -6920,7 +6978,7 @@ function drawDBS(g) {
   for (const x of [-38, -23, 11, 26]) roundRect(g, x, -20, 12, 7, 3, "#4a4f54");
 }
 
-// Трезубец Mazerati — фирменный значок из трёх зубцов
+// Трезубец Mazerety — фирменный значок из трёх зубцов
 function trident(g, y, color) {
   g.fillStyle = color;
   g.fillRect(-1.5, y, 3, 10);          // средний зубец — длинный
@@ -6928,7 +6986,7 @@ function trident(g, y, color) {
   g.fillRect(3.5, y + 3, 3, 6);
 }
 
-// --- Mazerati MC12 Corsa: оранжевый трековый гиперкар из книжки ---
+// --- Mazerety MC12 Corsa: оранжевый трековый гиперкар из книжки ---
 function drawMC12(g) {
   carBase(g);
   // Крыло ВЫШЕ КРЫШИ на двух мощных пилонах
@@ -6967,7 +7025,7 @@ function drawMC12(g) {
   roundRect(g, -84, -14, 168, 8, 4, "#101214");
 }
 
-// --- Mazerati MC20: алый суперкар с чёрным низом (по фото Саши) ---
+// --- Mazerety MC20: алый суперкар с чёрным низом (по фото Саши) ---
 function drawMC20(g) {
   carBase(g);
   // Покатое стекло
@@ -6989,7 +7047,7 @@ function drawMC20(g) {
   // Роспись-автограф через корму (как на фото)
   g.fillStyle = "#2f3237";
   g.font = "italic bold 8px Georgia"; g.textAlign = "center";
-  g.fillText("Mazerati", 0, -42);
+  g.fillText("Mazerety", 0, -42);
   // Чёрный глянцевый низ: номер и две КРУГЛЫЕ трубы
   roundRect(g, -86, -36, 172, 28, 8, "#101214");
   plate(g, -32);
@@ -7036,10 +7094,17 @@ function renderFireTrail() {
   const t = performance.now();
   // Огонь горит: у Делориана — после 88 миль/ч, у ЗИСа — все 5 секунд
   // стартового ускорителя (идея Саши: танк стартует В ОГНЕ!)
-  const until = Math.max(fireTrailUntil, zisBoostActive() ? shieldUntil : 0);
+  // 🔥 ТУРБО добавляет своё пламя — СИНЕЕ, как у настоящего нитро!
+  const nitro = nitroActive();
+  const until = Math.max(fireTrailUntil, zisBoostActive() ? shieldUntil : 0,
+                         nitro ? nitroUntil : 0);
   if (t > until) return;
   const fade = Math.min(1, (until - t) / 800); // плавно гаснет
-  const layers = [
+  const layers = nitro ? [
+    [22, "rgba(40, 120, 255, 0.55)"],
+    [12, "rgba(90, 180, 255, 0.75)"],
+    [5,  "rgba(215, 240, 255, 0.9)"],
+  ] : [
     [22, "rgba(255, 80, 10, 0.55)"],
     [12, "rgba(255, 150, 20, 0.75)"],
     [5,  "rgba(255, 230, 120, 0.9)"],
@@ -7060,10 +7125,11 @@ function renderFireTrail() {
       ctx.closePath();
       ctx.fill();
     }
-    // искры над следом
+    // искры над следом (у нитро — голубые!)
     for (let i = 0; i < 6; i++) {
       const p = Math.random();
-      ctx.fillStyle = Math.random() < 0.5 ? "#ffd23f" : "#ff8c1a";
+      ctx.fillStyle = nitro ? (Math.random() < 0.5 ? "#9fd4ff" : "#4f9dff")
+                            : (Math.random() < 0.5 ? "#ffd23f" : "#ff8c1a");
       ctx.fillRect(
         xTop + (xBot - xTop) * p + (Math.random() - 0.5) * 26,
         H - 64 + 64 * p - Math.random() * 14, 3, 3);
@@ -7130,6 +7196,18 @@ function renderHUD() {
   ctx.font = "bold 15px Verdana";
   ctx.textAlign = "left";
   ctx.fillText("км/ч", 126, 52);
+
+  // 🔥 Заряды турбо — над «км/ч» (только если турбо куплено)
+  if (getTun(car.id).turbo && car.gearbox !== "Э") {
+    ctx.font = "bold 12px Verdana";
+    if (nitroActive()) {
+      ctx.fillStyle = "#57b0ff";
+      ctx.fillText("ТУРБО!", 124, 32);
+    } else {
+      ctx.fillStyle = nitroCharges > 0 ? "#ffd23f" : "#63666e";
+      ctx.fillText(nitroCharges > 0 ? "🔥".repeat(nitroCharges) : "🔥 —", 124, 32);
+    }
+  }
 
   // ---------- 🚓 Табло погони ----------
   if (chaseMode && opponents[0] && !chaseOver) {
