@@ -1411,6 +1411,8 @@ let chaseMode = false;
 let chaseOver = false;
 let chasePrevCar = -1;
 let chaseForks = [];
+let chaseRole = "cop";   // "cop" — ты полиция; "thief" — ты ВОР!
+let chaseStart = 0;      // время старта (вору надо продержаться)
 
 function buildChaseTrack() {
   raceKind = "chase";
@@ -1431,12 +1433,23 @@ function buildChaseTrack() {
     addRoad(14, 22, 14, dir * (3.5 + Math.random() * 1.5),
             Math.random() * 12 - 6);
     addRoad(18, 34, 18, Math.random() * 4 - 2, 0);
+    // ВТОРАЯ ДОРОГА (правка Саши: «развилка как 2 дороги»):
+    // от знака вбок отслаивается настоящая ветка с бордюрами —
+    // помечаем сегменты, рисовалка дорисует её со смещением
+    for (let k = 0; k < 18 && forkSeg + k < segments.length; k++) {
+      segments[forkSeg + k].branch = {
+        side: -dir,                    // в противоположную сторону
+        o1: k * 0.30,
+        o2: (k + 1) * 0.30,
+      };
+    }
   }
   trackLength = segments.length * SEG_LEN;
   buildTrackMap();
 }
 
-function goChase() {
+function goChase(role = "cop") {
+  chaseRole = role;
   buildChaseTrack();
   raceMode = false;
   taMode = false;
@@ -1444,17 +1457,34 @@ function goChase() {
   chaseOver = false;
   inCity = false;
   show("city", false);
-  // Полицейскую машину ВЫДАЮТ на время службы (покупать не нужно)
-  chasePrevCar = carIndex;
-  carIndex = CARS.findIndex((c) => c.id === "police");
-  car = CARS[carIndex];
-  restartRace();
-  // ПРЕСТУПНИК: случайная машина впереди, быстрая, но досягаемая
-  const pool = CARS.filter((c) => !c.noNpc && c.topKmh >= 150 && c.topKmh <= 250);
-  const cc = pool[Math.floor(Math.random() * pool.length)];
-  opponents = [{ car: cc, canvas: prerenderCar(cc.id),
-                 z: SEG_LEN * 10, x: 0.4, speed: KMH * 80,
-                 skill: 0.84 + Math.random() * 0.06 }];
+  if (role === "cop") {
+    // Полицейскую машину ВЫДАЮТ на время службы (покупать не нужно)
+    chasePrevCar = carIndex;
+    carIndex = CARS.findIndex((c) => c.id === "police");
+    car = CARS[carIndex];
+    restartRace();
+    // ПРЕСТУПНИК: случайная машина впереди, быстрая, но досягаемая
+    const pool = CARS.filter((c) => !c.noNpc && c.topKmh >= 150 && c.topKmh <= 250);
+    const cc = pool[Math.floor(Math.random() * pool.length)];
+    opponents = [{ car: cc, canvas: prerenderCar(cc.id),
+                   z: SEG_LEN * 10, x: 0.4, speed: KMH * 80,
+                   skill: 0.84 + Math.random() * 0.06 }];
+    lapMsg = { text: `🚓 ДОГОНИ ПРЕСТУПНИКА! Он на ${cc.name}!`,
+               until: performance.now() + 3000 };
+  } else {
+    // ТЫ — ВОР (правило Саши: не купил полицию — будешь вором!):
+    // остаёшься на СВОЕЙ машине, полиция гонится СЗАДИ.
+    // Продержись 60 секунд или оторвись — уйдёшь!
+    chasePrevCar = -1;
+    restartRace();
+    position = SEG_LEN * 12;   // фора: стартуем впереди полиции
+    const pc = CARS.find((c) => c.id === "police");
+    opponents = [{ car: pc, canvas: prerenderCar("police"),
+                   z: SEG_LEN * 3, x: 0, speed: KMH * 80, skill: 0.9 }];
+    chaseStart = performance.now();
+    lapMsg = { text: "🚔 ТЫ ВОР! Продержись 60 секунд — и уйдёшь!",
+               until: performance.now() + 3000 };
+  }
   // СТАРТ С ХОДА: 60 км/ч (спецификация Саши)
   engineOn = true;
   engineStarting = false;
@@ -1464,8 +1494,6 @@ function goChase() {
   show("menu", false);
   initEngineSound();
   if (engine && engine.ac.state === "suspended") engine.ac.resume();
-  lapMsg = { text: `🚓 ДОГОНИ ПРЕСТУПНИКА! Он на ${cc.name}!`,
-             until: performance.now() + 3000 };
 }
 
 // Вернуть игроку его машину после службы
@@ -1631,7 +1659,13 @@ wireButton("btn-city-back", closeCity);
 wireButton("poi-hw", goHighway);
 wireButton("poi-race", () => { if (goRaceMode()) { inCity = false; show("city", false); } });
 wireButton("poi-drag", () => { inCity = false; show("city", false); goDragMode(); });
-wireButton("poi-chase", () => { goChase(); });
+wireButton("poi-chase", () => { goChase("cop"); });   // в городе — служба
+// В ЗАЕЗДАХ (правило Саши): купил полицию — ты полиция, нет — ты ВОР!
+wireButton("btn-chase", () => {
+  inRaces = false;
+  show("races", false);
+  goChase(isOwned("police") ? "cop" : "thief");
+});
 wireButton("poi-ta",   () => { if (goTimeAttack()) { inCity = false; show("city", false); } });
 wireButton("poi-fuel", () => {
   // Цены Саши: полный бак — 2 🪙 (как по кнопке V у колонки)
@@ -2229,6 +2263,8 @@ const ACHIEVEMENTS = [
     desc: "Сыграй с другом в мультиплеере" },
   { id: "arrest", icon: "🚓", name: "Именем закона!",
     desc: "Задержи преступника в погоне" },
+  { id: "escape", icon: "🏃", name: "Неуловимый",
+    desc: "Уйди от полиции, играя за вора" },
 ];
 // (сам объект achv объявлен наверху, рядом с owned — порядок загрузки!)
 function unlockAchv(id) {
@@ -3519,8 +3555,51 @@ function update(dt) {
     }
   }
 
+  // ---------- 🚔 ПОГОНЯ ЗА ВОРОМ: ты убегаешь от полиции! ----------
+  if (chaseMode && chaseRole === "thief" && !chaseOver && opponents[0]) {
+    const cop = opponents[0];
+    const gap = position - cop.z;
+    // «Резиновая» погоня: полиция всегда чуть быстрее тебя — спасают
+    // только развилки! (и не разбивайся: пока стоишь, она настигает)
+    const copMax = cop.car.maxSpeed * 0.97;
+    const target = gap > 600 ? speed + KMH * 12 : speed + KMH * 4;
+    cop.speed = Math.min(copMax, Math.max(KMH * 70, target));
+    cop.z += cop.speed * dt;
+    // Развилки: ушёл НЕ на сторону главной дороги — сбил её со следа!
+    for (const f of chaseForks) {
+      if (!f.resolved && position >= f.seg * SEG_LEN) {
+        f.resolved = true;
+        const side = playerX < 0 ? -1 : 1;
+        if (side !== f.dir) {
+          cop.z -= 900;
+          lapMsg = { text: "🌀 Сбил полицию со следа!",
+                     until: performance.now() + 1600 };
+        }
+      }
+    }
+    const left = 60 - (performance.now() - chaseStart) / 1000;
+    if (gap < 140) {
+      chaseOver = true;
+      raceOver = true;
+      if (!adminCode) { money = Math.max(0, money - 150); saveMoney(); }
+      updateMoneyUI();
+      document.getElementById("finish-text").textContent =
+        `🚔 ПОЙМАН! Штраф: −150 🪙 (всего: ${adminCode ? "АДМИН" : money})`;
+      show("finish", true);
+    } else if (left <= 0 || gap > 24000) {
+      chaseOver = true;
+      raceOver = true;
+      const reward = 400;
+      money += reward; saveMoney(); updateMoneyUI();
+      unlockAchv("escape");
+      document.getElementById("finish-text").textContent =
+        `🏃 УШЁЛ ОТ ПОГОНИ! Приз: +${reward} 🪙 (всего: ${adminCode ? "АДМИН" : money})`;
+      show("finish", true);
+    }
+  }
+
   // ---------- 🚓 ПОГОНЯ: развилки, задержание, побег ----------
-  if (chaseMode && !chaseOver && !crashed && opponents[0]) {
+  if (chaseMode && chaseRole === "cop" && !chaseOver && !crashed && opponents[0]) {
     updateOpponents(dt);
     const crim = opponents[0];
     const gap = crim.z - position;
@@ -3663,6 +3742,20 @@ function renderSegment(seg) {
 
   // Асфальт
   polygon(p1.x - p1.w, p1.y, p1.x + p1.w, p1.y, p2.x + p2.w, p2.y, p2.x - p2.w, p2.y, c.road);
+
+  // ВТОРАЯ ДОРОГА на развилке (правка Саши: «развилка как 2 дороги»):
+  // ветка с бордюрами отслаивается вбок и уходит за горизонт
+  if (seg.branch) {
+    const b = seg.branch;
+    const o1 = b.o1 * p1.w * 2 * b.side;
+    const o2 = b.o2 * p2.w * 2 * b.side;
+    polygon(p1.x + o1 - p1.w - r1, p1.y, p1.x + o1 - p1.w, p1.y,
+            p2.x + o2 - p2.w, p2.y, p2.x + o2 - p2.w - r2, p2.y, c.rumble);
+    polygon(p1.x + o1 + p1.w + r1, p1.y, p1.x + o1 + p1.w, p1.y,
+            p2.x + o2 + p2.w, p2.y, p2.x + o2 + p2.w + r2, p2.y, c.rumble);
+    polygon(p1.x + o1 - p1.w, p1.y, p1.x + o1 + p1.w, p1.y,
+            p2.x + o2 + p2.w, p2.y, p2.x + o2 - p2.w, p2.y, c.road);
+  }
 
   // Прерывистая разметка (только на "светлых" полосах — так она мигает)
   if (c.lane) {
@@ -4077,21 +4170,20 @@ function drawSprite(spr, x, y, scale, clipY) {
     ctx.textAlign = "center";
     ctx.fillText("⛽", x, y - h - px(60));
   } else if (spr.type === "fork") {
-    // ЗНАК РАЗВИЛКИ (режим погони): синий щит над дорогой со
-    // стрелками влево-вправо — выбирай сторону!
-    const sw = px(1500), sh = px(620), poleH = px(1500);
+    // ЗНАК РАЗВИЛКИ (режим погони): синяя АРКА над дорогой со
+    // стрелками — столбы по обочинам, не посреди дороги!
+    const half = px(ROAD_WIDTH * 1.18);
+    const pillarW = px(150), archH = px(2100), bannerH = px(640);
     ctx.fillStyle = "#c9cdd4";
-    ctx.fillRect(x - px(70), y - poleH, px(140), poleH);
+    ctx.fillRect(x - half - pillarW, y - archH, pillarW, archH);
+    ctx.fillRect(x + half, y - archH, pillarW, archH);
     ctx.fillStyle = "#1f5fd6";
-    ctx.fillRect(x - sw / 2, y - poleH - sh, sw, sh);
-    ctx.strokeStyle = "#f2f2f2";
-    ctx.lineWidth = Math.max(1, px(40));
-    ctx.strokeRect(x - sw / 2 + px(30), y - poleH - sh + px(30),
-                   sw - px(60), sh - px(60));
+    ctx.fillRect(x - half - pillarW, y - archH,
+                 half * 2 + pillarW * 2, bannerH);
     ctx.fillStyle = "#f2f2f2";
-    ctx.font = `bold ${px(400)}px Verdana`;
+    ctx.font = `bold ${px(430)}px Verdana`;
     ctx.textAlign = "center";
-    ctx.fillText("⬅ ➡", x, y - poleH - sh / 2 + px(140));
+    ctx.fillText("⬅  ➡", x, y - archH + bannerH * 0.78);
   } else if (spr.type === "farch") {
     // ФИНИШНАЯ арка: шахматный баннер над полосой!
     const half = px(ROAD_WIDTH * 1.12);
@@ -6718,17 +6810,24 @@ function renderHUD() {
   ctx.textAlign = "left";
   ctx.fillText("км/ч", 126, 52);
 
-  // ---------- 🚓 Табло погони: дистанция до преступника ----------
+  // ---------- 🚓 Табло погони ----------
   if (chaseMode && opponents[0] && !chaseOver) {
-    const gapM = Math.max(0, Math.round((opponents[0].z - position) / 10));
     ctx.fillStyle = "rgba(10, 10, 20, 0.6)";
     ctx.beginPath();
-    ctx.roundRect(W / 2 - 150, 14, 300, 36, 10);
+    ctx.roundRect(W / 2 - 175, 14, 350, 36, 10);
     ctx.fill();
-    ctx.fillStyle = gapM < 60 ? "#57d977" : gapM > 1200 ? "#ff5050" : "#ffffff";
-    ctx.font = "bold 17px Verdana";
+    ctx.font = "bold 16px Verdana";
     ctx.textAlign = "center";
-    ctx.fillText(`🚓 До преступника: ${gapM} м`, W / 2, 38);
+    if (chaseRole === "cop") {
+      const gapM = Math.max(0, Math.round((opponents[0].z - position) / 10));
+      ctx.fillStyle = gapM < 60 ? "#57d977" : gapM > 1200 ? "#ff5050" : "#ffffff";
+      ctx.fillText(`🚓 До преступника: ${gapM} м`, W / 2, 38);
+    } else {
+      const gapM = Math.max(0, Math.round((position - opponents[0].z) / 10));
+      const left = Math.max(0, Math.ceil(60 - (performance.now() - chaseStart) / 1000));
+      ctx.fillStyle = gapM < 60 ? "#ff5050" : "#ffffff";
+      ctx.fillText(`🚔 Полиция: ${gapM} м · Держись ещё ${left} с`, W / 2, 38);
+    }
   }
 
   // ---------- Мини-карта трассы под спидометром (идея Саши) ----------

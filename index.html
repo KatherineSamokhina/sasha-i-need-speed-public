@@ -6,7 +6,7 @@
 <title>I Need Speed 1: First Racing</title>
 <!-- ?v=2 — хитрость против кэша: браузер иногда запоминает старые
      файлы; поменяв цифру, мы заставляем его скачать свежие -->
-<link rel="stylesheet" href="style.css?v=57">
+<link rel="stylesheet" href="style.css?v=58">
 </head>
 <body>
   <div id="wrap">
@@ -60,7 +60,7 @@
         <button id="btn-settings" class="btn-dark">⚙️ Настройки</button>
       </div>
       <!-- Номер версии: сразу видно, какая сборка запущена (урок бага №14) -->
-      <p class="studio-credit">© Vardo Games · v57</p>
+      <p class="studio-credit">© Vardo Games · v58</p>
     </div>
 
     <!-- МУЛЬТИПЛЕЕР: пир-ту-пир через WebRTC (спецификация Саши) -->
@@ -101,6 +101,7 @@
       <button id="btn-drag" class="btn-orange">⚡ ДРАГ — дуэль с препятствиями</button>
       <button id="btn-ta" class="btn-blue">⏱ ПРОТИВ РЕКОРДА — обгони призрака</button>
       <button id="btn-go" class="btn-green">🚗 СВОБОДНАЯ ЕЗДА — без соперников</button>
+      <button id="btn-chase" class="btn-violet">🚓 ПОГОНЯ — есть полиция? Или будешь вором!</button>
       <button id="btn-track" class="btn-slate">🛣️ Трасса: Зелёное кольцо</button>
       <button id="btn-races-back" class="btn-dark">⬅ Назад</button>
     </div>
@@ -222,7 +223,7 @@
   <!-- SDK Яндекс Игр: на их сайте сообщает «игра загрузилась».
        Дома этот скрипт просто не загрузится — и ничего страшного -->
   <script src="https://yandex.ru/games/sdk/v2" onerror=""></script>
-  <script src="game.js?v=57"></script>
+  <script src="game.js?v=58"></script>
   <script>
     // Знакомимся с Яндекс Играми, если мы запущены у них
     if (typeof YaGames !== "undefined") {
