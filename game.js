@@ -1584,6 +1584,7 @@ function mpSetup(isHost) {
   conn.on("open", () => {
     mpStatus("✅ Подключено! Выезжаем вместе…");
     if (isHost) conn.send({ t: "hello", track: currentTrack });
+    unlockAchv("friend");   // достижение «Друг на связи»
     mpStartDrive();
   });
   conn.on("data", onMpData);
@@ -2072,6 +2073,78 @@ const CAR_BRAND = {
 let garageCat = 0;      // номер выбранной категории в CATEGORIES
 let garageBrand = null; // выбранная марка (null = фильтруем по типу)
 
+// ---------- ДОСТИЖЕНИЯ (блокнот Саши, 21.09) ----------
+// Награды за подвиги! Хранятся в ins1-achv, показываются на своём
+// экране, а при получении всплывает зелёная плашка.
+const ACHIEVEMENTS = [
+  { id: "firstwin", icon: "🥇", name: "Первая победа",
+    desc: "Выиграй любую гонку" },
+  { id: "mph88", icon: "⚡", name: "88 миль в час!",
+    desc: "Разгони Делориан до 142 км/ч. Награда: жалюзи Делориана в тюнинге!" },
+  { id: "hyper344", icon: "🚀", name: "Гиперскорость",
+    desc: "Разгонись до 344 км/ч" },
+  { id: "buhanka1", icon: "🍞", name: "Буханка-чемпион",
+    desc: "Выиграй гонку на Буханке" },
+  { id: "rich", icon: "💰", name: "Богач",
+    desc: "Накопи 5000 монет" },
+  { id: "ten", icon: "🔟", name: "Коллекционер",
+    desc: "Владей десятью машинами" },
+  { id: "ussr", icon: "🪆", name: "Гараж СССР",
+    desc: "Собери ВСЕ машины СССР (да, даже ЗИС!)" },
+  { id: "friend", icon: "🌐", name: "Друг на связи",
+    desc: "Сыграй с другом в мультиплеере" },
+];
+let achv = {};
+try { achv = JSON.parse(localStorage.getItem("ins1-achv") || "{}"); }
+catch (e) { achv = {}; }
+
+function unlockAchv(id) {
+  if (achv[id]) return;                     // уже получено
+  achv[id] = Date.now();
+  localStorage.setItem("ins1-achv", JSON.stringify(achv));
+  const a = ACHIEVEMENTS.find((x) => x.id === id);
+  const t = document.getElementById("achv-toast");
+  t.textContent = `🏅 Достижение: ${a.icon} ${a.name}!`;
+  t.classList.remove("hidden");
+  clearTimeout(unlockAchv._tm);
+  unlockAchv._tm = setTimeout(() => t.classList.add("hidden"), 3500);
+}
+
+// Проверки, связанные с гаражом (вызываются после покупки и при старте)
+function checkCarAchievements() {
+  if (owned.length >= 10) unlockAchv("ten");
+  const ussrIds = Object.keys(CAR_CATEGORY)
+    .filter((k) => CAR_CATEGORY[k] === "ussr");
+  if (ussrIds.every((k) => isOwned(k))) unlockAchv("ussr");
+}
+
+function renderAchv() {
+  const list = document.getElementById("achv-list");
+  list.innerHTML = "";
+  let got = 0;
+  for (const a of ACHIEVEMENTS) {
+    const row = document.createElement("div");
+    row.className = "achv-row" + (achv[a.id] ? "" : " locked");
+    if (achv[a.id]) got++;
+    row.innerHTML =
+      `<span class="ic">${achv[a.id] ? a.icon : "🔒"}</span>` +
+      `<div><b>${a.name}</b><span>${a.desc}</span></div>`;
+    list.appendChild(row);
+  }
+  document.getElementById("achv-count").textContent =
+    `Открыто: ${got} из ${ACHIEVEMENTS.length}`;
+}
+wireButton("btn-achv", () => {
+  renderAchv();
+  show("menu", false);
+  show("achv", true);
+});
+wireButton("btn-achv-back", () => {
+  show("achv", false);
+  show("menu", true);
+});
+checkCarAchievements();   // прошлые заслуги засчитываются сразу!
+
 // Список индексов CARS для текущей категории, по цене (ЗИС — в конец:
 // его цена −1 означает «бесценный», такому место последнее)
 function garageList() {
@@ -2237,6 +2310,7 @@ wireButton("btn-select", () => {
     pay(CAR_PRICES[c.id]);            // ПОКУПКА! 💰 (админу — бесплатно)
     owned.push(c.id);
     saveOwned();
+    checkCarAchievements();           // «Коллекционер», «Гараж СССР»
     applyCar(garageIndex);            // сразу садимся в новенькую
   } else {
     const btn = document.getElementById("btn-select");
@@ -2361,6 +2435,7 @@ try {
 } catch {}
 function saveMoney() {
   try { localStorage.setItem("ins1-money", String(money)); } catch {}
+  if (money >= 5000) unlockAchv("rich");   // достижение «Богач»
 }
 
 function updateMoneyUI() {
@@ -2514,6 +2589,14 @@ function drawMods(g, id, t) {
     g.fillRect( 29, sy + 6, 5, 12);
     roundRect(g, -58, sy, 116, 7, 3, "#101214");
   }
+  if (t.delorean) {
+    // ЖАЛЮЗИ ДЕЛОРИАНА — награда за достижение «88 миль в час»:
+    // стальные рёбра на корме, как у машины времени!
+    const ly = (fit.spoilerY ?? -72) + 11;
+    roundRect(g, -34, ly, 68, 18, 4, "#3a3f45");
+    g.fillStyle = "#23272c";
+    for (let i = 0; i < 5; i++) g.fillRect(-30, ly + 3 + i * 3.1, 60, 1.8);
+  }
   if (t.rims) {
     const x = RIM_X[id] || 66;
     for (const s of [-1, 1]) {
@@ -2579,6 +2662,10 @@ function renderTuning() {
     det.appendChild(chip("спойлер", t.spoiler, () => { t.spoiler = !t.spoiler; }));
   }
   det.appendChild(chip("золотые диски", t.rims, () => { t.rims = !t.rims; }));
+  // НАГРАДА за достижение «88 миль в час»: жалюзи Делориана!
+  if (achv["mph88"])
+    det.appendChild(chip("жалюзи Делориана", t.delorean,
+      () => { t.delorean = !t.delorean; }));
   const neons = Object.keys(NEON_COLORS);
   det.appendChild(chip("неон: " + t.neon, t.neon !== "нет", () => {
     t.neon = neons[(neons.indexOf(t.neon) + 1) % neons.length];
@@ -3228,8 +3315,11 @@ function update(dt) {
   // 88 миль/ч! Пересекли отметку 142 км/ч снизу вверх — поджигаем след.
   // Решение Саши: огонь — ЭКСКЛЮЗИВ Делориана, машины времени!
   const kmhNow = speed / KMH;
-  if (car.id === "delorean" && prevKmh < 142 && kmhNow >= 142)
+  if (car.id === "delorean" && prevKmh < 142 && kmhNow >= 142) {
     fireTrailUntil = performance.now() + 5000;
+    unlockAchv("mph88");            // достижение + жалюзи в тюнинге!
+  }
+  if (kmhNow >= 344) unlockAchv("hyper344");
   prevKmh = kmhNow;
 
   // Столкновения: проверяем объекты на сегменте, где сейчас машина.
@@ -3336,6 +3426,10 @@ function update(dt) {
       raceOver = true;
       finalPlace = 1 + opponents.filter((o) => o.z >= raceLaps() * trackLength).length;
       const medal = ["🥇", "🥈", "🥉", "🏁"][finalPlace - 1];
+      if (finalPlace === 1) {
+        unlockAchv("firstwin");
+        if (car.id === "buhanka") unlockAchv("buhanka1");
+      }
       // Призовые монеты — по месту! В драге свои ставки
       const reward = (raceKind === "drag" ? [400, 50] : PLACE_REWARD)[finalPlace - 1];
       money += reward;

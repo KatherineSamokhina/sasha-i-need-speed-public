@@ -6,7 +6,7 @@
 <title>I Need Speed 1: First Racing</title>
 <!-- ?v=2 — хитрость против кэша: браузер иногда запоминает старые
      файлы; поменяв цифру, мы заставляем его скачать свежие -->
-<link rel="stylesheet" href="style.css?v=48">
+<link rel="stylesheet" href="style.css?v=49">
 </head>
 <body>
   <div id="wrap">
@@ -56,10 +56,11 @@
         <button id="btn-city" class="btn-violet">🏙 ГОРОД</button>
         <button id="btn-mp" class="btn-green">🌐 МУЛЬТИПЛЕЕР</button>
         <button id="btn-garage" class="btn-blue">🔧 Гараж</button>
+        <button id="btn-achv" class="btn-orange">🏅 Достижения</button>
         <button id="btn-settings" class="btn-dark">⚙️ Настройки</button>
       </div>
       <!-- Номер версии: сразу видно, какая сборка запущена (урок бага №14) -->
-      <p class="studio-credit">© Vardo Games · v48</p>
+      <p class="studio-credit">© Vardo Games · v49</p>
     </div>
 
     <!-- МУЛЬТИПЛЕЕР: пир-ту-пир через WebRTC (спецификация Саши) -->
@@ -134,6 +135,14 @@
       <button id="btn-cats-back" class="btn-dark">⬅ Назад в гараж</button>
     </div>
 
+    <!-- ДОСТИЖЕНИЯ: награды за подвиги (блокнот Саши, 21.09) -->
+    <div id="achv" class="overlay hidden">
+      <h1>🏅 ДОСТИЖЕНИЯ</h1>
+      <p class="crash-text" id="achv-count"></p>
+      <div id="achv-list"></div>
+      <button id="btn-achv-back" class="btn-dark">⬅ Назад</button>
+    </div>
+
     <!-- НАСТРОЙКИ: две клавиши на каждую функцию -->
     <div id="settings" class="overlay hidden">
       <h1>⚙️ НАСТРОЙКИ</h1>
@@ -192,6 +201,9 @@
       <button id="btn-crash-menu">🏠 Главное меню</button>
     </div>
 
+    <!-- Всплывашка нового достижения (видна на любом экране) -->
+    <div id="achv-toast" class="hidden"></div>
+
     <!-- СЕНСОРНОЕ УПРАВЛЕНИЕ для телефонов и планшетов -->
     <div id="touch" class="hidden">
       <button class="tbtn" id="t-left">◀</button>
@@ -209,7 +221,7 @@
   <!-- SDK Яндекс Игр: на их сайте сообщает «игра загрузилась».
        Дома этот скрипт просто не загрузится — и ничего страшного -->
   <script src="https://yandex.ru/games/sdk/v2" onerror=""></script>
-  <script src="game.js?v=48"></script>
+  <script src="game.js?v=49"></script>
   <script>
     // Знакомимся с Яндекс Играми, если мы запущены у них
     if (typeof YaGames !== "undefined") {
