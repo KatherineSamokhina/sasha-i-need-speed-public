@@ -6319,9 +6319,6 @@ function drawTimeMachine(g) {
   g.lineWidth = 2;
   g.beginPath(); g.moveTo(-94, -20); g.quadraticCurveTo(-102, -74, -64, -94); g.stroke();
   g.beginPath(); g.moveTo( 94, -20); g.quadraticCurveTo( 102, -74,  64, -94); g.stroke();
-  // Жёлтые предупреждающие наклейки на углах
-  roundRect(g, -88, -50, 9, 5, 1, "#e8c11c");
-  roundRect(g,  79, -50, 9, 5, 1, "#e8c11c");
   // КРУГЛАЯ ТУРБИНА с жёлтой сердцевиной — за реактором (с фото!)
   circle(g, 0, -94, 17, "#17191c");
   g.strokeStyle = "#3d434a"; g.lineWidth = 2.5;
