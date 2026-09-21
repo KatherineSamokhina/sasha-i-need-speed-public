@@ -1888,6 +1888,9 @@ document.getElementById("btn-reset-progress").addEventListener("click", (e) => {
     saveOwned();
     zisCode = false;    // и секретные коды придётся вводить заново!
     adminCode = false;
+    achv = {};          // ДОСТИЖЕНИЯ тоже сгорают (правка Саши) —
+                        // а с ними прячется и Машина Времени!
+    try { localStorage.removeItem("ins1-achv"); } catch {}
     refreshCodeStatus();
     try { localStorage.removeItem("ins1-records"); } catch {}
     try { localStorage.removeItem("ins1-code"); } catch {}
@@ -1955,7 +1958,7 @@ function refreshCodeStatus() {
   // только после ввода — не ввёл, её нет!)
   const sa = document.getElementById("code-status-admin");
   if (adminCode) {
-    sa.innerHTML = "🛡 Код «админский код секрет» активен — все машины (кроме ЗИСа!) и <i>бесконечные деньги</i>";
+    sa.innerHTML = "🛡 Код «админский код секрет» активен — все машины (кроме ЗИСа и Машины Времени!) и <i>бесконечные деньги</i>";
     sa.classList.remove("hidden");
   } else {
     sa.classList.add("hidden");
@@ -1987,9 +1990,11 @@ document.getElementById("btn-code").addEventListener("click", (e) => {
   } else if (isAdmin) {
     // АДМИН: все машины разблокированы, деньги бесконечны!
     // НО ЗИС даже админу не даётся (правка Саши) — только ностальгия!
+    // И МАШИНА ВРЕМЕНИ не даётся (правка Саши) — только за достижение!
     adminCode = true;
     try { localStorage.setItem("ins1-admin", "1"); } catch {}
-    owned = CARS.filter((c) => c.id !== "zis").map((c) => c.id);
+    owned = CARS.filter((c) => c.id !== "zis" && c.id !== "timemachine")
+                .map((c) => c.id);
     if (zisCode) owned.push("zis");   // если ностальгия уже введена — оставляем
     saveOwned();
     refreshCodeStatus();
