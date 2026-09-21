@@ -1499,6 +1499,19 @@ function goChase(role = "cop") {
   if (engine && engine.ac.state === "suspended") engine.ac.resume();
 }
 
+// НАСТОЯЩИЙ ПОВОРОТ НЕ ТУДА (правка Саши: «я хотел чтоб можно было
+// выбрать путь»): дорога впереди ПЕРЕГИБАЕТСЯ в сторону игрока —
+// ты реально уезжаешь по своей ветке, а чужая уходит в другую
+function flipForkRoad(f) {
+  for (let k = 0; k < 45; k++) {
+    const s = segments[f.seg + k];
+    if (!s) break;
+    s.curve = -s.curve;
+    if (s.branch) s.branch.side = -s.branch.side;
+  }
+  buildTrackMap();   // мини-карта перерисуется под новый путь
+}
+
 // Вернуть игроку его машину после службы
 function endChase() {
   if (!chaseMode) return;
@@ -3566,23 +3579,29 @@ function update(dt) {
     const cop = opponents[0];
     const playerTotalC = (playerLap - 1) * trackLength + position;
     const gap = playerTotalC - cop.z;
-    // Погоня сбалансирована (правка Саши «слишком сложно удрать»):
-    // издалека полиция догоняет, вблизи лишь ВИСИТ на хвосте.
-    // Быстрая машина уходит по скорости (коп не больше 93% своей
-    // максималки), медленная — хитростью на развилках!
-    const copMax = cop.car.maxSpeed * 0.93;
+    // Баланс (правки Саши): полиция не быстрее ТВОЕЙ машины больше
+    // чем на 3% — даже медляк держится, а спасают РАЗВИЛКИ!
+    const copMax = Math.min(cop.car.maxSpeed * 0.93, tunedMaxSpeed() * 1.03);
     const target = gap > 800 ? speed + KMH * 8 : speed + KMH * 1;
     cop.speed = Math.min(copMax, Math.max(KMH * 70, target));
     cop.z += cop.speed * dt;
-    // Развилки: ушёл НЕ на сторону главной дороги — сбил её со следа!
+    // РАЗВИЛКИ — настоящий выбор пути: свернул на другую ветку —
+    // дорога перегибается за тобой! Полиция далеко — потеряла след,
+    // близко — успела свернуть следом.
     for (const f of chaseForks) {
       if (!f.resolved && position >= f.seg * SEG_LEN) {
         f.resolved = true;
         const side = playerX < 0 ? -1 : 1;
         if (side !== f.dir) {
-          cop.z -= 1400;
-          lapMsg = { text: "🌀 Сбил полицию со следа!",
-                     until: performance.now() + 1600 };
+          flipForkRoad(f);
+          if (gap > 1200) {
+            cop.z -= 4500;
+            lapMsg = { text: "🌀 Полиция потеряла тебя на развилке!",
+                       until: performance.now() + 1800 };
+          } else {
+            lapMsg = { text: "🚔 Полиция успела свернуть за тобой!",
+                       until: performance.now() + 1600 };
+          }
         }
       }
     }
@@ -3612,7 +3631,9 @@ function update(dt) {
     updateOpponents(dt);
     const crim = opponents[0];
     const gap = crim.z - ((playerLap - 1) * trackLength + position);
-    // РАЗВИЛКИ: на сегменте развилки надо быть на стороне преступника
+    // РАЗВИЛКИ — настоящий выбор пути (правка Саши): поехал не по
+    // ветке преступника — реально СВЕРНУЛ на другую дорогу, и вора
+    // уже не поймать!
     for (const f of chaseForks) {
       if (!f.resolved && position >= f.seg * SEG_LEN) {
         f.resolved = true;
@@ -3622,9 +3643,12 @@ function update(dt) {
           crim.speed *= 0.72;      // преступник запаниковал!
           lapMsg = { text: "✅ Верная дорога!", until: performance.now() + 1400 };
         } else {
-          crim.z += 1600;          // ушёл по другой ветке!
-          lapMsg = { text: "❌ Не туда! Преступник оторвался!",
-                     until: performance.now() + 1800 };
+          flipForkRoad(f);         // едешь по СВОЕЙ ветке…
+          chaseOver = true;
+          raceOver = true;
+          document.getElementById("finish-text").textContent =
+            "🛣 Свернул не туда — преступник ушёл по другой дороге!";
+          show("finish", true);
         }
       }
     }
