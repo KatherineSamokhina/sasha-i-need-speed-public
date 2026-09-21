@@ -111,6 +111,14 @@ body {
 
 .hidden { display: none !important; }
 
+/* Настройки: список клавиш длинный — нужен СКРОЛЛ (правка Саши).
+   Контент прижат к верху и листается, иначе верх недостижим */
+#settings {
+  justify-content: flex-start;
+  overflow-y: auto;
+  padding: 16px 0 14px;
+}
+
 /* ---- Достижения (блокнот Саши, 21.09) ---- */
 #achv-list {
   display: flex;
