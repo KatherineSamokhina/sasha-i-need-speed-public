@@ -86,6 +86,16 @@ const CARS = [
     desc: "Легенда из нержавейки: жалюзи на стекле и фонари-сетки. 88 миль/ч = 142 км/ч… попробуй разогнаться!",
   },
   {
+    // МАШИНА ВРЕМЕНИ (идея Саши, 21.09): отдельный Делориан с
+    // решётками из кино. НЕ продаётся — только за достижение
+    // «88 миль в час»!
+    id: "timemachine", name: "TimeLorean Машина Времени", gearbox: "С",
+    topKmh: 201,      // лимит Саши: «макс 201 км ч»
+    zeroTo100: 9.0,   // и разгон пободрее — время не ждёт!
+    noNpc: true,   // уникум соперникам не выдаётся
+    desc: "Награда за «88 миль в час»: решётки, огонь и путешествия во времени!",
+  },
+  {
     // Та самая Корса, с которой было "всё тяжело"! Саша уточнил:
     // НЕ электрическая — обычная бензиновая (фото было электро-
     // версии, но кузов у них одинаковый). Категория С — решение
@@ -482,6 +492,7 @@ const BRAKE_100_0 = {
   astro: 2.9, cobra: 3.2, defendor: 4.2, pejo206: 3.0,
   raf977: 4.4, uaz469: 4.5, zis101: 5.0, f2: 1.5,
   agera: 1.6, zonta: 1.8, aero: 1.7, m3e30: 3.0, m5: 2.2,
+  timemachine: 3.2,
 };
 
 // Досчитываем игровые характеристики из реальных цифр.
@@ -517,6 +528,7 @@ const CAR_PRICES = {
   astro: 650, cobra: 2100, defendor: 750, pejo206: 500,
   raf977: 350, uaz469: 400, zis101: 500, f2: 3500,
   agera: 8200, zonta: 7000, aero: 7800, m3e30: 1500, m5: 2700,
+  timemachine: -2,   // −2 = не продаётся, только за ДОСТИЖЕНИЕ!
   pejo308: 1300, volga3110: 320, volga24: 300, volga21: 380,
   sportage: 850, k5: 950, sonata: 900, tucson: 800, i30: 600,
   zis: -1,   // −1 = не продаётся, только код «вечная ностальгия»
@@ -530,7 +542,14 @@ try {
 function saveOwned() {
   try { localStorage.setItem("ins1-owned", JSON.stringify(owned)); } catch {}
 }
-const isOwned = (id) => owned.includes(id);
+// Достижения: НАВЕРХУ, потому что нужны isOwned уже при загрузке
+// (урок про порядок объявлений — см. DEVLOG!)
+let achv = {};
+try { achv = JSON.parse(localStorage.getItem("ins1-achv") || "{}"); }
+catch (e) { achv = {}; }
+// Машина времени принадлежит тому, кто добыл достижение «88 миль в час»
+const isOwned = (id) =>
+  owned.includes(id) || (id === "timemachine" && !!achv["mph88"]);
 
 // Коробка передач: объявляем здесь, наверху — applyCar пользуется
 // этими переменными уже при загрузке страницы
@@ -2052,7 +2071,7 @@ const CAR_CATEGORY = {
   astro: "city", cobra: "sport", defendor: "suv", pejo206: "city",
   raf977: "ussr", uaz469: "ussr", zis101: "ussr", f2: "hyper",
   agera: "hyper", zonta: "hyper", aero: "hyper",
-  m3e30: "sport", m5: "sport",
+  m3e30: "sport", m5: "sport", timemachine: "sport",
 };
 // Марка каждой машины — для вкладки «По марке» (заказ Саши)
 const CAR_BRAND = {
@@ -2079,7 +2098,7 @@ const CAR_BRAND = {
   astro: "Opal", cobra: "Shelbee", defendor: "Sand Hover",
   pejo206: "Pejo", raf977: "РАФ", uaz469: "УАЗ", zis101: "ЗИС",
   f2: "Нет марки", agera: "Konisegg", zonta: "Paganny", aero: "ZSC",
-  m3e30: "BNW", m5: "BNW",
+  m3e30: "BNW", m5: "BNW", timemachine: "TMC",
 };
 let garageCat = 0;      // номер выбранной категории в CATEGORIES
 let garageBrand = null; // выбранная марка (null = фильтруем по типу)
@@ -2091,7 +2110,7 @@ const ACHIEVEMENTS = [
   { id: "firstwin", icon: "🥇", name: "Первая победа",
     desc: "Выиграй любую гонку" },
   { id: "mph88", icon: "⚡", name: "88 миль в час!",
-    desc: "Разгони Делориан до 142 км/ч. Награда: жалюзи Делориана в тюнинге!" },
+    desc: "Разгони Делориан до 142 км/ч. Награда: МАШИНА ВРЕМЕНИ в гараже!" },
   { id: "hyper344", icon: "🚀", name: "Гиперскорость",
     desc: "Разгонись до 344 км/ч" },
   { id: "buhanka1", icon: "🍞", name: "Буханка-чемпион",
@@ -2105,10 +2124,7 @@ const ACHIEVEMENTS = [
   { id: "friend", icon: "🌐", name: "Друг на связи",
     desc: "Сыграй с другом в мультиплеере" },
 ];
-let achv = {};
-try { achv = JSON.parse(localStorage.getItem("ins1-achv") || "{}"); }
-catch (e) { achv = {}; }
-
+// (сам объект achv объявлен наверху, рядом с owned — порядок загрузки!)
 function unlockAchv(id) {
   if (achv[id]) return;                     // уже получено
   achv[id] = Date.now();
@@ -2166,8 +2182,9 @@ function garageList() {
       ? CAR_BRAND[CARS[i].id] === garageBrand
       : key === "all" || CAR_CATEGORY[CARS[i].id] === key)
     .sort((a, b) => {
+      // Отрицательная цена (код или достижение) = «бесценно» → в конец
       const pa = CAR_PRICES[CARS[a].id], pb = CAR_PRICES[CARS[b].id];
-      return (pa === -1 ? Infinity : pa) - (pb === -1 ? Infinity : pb);
+      return (pa < 0 ? Infinity : pa) - (pb < 0 ? Infinity : pb);
     });
 }
 
@@ -2201,6 +2218,9 @@ function renderGarage() {
     btn.textContent = "✅ Выбрать эту машину";
   } else if (CAR_PRICES[c.id] === -1) {
     btn.textContent = "🔒 Только по секретному коду!";
+    btn.classList.add("soon");
+  } else if (CAR_PRICES[c.id] === -2) {
+    btn.textContent = "🏅 Только за достижение «88 миль в час»!";
     btn.classList.add("soon");
   } else {
     btn.textContent = `💰 Купить за ${CAR_PRICES[c.id]} 🪙`;
@@ -2315,8 +2335,8 @@ wireButton("btn-select", () => {
   if (garageIndex === carIndex) return;
   if (isOwned(c.id)) {
     applyCar(garageIndex);            // своя — просто пересаживаемся
-  } else if (CAR_PRICES[c.id] === -1) {
-    return;                           // ЗЫС продаётся только за код!
+  } else if (CAR_PRICES[c.id] === -1 || CAR_PRICES[c.id] === -2) {
+    return;              // только код (ЗИС) или достижение (машина времени)!
   } else if (canAfford(CAR_PRICES[c.id])) {
     pay(CAR_PRICES[c.id]);            // ПОКУПКА! 💰 (админу — бесплатно)
     owned.push(c.id);
@@ -2431,7 +2451,7 @@ const RIM_X = { aveo: 66, picanto: 56, corsa: 59, focus: 73, delorean: 75,
   sportage: 66, k5: 71, sonata: 71, tucson: 66, i30: 65,
   astro: 64, cobra: 74, defendor: 64, pejo206: 62, raf977: 62,
   uaz469: 64, zis101: 66, f2: 84, agera: 80, zonta: 80, aero: 80,
-  m3e30: 70, m5: 74 };
+  m3e30: 70, m5: 74, timemachine: 75 };
 
 // ---------- ИГРОВАЯ ВАЛЮТА 🪙 ----------
 // Зарабатывается в гонках (по месту на финише), тратится на железо.
@@ -2553,6 +2573,7 @@ const MOD_FIT = {
   uaz469: { spoilerY: -92, stripeTop: -56 },
   zis101: { spoilerY: -112, stripeTop: -64 },
   cobra: { noSpoiler: true, stripeTop: -60 },   // родстеру спойлер некуда!
+  timemachine: { noSpoiler: true, stripeTop: -58 },  // решётки — не мешать!
   f2: { noSpoiler: true },
   agera: { noSpoiler: true, stripeTop: -72 },
   zonta: { noSpoiler: true, stripeTop: -74 },
@@ -2599,14 +2620,6 @@ function drawMods(g, id, t) {
     g.fillRect(-34, sy + 6, 5, 12);
     g.fillRect( 29, sy + 6, 5, 12);
     roundRect(g, -58, sy, 116, 7, 3, "#101214");
-  }
-  if (t.delorean) {
-    // ЖАЛЮЗИ ДЕЛОРИАНА — награда за достижение «88 миль в час»:
-    // стальные рёбра на корме, как у машины времени!
-    const ly = (fit.spoilerY ?? -72) + 11;
-    roundRect(g, -34, ly, 68, 18, 4, "#3a3f45");
-    g.fillStyle = "#23272c";
-    for (let i = 0; i < 5; i++) g.fillRect(-30, ly + 3 + i * 3.1, 60, 1.8);
   }
   if (t.rims) {
     const x = RIM_X[id] || 66;
@@ -2673,10 +2686,6 @@ function renderTuning() {
     det.appendChild(chip("спойлер", t.spoiler, () => { t.spoiler = !t.spoiler; }));
   }
   det.appendChild(chip("золотые диски", t.rims, () => { t.rims = !t.rims; }));
-  // НАГРАДА за достижение «88 миль в час»: жалюзи Делориана!
-  if (achv["mph88"])
-    det.appendChild(chip("жалюзи Делориана", t.delorean,
-      () => { t.delorean = !t.delorean; }));
   const neons = Object.keys(NEON_COLORS);
   det.appendChild(chip("неон: " + t.neon, t.neon !== "нет", () => {
     t.neon = neons[(neons.indexOf(t.neon) + 1) % neons.length];
@@ -3326,9 +3335,10 @@ function update(dt) {
   // 88 миль/ч! Пересекли отметку 142 км/ч снизу вверх — поджигаем след.
   // Решение Саши: огонь — ЭКСКЛЮЗИВ Делориана, машины времени!
   const kmhNow = speed / KMH;
-  if (car.id === "delorean" && prevKmh < 142 && kmhNow >= 142) {
+  if ((car.id === "delorean" || car.id === "timemachine")
+      && prevKmh < 142 && kmhNow >= 142) {
     fireTrailUntil = performance.now() + 5000;
-    unlockAchv("mph88");            // достижение + жалюзи в тюнинге!
+    unlockAchv("mph88");            // достижение + МАШИНА ВРЕМЕНИ!
   }
   if (kmhNow >= 344) unlockAchv("hyper344");
   prevKmh = kmhNow;
@@ -6290,6 +6300,29 @@ function drawM5(g) {
   }
 }
 
+// --- МАШИНА ВРЕМЕНИ: Делориан + решётки из кино (награда за
+// достижение «88 миль в час», по фото Саши) ---
+function drawTimeMachine(g) {
+  drawDelorean(g);   // низ — обычный TimeLorean из нержавейки
+  // Две чёрные решётки над кормой, чуть развалены наружу
+  for (const side of [-1, 1]) {
+    g.save();
+    g.translate(side * 21, -66);
+    g.rotate(side * 0.13);
+    roundRect(g, -14, -34, 28, 36, 3, "#15171a");
+    g.fillStyle = "#2e3238";
+    for (let r = 0; r < 3; r++)
+      for (let k = 0; k < 2; k++)
+        g.fillRect(-11 + k * 13, -31 + r * 11, 10, 9);
+    g.restore();
+  }
+  // Голубое свечение потокового конденсатора между решётками
+  g.fillStyle = "rgba(80, 180, 255, 0.35)";
+  g.beginPath(); g.ellipse(0, -80, 14, 9, 0, 0, Math.PI * 2); g.fill();
+  g.fillStyle = "#8fd4ff";
+  g.beginPath(); g.ellipse(0, -80, 6, 4, 0, 0, Math.PI * 2); g.fill();
+}
+
 const CAR_DRAWERS = {
   aveo: drawAveo, picanto: drawPicanto, focus: drawFocus,
   delorean: drawDelorean, corsa: drawCorsa,
@@ -6318,7 +6351,7 @@ const CAR_DRAWERS = {
   pejo206: drawPejo206, raf977: drawRaf977, uaz469: drawUaz469,
   zis101: drawZis101, f2: drawF2, agera: drawAgera,
   zonta: drawZonta, aero: drawAero,
-  m3e30: drawM3e30, m5: drawM5,
+  m3e30: drawM3e30, m5: drawM5, timemachine: drawTimeMachine,
 };
 
 // Огненный след: два пылающих следа за колёсами, три слоя пламени
