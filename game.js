@@ -1421,11 +1421,12 @@ function buildChaseTrack() {
   traffic = [];
   segments = [];
   chaseForks = [];
-  addRoad(40, 40, 40, 0, 0);   // разгонная прямая
+  addRoad(10, 12, 10, 0, 0);   // короткий разгон — и сразу к делу!
   while (segments.length < 1300) {
     const dir = Math.random() < 0.5 ? -1 : 1;
-    // подъезд к развилке
-    addRoad(18, 26, 18, Math.random() * 2 - 1, Math.random() * 10 - 5);
+    // подъезд к развилке (короткий: развилки должны быть ЧАСТЫМИ —
+    // правка Саши «развилки нет»: первая была аж на 181-м сегменте!)
+    addRoad(8, 12, 8, Math.random() * 2 - 1, Math.random() * 10 - 5);
     const forkSeg = segments.length - 1;
     chaseForks.push({ seg: forkSeg, dir, resolved: false });
     addSprite(forkSeg, "fork", 0);
@@ -1433,7 +1434,7 @@ function buildChaseTrack() {
     // как на фото-референсе Саши)
     addRoad(5, 24, 16, dir * (4.5 + Math.random() * 1.2),
             Math.random() * 12 - 6);
-    addRoad(18, 34, 18, Math.random() * 4 - 2, 0);
+    addRoad(10, 18, 10, Math.random() * 4 - 2, 0);
     // ВТОРАЯ ДОРОГА (правки Саши: «развилка как 2 дороги», «это
     // развилка» + фото): ветка отслаивается КРУТО, зеркально
     // настоящей — вместе они образуют букву V с травой в клину
