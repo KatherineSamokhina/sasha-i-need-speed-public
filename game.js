@@ -6304,6 +6304,34 @@ function drawM5(g) {
 // достижение «88 миль в час», по фото Саши) ---
 function drawTimeMachine(g) {
   drawDelorean(g);   // низ — обычный TimeLorean из нержавейки
+  // ЧЁРНЫЙ КАБЕЛЬ-ЗМЕЙКА через всю палубу (ещё деталей — Саша!)
+  g.strokeStyle = "#111316"; g.lineWidth = 4; g.lineCap = "round";
+  g.beginPath();
+  g.moveTo(-52, -56);
+  g.quadraticCurveTo(-26, -66, 0, -56);
+  g.quadraticCurveTo(26, -66, 52, -56);
+  g.stroke();
+  g.lineCap = "butt";
+  // Хромовые трубки-дуги по бокам палубы
+  g.strokeStyle = "#c9d0d7"; g.lineWidth = 3;
+  g.beginPath(); g.moveTo(-86, -50); g.quadraticCurveTo(-84, -84, -60, -90); g.stroke();
+  g.beginPath(); g.moveTo( 86, -50); g.quadraticCurveTo( 84, -84,  60, -90); g.stroke();
+  g.lineWidth = 2;
+  g.beginPath(); g.moveTo(-80, -50); g.quadraticCurveTo(-76, -76, -58, -82); g.stroke();
+  g.beginPath(); g.moveTo( 80, -50); g.quadraticCurveTo( 76, -76,  58, -82); g.stroke();
+  // Жёлтые предупреждающие наклейки на углах
+  roundRect(g, -88, -50, 9, 5, 1, "#e8c11c");
+  roundRect(g,  79, -50, 9, 5, 1, "#e8c11c");
+  // КРУГЛАЯ ТУРБИНА с жёлтой сердцевиной — за реактором (с фото!)
+  circle(g, 0, -94, 17, "#17191c");
+  g.strokeStyle = "#3d434a"; g.lineWidth = 2.5;
+  g.beginPath(); g.arc(0, -94, 12.5, 0, Math.PI * 2); g.stroke();
+  circle(g, 0, -94, 7, "#e8c11c");
+  g.fillStyle = "#17191c";
+  for (let a = 0; a < 8; a++) {
+    const ang = (a / 8) * Math.PI * 2;
+    g.fillRect(Math.cos(ang) * 4 - 0.8, -94 + Math.sin(ang) * 4 - 2.5, 1.6, 5);
+  }
   // СЕРЫЙ РЕАКТОР между решётками (правка Саши: больше деталей!):
   // блок с прорезями, синие катушки и шланги к решёткам — как в кино
   roundRect(g, -17, -86, 34, 26, 4, "#5c6166");
@@ -6320,18 +6348,40 @@ function drawTimeMachine(g) {
   g.strokeStyle = "#26292d"; g.lineWidth = 3;
   g.beginPath(); g.moveTo(-17, -70); g.quadraticCurveTo(-26, -62, -32, -66); g.stroke();
   g.beginPath(); g.moveTo( 17, -70); g.quadraticCurveTo( 26, -62,  32, -66); g.stroke();
-  // Две решётки: РОВНО (без наклона) и основаниями ЗАЛАЗИЮТ НА ФАРЫ —
-  // как в кино (правки Саши)
+  // Серые трубы-колена от реактора вниз к палубе (с фото)
+  g.strokeStyle = "#8a9096"; g.lineWidth = 5; g.lineCap = "round";
+  g.beginPath(); g.moveTo(-14, -62); g.quadraticCurveTo(-22, -56, -30, -58); g.stroke();
+  g.beginPath(); g.moveTo( 14, -62); g.quadraticCurveTo( 22, -56,  30, -58); g.stroke();
+  g.lineCap = "butt";
+  // Золотая решёточка на палубе под турбиной
+  roundRect(g, -11, -58, 22, 7, 2, "#c9a11c");
+  g.fillStyle = "#6d5410";
+  for (let k = 0; k < 3; k++) g.fillRect(-8 + k * 7, -56.5, 4.5, 4);
+  // Две решётки-ЭТАЖЕРКИ (по чёткому фото Саши): тонкий стальной
+  // каркас с полочками, стоят ровно, основаниями на фарах
   for (const side of [-1, 1]) {
-    const x0 = side * 42 - 15;
-    roundRect(g, x0, -96, 30, 52, 3, "#101214");
-    g.strokeStyle = "#3d434a"; g.lineWidth = 1.5;
-    g.strokeRect(x0 + 1.5, -94.5, 27, 49);
-    g.fillStyle = "#22262b";
-    for (let r = 0; r < 4; r++)
-      for (let k = 0; k < 2; k++)
-        g.fillRect(x0 + 3 + k * 13, -92 + r * 12, 11, 10);
+    const x0 = side * 42 - 16;
+    roundRect(g, x0, -100, 32, 56, 2, "#191c20");
+    g.strokeStyle = "#aeb4bc"; g.lineWidth = 2;
+    g.strokeRect(x0 + 1, -99, 30, 54);
+    g.beginPath();
+    g.moveTo(x0 + 16, -99); g.lineTo(x0 + 16, -45);       // средник
+    for (let r = 1; r < 4; r++) {                          // полочки
+      g.moveTo(x0 + 1, -99 + r * 13.5);
+      g.lineTo(x0 + 31, -99 + r * 13.5);
+    }
+    g.stroke();
   }
+  // Заклёпки на реакторе
+  g.fillStyle = "#3d434a";
+  for (const [bx, by] of [[-14, -84], [14, -84], [-14, -63], [14, -63]])
+    circle(g, bx, by, 1.6, "#3d434a");
+  // MR. FUSION — белый цилиндр-мусоросжигатель справа (как в кино!)
+  roundRect(g, 60, -90, 20, 28, 6, "#e8e6df");
+  roundRect(g, 58, -95, 24, 8, 3, "#d0cec6");
+  g.fillStyle = "#17191c"; g.fillRect(60, -78, 20, 5);
+  circle(g, 70, -98, 2.2, "#8a9096");
+  g.fillStyle = "#c22020"; g.fillRect(63, -71, 14, 3);
   // Голубое свечение потокового конденсатора над реактором
   g.fillStyle = "rgba(80, 180, 255, 0.30)";
   g.beginPath(); g.ellipse(0, -100, 15, 10, 0, 0, Math.PI * 2); g.fill();
