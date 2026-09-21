@@ -398,7 +398,18 @@ const CARS = [
   {
     id: "models", name: "Tesly Model S", gearbox: "Э",
     topKmh: 250, zeroTo100: 3.2,
-    desc: "Тихая красная молния: ни рёва, ни труб — только свист и скорость.",
+    desc: "Тихая чёрная молния: ни рёва, ни труб — только свист и скорость.",
+  },
+  // ---- Машина Бонда (блокнот Саши) — марка сразу парой! ----
+  {
+    id: "db5", name: "Astin Martun DB5", gearbox: "М",
+    topKmh: 233, zeroTo100: 8.1,
+    desc: "Серебристая машина шпиона №007: вращающийся номер и характер джентльмена.",
+  },
+  {
+    id: "dbs", name: "Astin Martun DBS", gearbox: "А",
+    topKmh: 340, zeroTo100: 3.4,
+    desc: "Супер-GT нового шпиона: 725 сил, алый, четыре трубы в диффузоре.",
   },
   // ---- Гиперкары (восторг Саши: «СКОРОСТЬ ГЕМЕРЫ!!!») ----
   {
@@ -514,6 +525,7 @@ const BRAKE_100_0 = {
   raf977: 4.4, uaz469: 4.5, zis101: 5.0, f2: 1.5,
   agera: 1.6, zonta: 1.8, aero: 1.7, m3e30: 3.0, m5: 2.2,
   timemachine: 3.2, police: 2.6, cybercraft: 2.6, models: 2.4,
+  db5: 3.6, dbs: 2.0,
 };
 
 // Досчитываем игровые характеристики из реальных цифр.
@@ -551,6 +563,7 @@ const CAR_PRICES = {
   agera: 8200, zonta: 7000, aero: 7800, m3e30: 1500, m5: 2700,
   timemachine: -2,   // −2 = не продаётся, только за ДОСТИЖЕНИЕ!
   police: 2200, cybercraft: 3000, models: 2600,
+  db5: 2000, dbs: 4800,
   pejo308: 1300, volga3110: 320, volga24: 300, volga21: 380,
   sportage: 850, k5: 950, sonata: 900, tucson: 800, i30: 600,
   zis: -1,   // −1 = не продаётся, только код «вечная ностальгия»
@@ -2240,6 +2253,7 @@ const CAR_CATEGORY = {
   agera: "hyper", zonta: "hyper", aero: "hyper",
   m3e30: "sport", m5: "sport", timemachine: "sport", police: "sport",
   cybercraft: "suv", models: "lux",
+  db5: "sport", dbs: "lux",
 };
 // Марка каждой машины — для вкладки «По марке» (заказ Саши)
 const CAR_BRAND = {
@@ -2268,6 +2282,7 @@ const CAR_BRAND = {
   f2: "Нет марки", agera: "Konisegg", zonta: "Paganny", aero: "ZSC",
   m3e30: "BNW", m5: "BNW", timemachine: "TMC", police: "Dodgee",
   cybercraft: "Tesly", models: "Tesly",
+  db5: "Astin Martun", dbs: "Astin Martun",
 };
 let garageCat = 0;      // номер выбранной категории в CATEGORIES
 let garageBrand = null; // выбранная марка (null = фильтруем по типу)
@@ -2578,6 +2593,8 @@ const PAINT_SLOTS = {
   tuatara: ["#f2f3f0", "#e2e4e0"],
   cybercraft: ["#c9ccd1", "#b8bcc2"],
   models: ["#17191c", "#101214"],
+  db5: ["#ccd2d6", "#b4bac0"],
+  dbs: ["#c0242c", "#8f151c"],
   merc190: ["#1a1c20", "#131519"],
   amggt53: ["#5a5e63", "#4d5156"],
   maybach: ["#ece9e2", "#dcd9d2"],
@@ -2627,7 +2644,7 @@ const RIM_X = { aveo: 66, picanto: 56, corsa: 59, focus: 73, delorean: 75,
   astro: 64, cobra: 74, defendor: 64, pejo206: 62, raf977: 62,
   uaz469: 64, zis101: 66, f2: 84, agera: 80, zonta: 80, aero: 80,
   m3e30: 70, m5: 74, timemachine: 75, police: 74,
-  cybercraft: 72, models: 72 };
+  cybercraft: 72, models: 72, db5: 68, dbs: 78 };
 
 // ---------- ИГРОВАЯ ВАЛЮТА 🪙 ----------
 // Зарабатывается в гонках (по месту на финише), тратится на железо.
@@ -2751,6 +2768,8 @@ const MOD_FIT = {
   cobra: { noSpoiler: true, stripeTop: -60 },   // родстеру спойлер некуда!
   timemachine: { noSpoiler: true, stripeTop: -58 },  // решётки — не мешать!
   cybercraft: { spoilerY: -92, stripeTop: -58 },
+  db5: { noSpoiler: true, stripeTop: -60 },  // классике шпиона спойлер не к лицу
+  dbs: { spoilerY: -100, stripeTop: -64 },
   f2: { noSpoiler: true },
   agera: { noSpoiler: true, stripeTop: -72 },
   zonta: { noSpoiler: true, stripeTop: -74 },
@@ -6812,6 +6831,77 @@ function drawModelS(g) {
   roundRect(g, -40, -13, 80, 3.5, 2, "#5c6166");
 }
 
+// --- Astin Martun DB5: серебристая машина шпиона №007 (по фото Саши) ---
+function drawDB5(g) {
+  carBase(g);
+  // Округлая крыша-купол (второй цвет слота — перекрасится тёмным оттенком)
+  roundRect(g, -50, -100, 100, 36, 18, "#b4bac0");
+  roundRect(g, -44, -96, 88, 26, 12, "#1a2026");
+  g.fillStyle = "rgba(255,255,255,0.12)"; g.fillRect(-36, -92, 32, 16);
+  // Покатый серебристый кузов с круглыми плечами
+  roundRect(g, -82, -66, 164, 58, 18, "#ccd2d6");
+  g.fillStyle = "rgba(255,255,255,0.30)"; g.fillRect(-70, -65, 140, 3);
+  // Вертикальные фонари-капли по краям: стоп + янтарный поворотник
+  for (const side of [-1, 1]) {
+    roundRect(g, side * 70 - 6, -58, 12, 26, 6, "#3d0a0a");
+    roundRect(g, side * 70 - 4, -55, 8, 9, 4, "#e82121");
+    roundRect(g, side * 70 - 4, -44, 8, 9, 4, "#e8b021");
+  }
+  // Крылатый значок на багажнике
+  g.fillStyle = "#e6eaee";
+  g.beginPath(); g.ellipse(0, -59, 15, 4.5, 0, 0, Math.PI * 2); g.fill();
+  g.fillStyle = "#15171a";
+  g.font = "bold 5px Verdana"; g.textAlign = "center";
+  g.fillText("DB5", 0, -56.5);
+  // Вращающийся номер шпиона — в толстой рамке-механизме
+  roundRect(g, -25, -41, 50, 16, 3, "#8a9096");
+  plate(g, -39);
+  // Хромовый бампер с клыками и две выхлопные трубы
+  roundRect(g, -80, -22, 160, 9, 4, "#c2c8ce");
+  roundRect(g, -46, -24, 7, 13, 3, "#b8bec4");
+  roundRect(g,  39, -24, 7, 13, 3, "#b8bec4");
+  roundRect(g, -34, -12, 12, 5, 2, "#7c8288");
+  roundRect(g,  22, -12, 12, 5, 2, "#7c8288");
+}
+
+// --- Astin Martun DBS: зелёный супер-GT нового шпиона ---
+function drawDBS(g) {
+  carBase(g);
+  // Широченное покатое стекло
+  roundRect(g, -56, -96, 112, 32, 12, "#1a2026");
+  g.fillStyle = "rgba(255,255,255,0.08)"; g.fillRect(-48, -91, 42, 22);
+  // Мускулистый АЛЫЙ кузов (по фото Саши)
+  roundRect(g, -88, -68, 176, 58, 12, "#c0242c");
+  g.fillStyle = "rgba(255,255,255,0.14)"; g.fillRect(-80, -67, 160, 3);
+  // Кромка «утиный хвост» на багажнике (второй цвет слота)
+  roundRect(g, -52, -70, 104, 5, 2, "#8f151c");
+  // Фонари-ЛЕЗВИЯ (по фото): тонкая полоса от середины багажника наружу,
+  // с изломом загибается вниз за угол кузова
+  for (const side of [-1, 1]) {
+    const s = side;
+    g.fillStyle = "#2a0808";      // тёмная подложка-лезвие
+    g.beginPath();
+    g.moveTo(s * 22, -61); g.lineTo(s * 78, -64); g.lineTo(s * 87, -50);
+    g.lineTo(s * 80, -47); g.lineTo(s * 73, -56); g.lineTo(s * 22, -53);
+    g.closePath(); g.fill();
+    g.fillStyle = "#ff2d2d";      // светящаяся нить внутри
+    g.beginPath();
+    g.moveTo(s * 25, -59); g.lineTo(s * 76, -61.5); g.lineTo(s * 83.5, -50.5);
+    g.lineTo(s * 80.5, -49); g.lineTo(s * 73.5, -58); g.lineTo(s * 25, -55.5);
+    g.closePath(); g.fill();
+  }
+  // Крылатый значок и имя модели
+  g.fillStyle = "#e6eaee";
+  g.beginPath(); g.ellipse(0, -62, 13, 4, 0, 0, Math.PI * 2); g.fill();
+  g.fillStyle = "#e8c9cb";
+  g.font = "bold 5px Verdana"; g.textAlign = "center";
+  g.fillText("DBS", 58, -36);
+  plate(g, -42);
+  // Огромный чёрный диффузор, ЧЕТЫРЕ трубы парами в центре (как на фото)
+  roundRect(g, -84, -24, 168, 14, 5, "#101214");
+  for (const x of [-38, -23, 11, 26]) roundRect(g, x, -20, 12, 7, 3, "#4a4f54");
+}
+
 const CAR_DRAWERS = {
   aveo: drawAveo, picanto: drawPicanto, focus: drawFocus,
   delorean: drawDelorean, corsa: drawCorsa,
@@ -6842,6 +6932,7 @@ const CAR_DRAWERS = {
   zonta: drawZonta, aero: drawAero,
   m3e30: drawM3e30, m5: drawM5, timemachine: drawTimeMachine,
   police: drawPolice, cybercraft: drawCybercraft, models: drawModelS,
+  db5: drawDB5, dbs: drawDBS,
 };
 
 // Огненный след: два пылающих следа за колёсами, три слоя пламени
