@@ -6304,23 +6304,39 @@ function drawM5(g) {
 // достижение «88 миль в час», по фото Саши) ---
 function drawTimeMachine(g) {
   drawDelorean(g);   // низ — обычный TimeLorean из нержавейки
-  // Две чёрные решётки над кормой, чуть развалены наружу
-  for (const side of [-1, 1]) {
-    g.save();
-    g.translate(side * 21, -66);
-    g.rotate(side * 0.13);
-    roundRect(g, -14, -34, 28, 36, 3, "#15171a");
-    g.fillStyle = "#2e3238";
-    for (let r = 0; r < 3; r++)
-      for (let k = 0; k < 2; k++)
-        g.fillRect(-11 + k * 13, -31 + r * 11, 10, 9);
-    g.restore();
-  }
-  // Голубое свечение потокового конденсатора между решётками
-  g.fillStyle = "rgba(80, 180, 255, 0.35)";
-  g.beginPath(); g.ellipse(0, -80, 14, 9, 0, 0, Math.PI * 2); g.fill();
+  // СЕРЫЙ РЕАКТОР между решётками (правка Саши: больше деталей!):
+  // блок с прорезями, синие катушки и шланги к решёткам — как в кино
+  roundRect(g, -17, -86, 34, 26, 4, "#5c6166");
+  g.fillStyle = "#3d434a";
+  g.fillRect(-13, -82, 26, 3.5);
+  g.fillRect(-13, -66, 26, 3);
+  g.fillStyle = "#2a6db8";                 // синие катушки
+  roundRect(g, -14, -77, 9, 10, 2, "#2a6db8");
+  roundRect(g,   5, -77, 9, 10, 2, "#2a6db8");
   g.fillStyle = "#8fd4ff";
-  g.beginPath(); g.ellipse(0, -80, 6, 4, 0, 0, Math.PI * 2); g.fill();
+  g.fillRect(-12, -74, 5, 4); g.fillRect(7, -74, 5, 4);
+  circle(g, 0, -88, 2.6, "#ff4040");       // красный огонёк сверху
+  // Шланги от реактора к решёткам
+  g.strokeStyle = "#26292d"; g.lineWidth = 3;
+  g.beginPath(); g.moveTo(-17, -70); g.quadraticCurveTo(-26, -62, -32, -66); g.stroke();
+  g.beginPath(); g.moveTo( 17, -70); g.quadraticCurveTo( 26, -62,  32, -66); g.stroke();
+  // Две решётки: РОВНО (без наклона) и основаниями ЗАЛАЗИЮТ НА ФАРЫ —
+  // как в кино (правки Саши)
+  for (const side of [-1, 1]) {
+    const x0 = side * 42 - 15;
+    roundRect(g, x0, -96, 30, 52, 3, "#101214");
+    g.strokeStyle = "#3d434a"; g.lineWidth = 1.5;
+    g.strokeRect(x0 + 1.5, -94.5, 27, 49);
+    g.fillStyle = "#22262b";
+    for (let r = 0; r < 4; r++)
+      for (let k = 0; k < 2; k++)
+        g.fillRect(x0 + 3 + k * 13, -92 + r * 12, 11, 10);
+  }
+  // Голубое свечение потокового конденсатора над реактором
+  g.fillStyle = "rgba(80, 180, 255, 0.30)";
+  g.beginPath(); g.ellipse(0, -100, 15, 10, 0, 0, Math.PI * 2); g.fill();
+  g.fillStyle = "#8fd4ff";
+  g.beginPath(); g.ellipse(0, -100, 6, 4, 0, 0, Math.PI * 2); g.fill();
 }
 
 const CAR_DRAWERS = {
