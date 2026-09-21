@@ -411,6 +411,18 @@ const CARS = [
     topKmh: 340, zeroTo100: 3.4,
     desc: "Супер-GT нового шпиона: 725 сил, алый, четыре трубы в диффузоре.",
   },
+  // ---- Mazerati из книжки Саши (названия только по-английски!) ----
+  {
+    id: "mc12", name: "Mazerati MC12 Corsa", gearbox: "М",
+    topKmh: 326, zeroTo100: 2.9,
+    noNpc: true,   // гоночный гиперкар — соперникам не выдаётся!
+    desc: "Гиперкар для трека из книжки: крыло выше крыши и четыре трубы по центру.",
+  },
+  {
+    id: "mc20", name: "Mazerati MC20", gearbox: "А",
+    topKmh: 325, zeroTo100: 2.9,
+    desc: "Младший брат MC12: синий суперкар с трезубцем на корме.",
+  },
   // ---- Гиперкары (восторг Саши: «СКОРОСТЬ ГЕМЕРЫ!!!») ----
   {
     id: "gemera", name: "Konisegg Gemera", gearbox: "А",
@@ -525,7 +537,7 @@ const BRAKE_100_0 = {
   raf977: 4.4, uaz469: 4.5, zis101: 5.0, f2: 1.5,
   agera: 1.6, zonta: 1.8, aero: 1.7, m3e30: 3.0, m5: 2.2,
   timemachine: 3.2, police: 2.6, cybercraft: 2.6, models: 2.4,
-  db5: 3.6, dbs: 2.0,
+  db5: 3.6, dbs: 2.0, mc12: 1.8, mc20: 2.1,
 };
 
 // Досчитываем игровые характеристики из реальных цифр.
@@ -563,7 +575,7 @@ const CAR_PRICES = {
   agera: 8200, zonta: 7000, aero: 7800, m3e30: 1500, m5: 2700,
   timemachine: -2,   // −2 = не продаётся, только за ДОСТИЖЕНИЕ!
   police: 2200, cybercraft: 3000, models: 2600,
-  db5: 2000, dbs: 4800,
+  db5: 2000, dbs: 4800, mc12: 7500, mc20: 5200,
   pejo308: 1300, volga3110: 320, volga24: 300, volga21: 380,
   sportage: 850, k5: 950, sonata: 900, tucson: 800, i30: 600,
   zis: -1,   // −1 = не продаётся, только код «вечная ностальгия»
@@ -2254,6 +2266,7 @@ const CAR_CATEGORY = {
   m3e30: "sport", m5: "sport", timemachine: "sport", police: "sport",
   cybercraft: "suv", models: "lux",
   db5: "sport", dbs: "lux",
+  mc12: "hyper", mc20: "sport",
 };
 // Марка каждой машины — для вкладки «По марке» (заказ Саши)
 const CAR_BRAND = {
@@ -2283,6 +2296,7 @@ const CAR_BRAND = {
   m3e30: "BNW", m5: "BNW", timemachine: "TMC", police: "Dodgee",
   cybercraft: "Tesly", models: "Tesly",
   db5: "Astin Martun", dbs: "Astin Martun",
+  mc12: "Mazerati", mc20: "Mazerati",
 };
 let garageCat = 0;      // номер выбранной категории в CATEGORIES
 let garageBrand = null; // выбранная марка (null = фильтруем по типу)
@@ -2595,6 +2609,8 @@ const PAINT_SLOTS = {
   models: ["#17191c", "#101214"],
   db5: ["#ccd2d6", "#b4bac0"],
   dbs: ["#c0242c", "#8f151c"],
+  mc12: ["#f28a1e", "#c96e12"],
+  mc20: ["#2456a8", "#1a3f7e"],
   merc190: ["#1a1c20", "#131519"],
   amggt53: ["#5a5e63", "#4d5156"],
   maybach: ["#ece9e2", "#dcd9d2"],
@@ -2644,7 +2660,7 @@ const RIM_X = { aveo: 66, picanto: 56, corsa: 59, focus: 73, delorean: 75,
   astro: 64, cobra: 74, defendor: 64, pejo206: 62, raf977: 62,
   uaz469: 64, zis101: 66, f2: 84, agera: 80, zonta: 80, aero: 80,
   m3e30: 70, m5: 74, timemachine: 75, police: 74,
-  cybercraft: 72, models: 72, db5: 68, dbs: 78 };
+  cybercraft: 72, models: 72, db5: 68, dbs: 78, mc12: 82, mc20: 76 };
 
 // ---------- ИГРОВАЯ ВАЛЮТА 🪙 ----------
 // Зарабатывается в гонках (по месту на финише), тратится на железо.
@@ -2770,6 +2786,8 @@ const MOD_FIT = {
   cybercraft: { spoilerY: -92, stripeTop: -58 },
   db5: { noSpoiler: true, stripeTop: -60 },  // классике шпиона спойлер не к лицу
   dbs: { spoilerY: -100, stripeTop: -64 },
+  mc12: { noSpoiler: true, stripeTop: -66 },  // заводское крыло выше крыши!
+  mc20: { spoilerY: -98, stripeTop: -62 },
   f2: { noSpoiler: true },
   agera: { noSpoiler: true, stripeTop: -72 },
   zonta: { noSpoiler: true, stripeTop: -74 },
@@ -6902,6 +6920,78 @@ function drawDBS(g) {
   for (const x of [-38, -23, 11, 26]) roundRect(g, x, -20, 12, 7, 3, "#4a4f54");
 }
 
+// Трезубец Mazerati — фирменный значок из трёх зубцов
+function trident(g, y, color) {
+  g.fillStyle = color;
+  g.fillRect(-1.5, y, 3, 10);          // средний зубец — длинный
+  g.fillRect(-6.5, y + 3, 3, 6);       // боковые — короче
+  g.fillRect(3.5, y + 3, 3, 6);
+}
+
+// --- Mazerati MC12 Corsa: оранжевый трековый гиперкар из книжки ---
+function drawMC12(g) {
+  carBase(g);
+  // Крыло ВЫШЕ КРЫШИ на двух мощных пилонах
+  roundRect(g, -44, -116, 10, 36, 3, "#15171a");
+  roundRect(g,  34, -116, 10, 36, 3, "#15171a");
+  roundRect(g, -80, -126, 160, 11, 4, "#101214");
+  g.fillStyle = "rgba(255,255,255,0.12)"; g.fillRect(-72, -125, 144, 3);
+  // Кабина-капля со стеклом
+  roundRect(g, -42, -100, 84, 32, 14, "#f28a1e");
+  roundRect(g, -34, -96, 68, 22, 9, "#1a2026");
+  // Широченный оранжевый кузов
+  roundRect(g, -88, -70, 176, 60, 10, "#f28a1e");
+  g.fillStyle = "rgba(255,255,255,0.22)"; g.fillRect(-80, -69, 160, 3);
+  // Чёрная гоночная полоса по центру (как на фото)
+  g.fillStyle = "#15171a"; g.fillRect(-10, -70, 20, 26);
+  // Круглые фонари — по два с каждой стороны
+  for (const side of [-1, 1]) {
+    circle(g, side * 68, -56, 7, "#3d0a0a");
+    circle(g, side * 68, -56, 4.5, "#e82121");
+    circle(g, side * 48, -56, 5.5, "#3d0a0a");
+    circle(g, side * 48, -56, 3.5, "#e82121");
+  }
+  trident(g, -67, "#d9dee2");
+  // Имя — белым прямо на крыле, как гоночный баннер
+  g.fillStyle = "#fff";
+  g.font = "bold 5px Verdana"; g.textAlign = "center";
+  g.fillText("MC12 CORSA", 0, -118.5);
+  // Тёмная панель с ЧЕТЫРЬМЯ круглыми трубами по центру (как на фото)
+  roundRect(g, -32, -46, 64, 16, 6, "#15171a");
+  for (const x of [-21, -7, 7, 21]) {
+    circle(g, x, -38, 5, "#26292d");
+    circle(g, x, -38, 3, "#4a4f54");
+  }
+  plate(g, -28, 36);
+  // Диффузор
+  roundRect(g, -84, -14, 168, 8, 4, "#101214");
+}
+
+// --- Mazerati MC20: синий суперкар, младший брат MC12 ---
+function drawMC20(g) {
+  carBase(g);
+  // Покатое стекло
+  roundRect(g, -50, -94, 100, 30, 12, "#1a2026");
+  g.fillStyle = "rgba(255,255,255,0.08)"; g.fillRect(-42, -89, 38, 20);
+  // Синий кузов
+  roundRect(g, -86, -66, 172, 56, 11, "#2456a8");
+  g.fillStyle = "rgba(255,255,255,0.16)"; g.fillRect(-78, -65, 156, 3);
+  // Тонкие фонари по краям
+  for (const side of [-1, 1]) {
+    roundRect(g, side * 64 - 17, -58, 34, 7, 3.5, "#3d0a0a");
+    roundRect(g, side * 64 - 14, -56.5, 28, 4, 2, "#e82121");
+  }
+  trident(g, -62, "#d9dee2");
+  g.fillStyle = "#cdd8ea";
+  g.font = "bold 5px Verdana"; g.textAlign = "center";
+  g.fillText("MC20", 58, -38);
+  plate(g, -42);
+  // Диффузор и две широкие трубы
+  roundRect(g, -82, -22, 164, 12, 5, "#101214");
+  roundRect(g, -34, -18, 16, 6, 3, "#4a4f54");
+  roundRect(g,  18, -18, 16, 6, 3, "#4a4f54");
+}
+
 const CAR_DRAWERS = {
   aveo: drawAveo, picanto: drawPicanto, focus: drawFocus,
   delorean: drawDelorean, corsa: drawCorsa,
@@ -6932,7 +7022,7 @@ const CAR_DRAWERS = {
   zonta: drawZonta, aero: drawAero,
   m3e30: drawM3e30, m5: drawM5, timemachine: drawTimeMachine,
   police: drawPolice, cybercraft: drawCybercraft, models: drawModelS,
-  db5: drawDB5, dbs: drawDBS,
+  db5: drawDB5, dbs: drawDBS, mc12: drawMC12, mc20: drawMC20,
 };
 
 // Огненный след: два пылающих следа за колёсами, три слоя пламени
