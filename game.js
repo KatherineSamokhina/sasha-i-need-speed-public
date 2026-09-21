@@ -423,6 +423,51 @@ const CARS = [
     topKmh: 325, zeroTo100: 2.9,
     desc: "Младший брат MC12: алый, чёрный низ, крыло и роспись на корме.",
   },
+  // ---- МЕГА-ДЕНЬ: 20 фото Саши за раз! Добиваем марки до 3-4 ----
+  { id: "m2", name: "BNW M2", gearbox: "М", topKmh: 285, zeroTo100: 4.1,
+    desc: "Злой малыш: четыре трубы парами и рубленый диффузор." },
+  { id: "m4", name: "BNW M4 Competition", gearbox: "А", topKmh: 290, zeroTo100: 3.9,
+    desc: "Зелёный, как гоночный газон: 510 сил и наглый характер." },
+  { id: "b750", name: "BNW 750", gearbox: "А", topKmh: 250, zeroTo100: 4.4,
+    desc: "Флагман-лимузин: хромовая полоса соединяет тонкие фонари." },
+  { id: "i7", name: "BNW i7", gearbox: "Э", topKmh: 240, zeroTo100: 4.7,
+    desc: "Электро-лимузин: едет как облако, молчит как шпион." },
+  { id: "vantage", name: "Astin Martun Vantage", gearbox: "М", topKmh: 314, zeroTo100: 3.6,
+    desc: "Хищник: световая дуга через всю корму." },
+  { id: "dbx", name: "Astin Martun DBX", gearbox: "А", topKmh: 290, zeroTo100: 4.5,
+    offroadSoft: true,
+    desc: "Вездеход-шпион: красная лента-фонарь и белая крыша." },
+  { id: "rapide", name: "Astin Martun Rapide S", gearbox: "А", topKmh: 327, zeroTo100: 4.4,
+    desc: "Белый четырёхдверный: седан, который обгоняет спорткары." },
+  { id: "quattroporte", name: "Mazerety Quattroporte", gearbox: "А", topKmh: 310, zeroTo100: 4.7,
+    desc: "«Четыре двери» по-итальянски: золотистый лимузин с росписью." },
+  { id: "ghibli", name: "Mazerety Ghibli", gearbox: "А", topKmh: 267, zeroTo100: 5.5,
+    desc: "Серый ветер пустыни: четыре трубы парами." },
+  { id: "gt3200", name: "Mazerety 3200 GT", gearbox: "М", topKmh: 280, zeroTo100: 5.1,
+    desc: "Классика с фонарями-БУМЕРАНГАМИ — таких больше не делают!" },
+  { id: "levante", name: "Mazerety Levante", gearbox: "А", topKmh: 264, zeroTo100: 5.2,
+    offroadSoft: true,
+    desc: "Вездеход с трезубцем: море по колено, трава по плечо." },
+  { id: "corolla", name: "Tayoda Corolla", gearbox: "А", topKmh: 180, zeroTo100: 9.5,
+    desc: "Самая продаваемая машина планеты. Скромная и вечная." },
+  { id: "chr", name: "Tayoda C-HR", gearbox: "А", topKmh: 180, zeroTo100: 8.2,
+    offroadSoft: true,
+    desc: "Кроссовер-оригами: двухцветный, углы во все стороны." },
+  { id: "chrgr", name: "Tayoda C-HR GR Sport", gearbox: "А", topKmh: 185, zeroTo100: 8.0,
+    offroadSoft: true,
+    desc: "Тот же оригами, но спортивный: чёрная крыша, злые фонари." },
+  { id: "corona", name: "Tayoda Corona Premio", gearbox: "А", topKmh: 180, zeroTo100: 10.5,
+    desc: "Серебристый японский дедушка из 90-х: мягкий и честный." },
+  { id: "crown", name: "Tayoda Crown", gearbox: "А", topKmh: 200, zeroTo100: 6.0,
+    desc: "Корона: красно-чёрный флагман со световой лентой." },
+  { id: "supra", name: "Tayoda Supra", gearbox: "М", topKmh: 285, zeroTo100: 4.6,
+    desc: "Легенда 90-х с ОГРОМНЫМ крылом и круглыми фонарями. JDM!" },
+  { id: "gsupra", name: "Tayoda GR Supra", gearbox: "А", topKmh: 250, zeroTo100: 4.3,
+    desc: "Внучка легенды: та же красная ярость, новые мускулы." },
+  { id: "yaris", name: "Tayoda Yaris", gearbox: "А", topKmh: 165, zeroTo100: 11.0,
+    desc: "Городской малыш: юркий, как воробей." },
+  { id: "prius", name: "Tayoda Prius Prime", gearbox: "А", topKmh: 180, zeroTo100: 10.2,
+    desc: "Бирюзовый гибрид: наполовину электричка, но коробка обычная." },
   // ---- Гиперкары (восторг Саши: «СКОРОСТЬ ГЕМЕРЫ!!!») ----
   {
     id: "gemera", name: "Konisegg Gemera", gearbox: "А",
@@ -538,6 +583,10 @@ const BRAKE_100_0 = {
   agera: 1.6, zonta: 1.8, aero: 1.7, m3e30: 3.0, m5: 2.2,
   timemachine: 3.2, police: 2.6, cybercraft: 2.6, models: 2.4,
   db5: 3.6, dbs: 2.0, mc12: 1.8, mc20: 2.1,
+  m2: 2.3, m4: 2.3, b750: 2.7, i7: 2.7, vantage: 2.2, dbx: 2.9,
+  rapide: 2.5, quattroporte: 2.6, ghibli: 2.6, gt3200: 2.9, levante: 2.9,
+  corolla: 3.0, chr: 3.0, chrgr: 2.9, corona: 3.3, crown: 2.8,
+  supra: 2.5, gsupra: 2.4, yaris: 3.1, prius: 3.0,
 };
 
 // Досчитываем игровые характеристики из реальных цифр.
@@ -576,6 +625,10 @@ const CAR_PRICES = {
   timemachine: -2,   // −2 = не продаётся, только за ДОСТИЖЕНИЕ!
   police: 2200, cybercraft: 3000, models: 2600,
   db5: 2000, dbs: 4800, mc12: 7500, mc20: 5200,
+  m2: 2400, m4: 2600, b750: 2900, i7: 3200, vantage: 3800, dbx: 3000,
+  rapide: 3400, quattroporte: 2800, ghibli: 2200, gt3200: 2000,
+  levante: 2400, corolla: 550, chr: 850, chrgr: 950, corona: 450,
+  crown: 1400, supra: 2300, gsupra: 2100, yaris: 400, prius: 700,
   pejo308: 1300, volga3110: 320, volga24: 300, volga21: 380,
   sportage: 850, k5: 950, sonata: 900, tucson: 800, i30: 600,
   zis: -1,   // −1 = не продаётся, только код «вечная ностальгия»
@@ -2278,6 +2331,11 @@ const CAR_CATEGORY = {
   cybercraft: "suv", models: "lux",
   db5: "sport", dbs: "lux",
   mc12: "hyper", mc20: "sport",
+  m2: "sport", m4: "sport", b750: "lux", i7: "lux",
+  vantage: "sport", dbx: "suv", rapide: "lux",
+  quattroporte: "lux", ghibli: "sport", gt3200: "sport", levante: "suv",
+  corolla: "city", chr: "suv", chrgr: "suv", corona: "city",
+  crown: "lux", supra: "sport", gsupra: "sport", yaris: "city", prius: "city",
 };
 // Марка каждой машины — для вкладки «По марке» (заказ Саши)
 const CAR_BRAND = {
@@ -2308,6 +2366,13 @@ const CAR_BRAND = {
   cybercraft: "Tesly", models: "Tesly",
   db5: "Astin Martun", dbs: "Astin Martun",
   mc12: "Mazerety", mc20: "Mazerety",
+  m2: "BNW", m4: "BNW", b750: "BNW", i7: "BNW",
+  vantage: "Astin Martun", dbx: "Astin Martun", rapide: "Astin Martun",
+  quattroporte: "Mazerety", ghibli: "Mazerety", gt3200: "Mazerety",
+  levante: "Mazerety",
+  corolla: "Tayoda", chr: "Tayoda", chrgr: "Tayoda", corona: "Tayoda",
+  crown: "Tayoda", supra: "Tayoda", gsupra: "Tayoda", yaris: "Tayoda",
+  prius: "Tayoda",
 };
 let garageCat = 0;      // номер выбранной категории в CATEGORIES
 let garageBrand = null; // выбранная марка (null = фильтруем по типу)
@@ -2622,6 +2687,26 @@ const PAINT_SLOTS = {
   dbs: ["#c0242c", "#8f151c"],
   mc12: ["#f28a1e", "#c96e12"],
   mc20: ["#c8232b", "#96161d"],
+  m2: ["#d0342c", "#a3241e"],
+  m4: ["#1e5c40", "#154430"],
+  b750: ["#c8ccd2", "#aeb3ba"],
+  i7: ["#26282c", "#1a1c20"],
+  vantage: ["#9aa1a8", "#7e858c"],
+  dbx: ["#3f444a", "#2e3338"],
+  rapide: ["#eceef0", "#d2d5d9"],
+  quattroporte: ["#cbb598", "#b09a7d"],
+  ghibli: ["#3a3d42", "#2b2e33"],
+  gt3200: ["#c3c8ce", "#a9aeb5"],
+  levante: ["#5b7292", "#475d7c"],
+  corolla: ["#f2f3f5", "#d8dade"],
+  chr: ["#c9bfae", "#b0a591"],
+  chrgr: ["#c6cad0", "#acb1b8"],
+  corona: ["#d5d8dc", "#bbbfc5"],
+  crown: ["#b3202a", "#8c161e"],
+  supra: ["#c22026", "#98161b"],
+  gsupra: ["#d8242b", "#a81a20"],
+  yaris: ["#f0f1f3", "#d6d8dc"],
+  prius: ["#2e9e96", "#22776f"],
   merc190: ["#1a1c20", "#131519"],
   amggt53: ["#5a5e63", "#4d5156"],
   maybach: ["#ece9e2", "#dcd9d2"],
@@ -2671,7 +2756,11 @@ const RIM_X = { aveo: 66, picanto: 56, corsa: 59, focus: 73, delorean: 75,
   astro: 64, cobra: 74, defendor: 64, pejo206: 62, raf977: 62,
   uaz469: 64, zis101: 66, f2: 84, agera: 80, zonta: 80, aero: 80,
   m3e30: 70, m5: 74, timemachine: 75, police: 74,
-  cybercraft: 72, models: 72, db5: 68, dbs: 78, mc12: 82, mc20: 76 };
+  cybercraft: 72, models: 72, db5: 68, dbs: 78, mc12: 82, mc20: 76,
+  m2: 76, m4: 76, b750: 72, i7: 72, vantage: 76, dbx: 68, rapide: 73,
+  quattroporte: 72, ghibli: 71, gt3200: 72, levante: 68, corolla: 68,
+  chr: 66, chrgr: 66, corona: 66, crown: 71, supra: 78, gsupra: 77,
+  yaris: 60, prius: 66 };
 
 // ---------- ИГРОВАЯ ВАЛЮТА 🪙 ----------
 // Зарабатывается в гонках (по месту на финише), тратится на железо.
@@ -2801,6 +2890,13 @@ const MOD_FIT = {
   dbs: { spoilerY: -100, stripeTop: -64 },
   mc12: { noSpoiler: true, stripeTop: -66 },  // заводское крыло выше крыши!
   mc20: { noSpoiler: true, stripeTop: -62 },  // крыло уже с завода (фото)
+  supra: { noSpoiler: true, stripeTop: -62 }, // ОГРОМНОЕ крыло с завода!
+  yaris: { spoilerY: -104, stripeTop: -58 },
+  prius: { noSpoiler: true, stripeTop: -58 }, // планка поперёк стекла — своя!
+  chr: { spoilerY: -108, stripeTop: -58 },
+  chrgr: { spoilerY: -108, stripeTop: -58 },
+  dbx: { spoilerY: -112, stripeTop: -62 },
+  levante: { spoilerY: -110, stripeTop: -60 },
   f2: { noSpoiler: true },
   agera: { noSpoiler: true, stripeTop: -72 },
   zonta: { noSpoiler: true, stripeTop: -74 },
@@ -6978,6 +7074,481 @@ function drawDBS(g) {
   for (const x of [-38, -23, 11, 26]) roundRect(g, x, -20, 12, 7, 3, "#4a4f54");
 }
 
+// Роспись-автограф Mazerety — используют все машины марки
+function mazeretyScript(g, y, color) {
+  g.fillStyle = color;
+  g.font = "italic bold 7px Georgia"; g.textAlign = "center";
+  g.fillText("Mazerety", 0, y);
+}
+// Овальный значок Tayoda: колечко с перекладиной
+function tayodaBadge(g, y) {
+  g.strokeStyle = "#c9d0d7"; g.lineWidth = 2;
+  g.beginPath(); g.ellipse(0, y, 8, 5.5, 0, 0, Math.PI * 2); g.stroke();
+  g.beginPath(); g.ellipse(0, y, 3.2, 5.5, 0, 0, Math.PI * 2); g.stroke();
+}
+
+// ---------- МЕГА-ДЕНЬ: 20 машин по фото Саши ----------
+
+// --- BNW M2: красный злой малыш, четыре трубы парами ---
+function drawM2(g) {
+  carBase(g);
+  roundRect(g, -50, -96, 100, 32, 8, "#1a2026");
+  g.fillStyle = "rgba(255,255,255,0.10)"; g.fillRect(-42, -91, 38, 22);
+  roundRect(g, -86, -66, 172, 60, 9, "#d0342c");
+  g.fillStyle = "rgba(255,255,255,0.18)"; g.fillRect(-78, -65, 156, 3);
+  // Тонкие фонари с изогнутой красной нитью
+  for (const side of [-1, 1]) {
+    roundRect(g, side * 58 - 24, -60, 48, 10, 5, "#2a0d0d");
+    roundRect(g, side * 58 - 21, -58, 42, 4, 2, "#e82121");
+  }
+  bnwBadge(g, 0, -54, 8);
+  g.fillStyle = "#c9d0d7"; g.font = "italic bold 7px Verdana"; g.textAlign = "center";
+  g.fillText("M2", 62, -40);
+  plate(g, -42);
+  // Рубленый диффузор, трубы ПАРАМИ ближе к центру (как на фото)
+  g.fillStyle = "#17191c";
+  g.beginPath();
+  g.moveTo(-80, -26); g.lineTo(80, -26); g.lineTo(70, -8); g.lineTo(-70, -8);
+  g.closePath(); g.fill();
+  for (const x of [-46, -32, 32, 46]) {
+    g.strokeStyle = "#c9d0d7"; g.lineWidth = 2.5;
+    g.beginPath(); g.arc(x, -17, 5, 0, Math.PI * 2); g.stroke();
+  }
+}
+
+// --- BNW M4 Competition: зелёный, как гоночный газон ---
+function drawM4(g) {
+  carBase(g);
+  roundRect(g, -52, -96, 104, 32, 10, "#1a2026");
+  g.fillStyle = "rgba(255,255,255,0.10)"; g.fillRect(-44, -91, 40, 22);
+  roundRect(g, -54, -66, 108, 4, 2, "#12291d");     // губа-спойлер
+  roundRect(g, -86, -64, 172, 58, 9, "#1e5c40");
+  g.fillStyle = "rgba(255,255,255,0.14)"; g.fillRect(-78, -63, 156, 3);
+  // Узкие косые фонари
+  for (const side of [-1, 1]) {
+    roundRect(g, side * 56 - 25, -58, 50, 9, 4.5, "#2a0d0d");
+    roundRect(g, side * 56 - 22, -56, 44, 4, 2, "#e82121");
+  }
+  bnwBadge(g, 0, -52, 8);
+  g.fillStyle = "#c9d0d7"; g.font = "italic bold 7px Verdana"; g.textAlign = "center";
+  g.fillText("M4", 62, -38);
+  plate(g, -40);
+  // Карбоновый диффузор с рёбрами и четыре трубы парами
+  roundRect(g, -80, -24, 160, 15, 5, "#141618");
+  g.fillStyle = "#26292d";
+  for (const x of [-12, 0, 12]) g.fillRect(x - 1.5, -22, 3, 11);
+  for (const x of [-52, -38, 38, 52]) {
+    g.strokeStyle = "#c9d0d7"; g.lineWidth = 2.5;
+    g.beginPath(); g.arc(x, -16, 5, 0, Math.PI * 2); g.stroke();
+  }
+}
+
+// --- BNW 750: серебристый флагман, хром между фонарями ---
+function drawB750(g) {
+  carBase(g);
+  roundRect(g, -54, -96, 108, 32, 9, "#1a2026");
+  g.fillStyle = "rgba(255,255,255,0.12)"; g.fillRect(-46, -91, 42, 22);
+  roundRect(g, -86, -66, 172, 60, 10, "#c8ccd2");
+  g.fillStyle = "rgba(255,255,255,0.30)"; g.fillRect(-78, -65, 156, 3);
+  // Тонкие фонари, соединённые хромовой полосой
+  roundRect(g, -70, -55, 140, 3, 1.5, "#c9d0d7");
+  for (const side of [-1, 1]) {
+    roundRect(g, side * 60 - 22, -59, 44, 10, 5, "#2a0d0d");
+    roundRect(g, side * 60 - 19, -57, 38, 5, 2.5, "#e82121");
+  }
+  bnwBadge(g, 0, -62, 7);
+  g.fillStyle = "#63666e"; g.font = "bold 6px Verdana"; g.textAlign = "center";
+  g.fillText("750", 64, -40);
+  plate(g, -42);
+  // Аккуратный низ с трапециями выхлопа
+  roundRect(g, -84, -22, 168, 12, 5, "#3d4247");
+  roundRect(g, -60, -18, 20, 6, 2, "#7c8288");
+  roundRect(g,  40, -18, 20, 6, 2, "#7c8288");
+}
+
+// --- BNW i7: чёрный электро-лимузин (категория Э растёт!) ---
+function drawI7(g) {
+  carBase(g);
+  roundRect(g, -54, -98, 108, 34, 10, "#1a2026");
+  g.fillStyle = "rgba(255,255,255,0.08)"; g.fillRect(-46, -93, 42, 24);
+  roundRect(g, -86, -66, 172, 60, 11, "#26282c");
+  g.fillStyle = "rgba(255,255,255,0.10)"; g.fillRect(-78, -65, 156, 3);
+  // Раздвоенные тонкие фонари почти во всю ширину
+  for (const side of [-1, 1]) {
+    roundRect(g, side * 46 - 34, -58, 68, 8, 4, "#2a0d0d");
+    roundRect(g, side * 46 - 31, -56, 62, 3.5, 1.5, "#e82121");
+  }
+  bnwBadge(g, 0, -54, 8);
+  g.fillStyle = "#8fb6e8"; g.font = "bold 6px Verdana"; g.textAlign = "center";
+  g.fillText("i7", 66, -40);   // голубая буква — электричество!
+  plate(g, -42);
+  // Гладкий низ БЕЗ труб + хромовый штрих
+  roundRect(g, -84, -22, 168, 12, 5, "#17191c");
+  roundRect(g, -70, -12, 140, 2.5, 1, "#7c8288");
+}
+
+// --- Astin Martun Vantage: световая дуга через всю корму ---
+function drawVantage(g) {
+  carBase(g);
+  roundRect(g, -52, -92, 104, 30, 14, "#1a2026");
+  g.fillStyle = "rgba(255,255,255,0.10)"; g.fillRect(-44, -87, 40, 20);
+  roundRect(g, -50, -64, 100, 4, 2, "#6e757c");   // утиный хвост
+  roundRect(g, -86, -62, 172, 56, 13, "#9aa1a8");
+  g.fillStyle = "rgba(255,255,255,0.22)"; g.fillRect(-78, -61, 156, 3);
+  // ДУГА-фонарь: единая красная лента изгибом через корму (фишка фото!)
+  g.strokeStyle = "#2a0808"; g.lineWidth = 8;
+  g.beginPath(); g.moveTo(-76, -42); g.quadraticCurveTo(0, -62, 76, -42); g.stroke();
+  g.strokeStyle = "#e82121"; g.lineWidth = 3.5;
+  g.beginPath(); g.moveTo(-74, -42); g.quadraticCurveTo(0, -60, 74, -42); g.stroke();
+  // Крылатый значок
+  g.fillStyle = "#e6eaee";
+  g.beginPath(); g.ellipse(0, -66, 13, 4, 0, 0, Math.PI * 2); g.fill();
+  g.fillStyle = "#33363b"; g.font = "bold 5px Verdana"; g.textAlign = "center";
+  g.fillText("VANTAGE", 0, -30);
+  plate(g, -26, 36);
+  // Чёрный низ и две трубы по краям
+  roundRect(g, -80, -12, 160, 7, 3, "#101214");
+  circle(g, -58, -16, 5, "#26292d"); circle(g, -58, -16, 3, "#4a4f54");
+  circle(g,  58, -16, 5, "#26292d"); circle(g,  58, -16, 3, "#4a4f54");
+}
+
+// --- Astin Martun DBX: вездеход-шпион с белой крышей ---
+function drawDBX(g) {
+  carBase(g, -30, 38);
+  // Белая крыша-купол (как на фото-концепте)
+  roundRect(g, -50, -110, 100, 24, 12, "#e6eaee");
+  roundRect(g, -46, -104, 92, 26, 10, "#1a2026");
+  roundRect(g, -86, -78, 172, 70, 12, "#3f444a");
+  g.fillStyle = "rgba(255,255,255,0.10)"; g.fillRect(-78, -77, 156, 3);
+  // КРАСНАЯ лента-фонарь во всю ширину
+  roundRect(g, -74, -66, 148, 7, 3.5, "#2a0808");
+  roundRect(g, -71, -64.5, 142, 4, 2, "#e82121");
+  // Крылатый значок и хромовый клин бампера
+  g.fillStyle = "#e6eaee";
+  g.beginPath(); g.ellipse(0, -74, 13, 4, 0, 0, Math.PI * 2); g.fill();
+  plate(g, -50);
+  roundRect(g, -70, -30, 140, 3.5, 1.5, "#aab0b6");
+  roundRect(g, -84, -24, 168, 13, 5, "#17191c");
+}
+
+// --- Astin Martun Rapide S: белый четырёхдверный красавец ---
+function drawRapide(g) {
+  carBase(g);
+  roundRect(g, -50, -94, 100, 30, 13, "#1a2026");
+  g.fillStyle = "rgba(255,255,255,0.14)"; g.fillRect(-42, -89, 38, 20);
+  roundRect(g, -84, -66, 168, 60, 15, "#eceef0");
+  g.fillStyle = "rgba(255,255,255,0.45)"; g.fillRect(-76, -65, 152, 3);
+  // Вытянутые тёмные фонари по краям
+  for (const side of [-1, 1]) {
+    roundRect(g, side * 60 - 22, -60, 44, 13, 6, "#26292d");
+    roundRect(g, side * 60 - 19, -57, 38, 6, 3, "#c22020");
+  }
+  // Крылатый значок и решётка воздуховода на багажнике
+  g.fillStyle = "#8f959c";
+  g.beginPath(); g.ellipse(0, -60, 13, 4, 0, 0, Math.PI * 2); g.fill();
+  roundRect(g, -16, -70, 32, 4, 2, "#c9ccd1");
+  g.fillStyle = "#8f959c"; g.font = "bold 4.5px Verdana"; g.textAlign = "center";
+  g.fillText("RAPIDE S", 56, -38);
+  plate(g, -42);
+  // Светлый бампер, две трубы-овала по краям
+  roundRect(g, -82, -22, 164, 12, 6, "#d2d5d9");
+  circle(g, -66, -14, 5, "#33363b"); circle(g, 66, -14, 5, "#33363b");
+}
+
+// --- Mazerety Quattroporte: золотистый лимузин ---
+function drawQuattroporte(g) {
+  carBase(g);
+  roundRect(g, -52, -94, 104, 30, 9, "#1a2026");
+  g.fillStyle = "rgba(255,255,255,0.12)"; g.fillRect(-44, -89, 40, 20);
+  roundRect(g, -86, -66, 172, 60, 11, "#cbb598");
+  g.fillStyle = "rgba(255,255,255,0.30)"; g.fillRect(-78, -65, 156, 3);
+  // Трапецевидные фонари с красной серединой
+  for (const side of [-1, 1]) {
+    roundRect(g, side * 58 - 22, -60, 44, 14, 5, "#3d1512");
+    roundRect(g, side * 58 - 18, -57, 36, 7, 3, "#d43535");
+  }
+  mazeretyScript(g, -44, "#5c5347");
+  plate(g, -40);
+  // Диффузор и четыре трубы парами
+  roundRect(g, -82, -24, 164, 13, 5, "#2b2e33");
+  for (const x of [-56, -42, 42, 56]) roundRect(g, x - 5, -20, 10, 6, 3, "#7c8288");
+}
+
+// --- Mazerety Ghibli: серый ветер пустыни ---
+function drawGhibli(g) {
+  carBase(g);
+  roundRect(g, -50, -94, 100, 30, 10, "#1a2026");
+  g.fillStyle = "rgba(255,255,255,0.08)"; g.fillRect(-42, -89, 38, 20);
+  roundRect(g, -85, -66, 170, 60, 12, "#3a3d42");
+  g.fillStyle = "rgba(255,255,255,0.12)"; g.fillRect(-77, -65, 154, 3);
+  // Хромовая накладка через багажник + роспись
+  roundRect(g, -40, -58, 80, 5, 2.5, "#8f959c");
+  // Округлые фонари
+  for (const side of [-1, 1]) {
+    roundRect(g, side * 60 - 20, -60, 40, 13, 6, "#2a0d0d");
+    roundRect(g, side * 60 - 16, -57, 32, 7, 3.5, "#d43535");
+  }
+  mazeretyScript(g, -44, "#c9d0d7");
+  plate(g, -40);
+  roundRect(g, -80, -24, 160, 13, 5, "#17191c");
+  for (const x of [-58, -44, 44, 58]) roundRect(g, x - 5, -20, 10, 6, 3, "#63666e");
+}
+
+// --- Mazerety 3200 GT: фонари-БУМЕРАНГИ (легенда!) ---
+function drawGT3200(g) {
+  carBase(g);
+  roundRect(g, -52, -96, 104, 34, 16, "#1a2026");
+  g.fillStyle = "rgba(255,255,255,0.12)"; g.fillRect(-44, -90, 40, 24);
+  roundRect(g, -84, -64, 168, 58, 16, "#c3c8ce");
+  g.fillStyle = "rgba(255,255,255,0.30)"; g.fillRect(-76, -63, 152, 3);
+  // БУМЕРАНГИ: тонкая красная дуга-крюк по каждому краю
+  for (const side of [-1, 1]) {
+    g.strokeStyle = "#c22020"; g.lineWidth = 3.5;
+    g.beginPath();
+    g.arc(side * 52, -38, 22, -Math.PI * 0.55, -Math.PI * 0.05, side < 0);
+    g.stroke();
+    g.strokeStyle = "#7a1216"; g.lineWidth = 1.5;
+    g.beginPath();
+    g.arc(side * 52, -38, 17, -Math.PI * 0.55, -Math.PI * 0.05, side < 0);
+    g.stroke();
+  }
+  mazeretyScript(g, -56, "#63666e");
+  plate(g, -44);
+  // Бампер в цвет и две сдвоенные трубы
+  roundRect(g, -80, -20, 160, 11, 5, "#a9aeb5");
+  for (const x of [-56, -46, 46, 56]) circle(g, x, -14, 4, "#33363b");
+}
+
+// --- Mazerety Levante: вездеход с трезубцем ---
+function drawLevante(g) {
+  carBase(g, -30, 38);
+  roundRect(g, -52, -104, 104, 30, 10, "#1a2026");
+  g.fillStyle = "rgba(255,255,255,0.10)"; g.fillRect(-44, -99, 40, 20);
+  roundRect(g, -86, -76, 172, 68, 11, "#5b7292");
+  g.fillStyle = "rgba(255,255,255,0.14)"; g.fillRect(-78, -75, 156, 3);
+  // Хромовая полоса с трезубцем + роспись
+  roundRect(g, -44, -66, 88, 4, 2, "#aab0b6");
+  trident(g, -64, "#e6eaee");
+  // Раскосые фонари
+  for (const side of [-1, 1]) {
+    roundRect(g, side * 60 - 21, -70, 42, 12, 6, "#2a0d0d");
+    roundRect(g, side * 60 - 17, -67, 34, 6, 3, "#d43535");
+  }
+  mazeretyScript(g, -50, "#dbe2ea");
+  plate(g, -46);
+  // Тёмный низ и четыре трубы парами
+  roundRect(g, -84, -26, 168, 15, 6, "#17191c");
+  for (const x of [-56, -44, 44, 56]) circle(g, x, -18, 4.5, "#63666e");
+}
+
+// --- Tayoda Corolla: самая продаваемая машина планеты ---
+function drawCorolla(g) {
+  carBase(g);
+  roundRect(g, -50, -94, 100, 30, 9, "#1a2026");
+  g.fillStyle = "rgba(255,255,255,0.14)"; g.fillRect(-42, -89, 38, 20);
+  roundRect(g, -84, -66, 168, 60, 10, "#f2f3f5");
+  g.fillStyle = "rgba(255,255,255,0.45)"; g.fillRect(-76, -65, 152, 3);
+  // Фонари с тёмной перемычкой между ними (как на фото)
+  roundRect(g, -62, -57, 124, 4, 2, "#33363b");
+  for (const side of [-1, 1]) {
+    roundRect(g, side * 58 - 20, -60, 40, 11, 5, "#3d1512");
+    roundRect(g, side * 58 - 16, -57, 32, 5, 2.5, "#d43535");
+  }
+  tayodaBadge(g, -66);
+  plate(g, -42);
+  roundRect(g, -80, -22, 160, 12, 5, "#d8dade");
+  roundRect(g, -62, -14, 124, 3, 1.5, "#b3202a");   // красный катафот-штрих
+}
+
+// --- Tayoda C-HR: кроссовер-оригами, двухцветный ---
+function drawCHR(g) {
+  carBase(g, -30, 36);
+  // ЧЁРНАЯ крыша и корма сверху (двухцветность с фото)
+  roundRect(g, -52, -106, 104, 34, 12, "#17191c");
+  roundRect(g, -46, -101, 92, 24, 9, "#1a2026");
+  roundRect(g, -86, -74, 172, 66, 11, "#c9bfae");
+  g.fillStyle = "rgba(255,255,255,0.18)"; g.fillRect(-78, -73, 156, 3);
+  // Чёрная вставка сверху кормы, из неё торчат фонари-стрелы
+  roundRect(g, -66, -74, 132, 12, 6, "#17191c");
+  for (const side of [-1, 1]) {
+    roundRect(g, side * 62 - 16, -72, 32, 8, 4, "#2a0d0d");
+    roundRect(g, side * 62 - 13, -70, 26, 4, 2, "#e82121");
+  }
+  tayodaBadge(g, -66);
+  g.fillStyle = "#63666e"; g.font = "bold 5px Verdana"; g.textAlign = "center";
+  g.fillText("C-HR", 0, -50);
+  plate(g, -44);
+  // Серый рубленый низ
+  g.fillStyle = "#5c6166";
+  g.beginPath();
+  g.moveTo(-76, -26); g.lineTo(76, -26); g.lineTo(64, -8); g.lineTo(-64, -8);
+  g.closePath(); g.fill();
+}
+
+// --- Tayoda C-HR GR Sport: оригами в спортивном костюме ---
+function drawCHRGR(g) {
+  carBase(g, -30, 36);
+  roundRect(g, -52, -106, 104, 34, 12, "#17191c");
+  roundRect(g, -46, -101, 92, 24, 9, "#1a2026");
+  roundRect(g, -86, -74, 172, 66, 11, "#c6cad0");
+  g.fillStyle = "rgba(255,255,255,0.22)"; g.fillRect(-78, -73, 156, 3);
+  // Злые фонари-клинья, тянущиеся к центру
+  for (const side of [-1, 1]) {
+    roundRect(g, side * 50 - 28, -72, 56, 9, 4.5, "#2a0d0d");
+    roundRect(g, side * 50 - 25, -70, 50, 4.5, 2, "#e82121");
+  }
+  tayodaBadge(g, -64);
+  // Красно-чёрный значок GR
+  roundRect(g, 52, -58, 18, 8, 2, "#17191c");
+  g.fillStyle = "#e82121"; g.font = "bold 5.5px Verdana"; g.textAlign = "center";
+  g.fillText("GR", 61, -51.5);
+  plate(g, -44);
+  g.fillStyle = "#33363b";
+  g.beginPath();
+  g.moveTo(-76, -26); g.lineTo(76, -26); g.lineTo(64, -8); g.lineTo(-64, -8);
+  g.closePath(); g.fill();
+  roundRect(g, -40, -14, 80, 4, 2, "#7c8288");
+}
+
+// --- Tayoda Corona Premio: серебристый дедушка из 90-х ---
+function drawCorona(g) {
+  carBase(g);
+  roundRect(g, -50, -92, 100, 30, 7, "#1a2026");
+  g.fillStyle = "rgba(255,255,255,0.14)"; g.fillRect(-42, -87, 38, 20);
+  roundRect(g, -83, -64, 166, 58, 8, "#d5d8dc");
+  g.fillStyle = "rgba(255,255,255,0.35)"; g.fillRect(-75, -63, 150, 3);
+  // Широкая красная лента фонарей во всю корму (стиль 90-х)
+  roundRect(g, -70, -58, 140, 13, 4, "#8c1620");
+  roundRect(g, -68, -55, 136, 5, 2, "#d43535");
+  g.fillStyle = "rgba(255,255,255,0.25)"; g.fillRect(-66, -49, 132, 2);
+  tayodaBadge(g, -62);
+  g.fillStyle = "#63666e"; g.font = "bold 4.5px Verdana"; g.textAlign = "center";
+  g.fillText("CORONA PREMIO", -46, -38);
+  plate(g, -40);
+  roundRect(g, -79, -22, 158, 11, 4, "#bbbfc5");
+  roundRect(g, -30, -13, 10, 4, 2, "#7c8288");
+}
+
+// --- Tayoda Crown: красно-чёрная «Корона» со световой лентой ---
+function drawCrown(g) {
+  carBase(g);
+  roundRect(g, -52, -96, 104, 32, 11, "#17191c");   // чёрная крыша
+  roundRect(g, -46, -92, 92, 22, 8, "#1a2026");
+  roundRect(g, -85, -66, 170, 60, 11, "#b3202a");
+  g.fillStyle = "rgba(255,255,255,0.14)"; g.fillRect(-77, -65, 154, 3);
+  // Чёрная панель багажника со световой лентой во всю ширину
+  roundRect(g, -70, -62, 140, 16, 6, "#17191c");
+  roundRect(g, -66, -58, 132, 3.5, 1.5, "#e82121");
+  for (const side of [-1, 1])
+    roundRect(g, side * 70 - 5, -60, 10, 12, 4, "#e82121");
+  tayodaBadge(g, -54);
+  g.fillStyle = "#c9d0d7"; g.font = "bold 4.5px Verdana"; g.textAlign = "center";
+  g.fillText("C R O W N", 0, -40);
+  plate(g, -36);
+  // Серебристая юбка бампера
+  roundRect(g, -80, -22, 160, 12, 5, "#33363b");
+  roundRect(g, -74, -12, 148, 3, 1.5, "#aab0b6");
+}
+
+// --- Tayoda Supra (Mk4): ОГРОМНОЕ крыло и круглые фонари. JDM! ---
+function drawSupra(g) {
+  carBase(g);
+  // Крыло-дуга на высоких стойках
+  roundRect(g, -60, -112, 9, 30, 3, "#33363b");
+  roundRect(g,  51, -112, 9, 30, 3, "#33363b");
+  roundRect(g, -74, -120, 148, 9, 4, "#5c1015");
+  g.fillStyle = "rgba(255,255,255,0.14)"; g.fillRect(-66, -119, 132, 2.5);
+  // Округлая кабина
+  roundRect(g, -48, -96, 96, 32, 15, "#1a2026");
+  g.fillStyle = "rgba(255,255,255,0.10)"; g.fillRect(-40, -91, 36, 22);
+  roundRect(g, -84, -66, 168, 60, 13, "#c22026");
+  g.fillStyle = "rgba(255,255,255,0.16)"; g.fillRect(-76, -65, 152, 3);
+  // КРУГЛЫЕ фонари: по два с каждой стороны (легенда 90-х!)
+  for (const side of [-1, 1]) {
+    circle(g, side * 64, -50, 8.5, "#2a0d0d");
+    circle(g, side * 64, -50, 5.5, "#e82121");
+    circle(g, side * 42, -50, 8.5, "#2a0d0d");
+    circle(g, side * 42, -50, 5.5, "#d43535");
+  }
+  tayodaBadge(g, -62);
+  plate(g, -40, 36);
+  // Чёрный низ и толстая труба-«кастрюля» слева
+  roundRect(g, -80, -22, 160, 13, 5, "#17191c");
+  circle(g, -54, -15, 7, "#26292d"); circle(g, -54, -15, 4.5, "#63666e");
+}
+
+// --- Tayoda GR Supra: внучка легенды ---
+function drawGSupra(g) {
+  carBase(g);
+  roundRect(g, -48, -94, 96, 32, 16, "#1a2026");
+  g.fillStyle = "rgba(255,255,255,0.10)"; g.fillRect(-40, -89, 36, 22);
+  roundRect(g, -50, -64, 100, 4, 2, "#98161b");   // утиный хвост
+  roundRect(g, -85, -62, 170, 56, 14, "#d8242b");
+  g.fillStyle = "rgba(255,255,255,0.18)"; g.fillRect(-77, -61, 154, 3);
+  // Фонари-запятые, загнутые к центру
+  for (const side of [-1, 1]) {
+    g.strokeStyle = "#2a0808"; g.lineWidth = 7;
+    g.beginPath();
+    g.moveTo(side * 72, -34); g.quadraticCurveTo(side * 74, -54, side * 44, -54);
+    g.stroke();
+    g.strokeStyle = "#e82121"; g.lineWidth = 3;
+    g.beginPath();
+    g.moveTo(side * 71, -35); g.quadraticCurveTo(side * 72, -52, side * 45, -52);
+    g.stroke();
+  }
+  tayodaBadge(g, -56);
+  g.fillStyle = "#f0b6b8"; g.font = "italic bold 5px Georgia"; g.textAlign = "center";
+  g.fillText("Supra", 0, -44);
+  plate(g, -38, 36);
+  // Чёрная сетка по центру и две трубы по краям
+  roundRect(g, -80, -22, 160, 13, 5, "#17191c");
+  roundRect(g, -14, -24, 28, 14, 4, "#26292d");
+  circle(g, -62, -15, 5.5, "#26292d"); circle(g, -62, -15, 3.5, "#63666e");
+  circle(g,  62, -15, 5.5, "#26292d"); circle(g,  62, -15, 3.5, "#63666e");
+}
+
+// --- Tayoda Yaris: юркий городской воробей ---
+function drawYaris(g) {
+  carBase(g, -26, 32);
+  // Высокий хэтчбек: большое стекло почти во всю корму
+  roundRect(g, -46, -100, 92, 40, 11, "#e8e9eb");
+  roundRect(g, -40, -96, 80, 32, 8, "#1a2026");
+  g.fillStyle = "rgba(255,255,255,0.12)"; g.fillRect(-32, -91, 30, 22);
+  roundRect(g, -70, -62, 140, 56, 10, "#f0f1f3");
+  g.fillStyle = "rgba(255,255,255,0.40)"; g.fillRect(-62, -61, 124, 3);
+  // Крупные фонари по краям
+  for (const side of [-1, 1]) {
+    roundRect(g, side * 52 - 12, -58, 24, 20, 6, "#3d1512");
+    roundRect(g, side * 52 - 8, -54, 16, 12, 4, "#d43535");
+  }
+  tayodaBadge(g, -50);
+  plate(g, -40, 36);
+  roundRect(g, -66, -20, 132, 11, 5, "#d6d8dc");
+  roundRect(g, -22, -12, 8, 3.5, 1.5, "#7c8288");
+}
+
+// --- Tayoda Prius Prime: бирюзовый гибрид (по фото Саши) ---
+function drawPrius(g) {
+  carBase(g);
+  // Покатое стекло с ПЛАНКОЙ-СПОЙЛЕРОМ поперёк (двойное стекло!)
+  roundRect(g, -50, -100, 100, 38, 12, "#1a2026");
+  g.fillStyle = "rgba(255,255,255,0.10)"; g.fillRect(-42, -95, 38, 28);
+  roundRect(g, -54, -80, 108, 6, 3, "#2e9e96");   // планка в цвет кузова
+  g.fillStyle = "rgba(0,0,0,0.20)"; g.fillRect(-50, -75, 100, 2);
+  roundRect(g, -82, -64, 164, 58, 12, "#2e9e96");
+  g.fillStyle = "rgba(255,255,255,0.20)"; g.fillRect(-74, -63, 148, 3);
+  // Вертикальные фонари-крючья по углам (как на фото)
+  for (const side of [-1, 1]) {
+    roundRect(g, side * 66 - 6, -60, 12, 28, 6, "#3d1512");
+    roundRect(g, side * 66 - 3.5, -56, 7, 20, 3.5, "#d43535");
+  }
+  tayodaBadge(g, -56);
+  g.fillStyle = "#bfe6e2"; g.font = "bold 4.5px Verdana"; g.textAlign = "center";
+  g.fillText("PRIUS", 0, -44);
+  plate(g, -38, 36);
+  roundRect(g, -78, -20, 156, 11, 5, "#26292d");
+}
+
 // Трезубец Mazerety — фирменный значок из трёх зубцов
 function trident(g, y, color) {
   g.fillStyle = color;
@@ -7086,6 +7657,13 @@ const CAR_DRAWERS = {
   m3e30: drawM3e30, m5: drawM5, timemachine: drawTimeMachine,
   police: drawPolice, cybercraft: drawCybercraft, models: drawModelS,
   db5: drawDB5, dbs: drawDBS, mc12: drawMC12, mc20: drawMC20,
+  m2: drawM2, m4: drawM4, b750: drawB750, i7: drawI7,
+  vantage: drawVantage, dbx: drawDBX, rapide: drawRapide,
+  quattroporte: drawQuattroporte, ghibli: drawGhibli,
+  gt3200: drawGT3200, levante: drawLevante,
+  corolla: drawCorolla, chr: drawCHR, chrgr: drawCHRGR,
+  corona: drawCorona, crown: drawCrown, supra: drawSupra,
+  gsupra: drawGSupra, yaris: drawYaris, prius: drawPrius,
 };
 
 // Огненный след: два пылающих следа за колёсами, три слоя пламени
