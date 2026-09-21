@@ -1483,9 +1483,10 @@ function goChase(role = "cop") {
     opponents = [{ car: pc, canvas: prerenderCar("police"),
                    z: SEG_LEN * 3, x: 0, speed: KMH * 80, skill: 0.9 }];
     chaseStart = performance.now();
-    lapMsg = { text: "🚔 ТЫ ВОР! Продержись 60 секунд — и уйдёшь!",
+    lapMsg = { text: "🚔 ТЫ ВОР! Продержись 45 секунд — и уйдёшь!",
                until: performance.now() + 3000 };
   }
+  playerLap = 1;   // абсолютная дистанция погони считается по кругам
   // СТАРТ С ХОДА: 60 км/ч (спецификация Саши)
   engineOn = true;
   engineStarting = false;
@@ -3475,7 +3476,8 @@ function update(dt) {
   position += speed * dt;
   while (position >= trackLength) {
     position -= trackLength;
-    if (raceMode) playerLap++;   // пересекли стартовую черту — новый круг!
+    // круги считает и погоня — иначе дистанция до полиции «прыгает»
+    if (raceMode || chaseMode) playerLap++;
     if (taMode) finishTaLap();   // против рекорда: круг завершён!
   }
 
@@ -3561,11 +3563,14 @@ function update(dt) {
   // ---------- 🚔 ПОГОНЯ ЗА ВОРОМ: ты убегаешь от полиции! ----------
   if (chaseMode && chaseRole === "thief" && !chaseOver && opponents[0]) {
     const cop = opponents[0];
-    const gap = position - cop.z;
-    // «Резиновая» погоня: полиция всегда чуть быстрее тебя — спасают
-    // только развилки! (и не разбивайся: пока стоишь, она настигает)
-    const copMax = cop.car.maxSpeed * 0.97;
-    const target = gap > 600 ? speed + KMH * 12 : speed + KMH * 4;
+    const playerTotalC = (playerLap - 1) * trackLength + position;
+    const gap = playerTotalC - cop.z;
+    // Погоня сбалансирована (правка Саши «слишком сложно удрать»):
+    // издалека полиция догоняет, вблизи лишь ВИСИТ на хвосте.
+    // Быстрая машина уходит по скорости (коп не больше 93% своей
+    // максималки), медленная — хитростью на развилках!
+    const copMax = cop.car.maxSpeed * 0.93;
+    const target = gap > 800 ? speed + KMH * 8 : speed + KMH * 1;
     cop.speed = Math.min(copMax, Math.max(KMH * 70, target));
     cop.z += cop.speed * dt;
     // Развилки: ушёл НЕ на сторону главной дороги — сбил её со следа!
@@ -3574,14 +3579,14 @@ function update(dt) {
         f.resolved = true;
         const side = playerX < 0 ? -1 : 1;
         if (side !== f.dir) {
-          cop.z -= 900;
+          cop.z -= 1400;
           lapMsg = { text: "🌀 Сбил полицию со следа!",
                      until: performance.now() + 1600 };
         }
       }
     }
-    const left = 60 - (performance.now() - chaseStart) / 1000;
-    if (gap < 140) {
+    const left = 45 - (performance.now() - chaseStart) / 1000;
+    if (gap < 120) {
       chaseOver = true;
       raceOver = true;
       if (!adminCode) { money = Math.max(0, money - 150); saveMoney(); }
@@ -3605,7 +3610,7 @@ function update(dt) {
   if (chaseMode && chaseRole === "cop" && !chaseOver && !crashed && opponents[0]) {
     updateOpponents(dt);
     const crim = opponents[0];
-    const gap = crim.z - position;
+    const gap = crim.z - ((playerLap - 1) * trackLength + position);
     // РАЗВИЛКИ: на сегменте развилки надо быть на стороне преступника
     for (const f of chaseForks) {
       if (!f.resolved && position >= f.seg * SEG_LEN) {
@@ -6822,12 +6827,14 @@ function renderHUD() {
     ctx.font = "bold 16px Verdana";
     ctx.textAlign = "center";
     if (chaseRole === "cop") {
-      const gapM = Math.max(0, Math.round((opponents[0].z - position) / 10));
+      const gapM = Math.max(0, Math.round(
+        (opponents[0].z - ((playerLap - 1) * trackLength + position)) / 10));
       ctx.fillStyle = gapM < 60 ? "#57d977" : gapM > 1200 ? "#ff5050" : "#ffffff";
       ctx.fillText(`🚓 До преступника: ${gapM} м`, W / 2, 38);
     } else {
-      const gapM = Math.max(0, Math.round((position - opponents[0].z) / 10));
-      const left = Math.max(0, Math.ceil(60 - (performance.now() - chaseStart) / 1000));
+      const gapM = Math.max(0, Math.round(
+        ((playerLap - 1) * trackLength + position - opponents[0].z) / 10));
+      const left = Math.max(0, Math.ceil(45 - (performance.now() - chaseStart) / 1000));
       ctx.fillStyle = gapM < 60 ? "#ff5050" : "#ffffff";
       ctx.fillText(`🚔 Полиция: ${gapM} м · Держись ещё ${left} с`, W / 2, 38);
     }
