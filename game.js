@@ -3579,9 +3579,11 @@ function update(dt) {
     const cop = opponents[0];
     const playerTotalC = (playerLap - 1) * trackLength + position;
     const gap = playerTotalC - cop.z;
-    // Баланс (правки Саши): полиция не быстрее ТВОЕЙ машины больше
-    // чем на 3% — даже медляк держится, а спасают РАЗВИЛКИ!
-    const copMax = Math.min(cop.car.maxSpeed * 0.93, tunedMaxSpeed() * 1.03);
+    // Баланс (финальное правило Саши): полиция НЕ ДОЛЖНА нагонять
+    // никого, кто жмёт газ в пол — её потолок на 3% НИЖЕ твоей
+    // максималки. Но БЕЗДЕЙСТВИЕ нагоняется: стоишь, разбился или
+    // ползёшь — она надвигается (не медленнее 70 км/ч)!
+    const copMax = tunedMaxSpeed() * 0.97;
     const target = gap > 800 ? speed + KMH * 8 : speed + KMH * 1;
     cop.speed = Math.min(copMax, Math.max(KMH * 70, target));
     cop.z += cop.speed * dt;
