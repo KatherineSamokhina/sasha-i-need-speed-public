@@ -8367,48 +8367,56 @@ function drawP205(g) {
   roundRect(g, -26, -10, 9, 3.5, 1.5, "#7c8288");
 }
 
-// --- Konisegg Jesko: гигантское крыло, зелёные акценты, 359 км/ч ---
+// --- Konisegg Jesko: белые плечи, чёрная корма, крыло-лезвие ---
 function drawJesko(g) {
   carBase(g);
-  // КРЫЛО-ГИГАНТ на двух скошенных пилонах. Пилоны — до кузова
-  // (закон Ф-1/Супры/Зонды: ни пикселя воздуха!)
-  g.fillStyle = "#15171a";
+  // Лебединые пилоны от центра лезвия до самого кузова
+  g.fillStyle = "#26292d";
   for (const side of [-1, 1]) {
     g.beginPath();
-    g.moveTo(side * 34, -118); g.lineTo(side * 46, -118);
-    g.lineTo(side * 60, -62); g.lineTo(side * 48, -62);
+    g.moveTo(side * 12, -110); g.lineTo(side * 21, -110);
+    g.lineTo(side * 30, -60); g.lineTo(side * 19, -60);
     g.closePath(); g.fill();
   }
-  roundRect(g, -84, -126, 168, 10, 3, "#111316");
-  g.fillStyle = "rgba(255,255,255,0.12)"; g.fillRect(-76, -125, 152, 2.5);
-  roundRect(g, -88, -130, 9, 18, 2, "#15171a");
-  roundRect(g,  79, -130, 9, 18, 2, "#15171a");
-  // Кабина-капля
-  roundRect(g, -42, -96, 84, 30, 14, "#1a2026");
-  g.fillStyle = "rgba(255,255,255,0.10)"; g.fillRect(-34, -91, 32, 20);
-  // Белый кузов с мускулистыми плечами
-  roundRect(g, -86, -66, 172, 60, 14, "#e4e7ea");
-  g.fillStyle = "rgba(255,255,255,0.40)"; g.fillRect(-78, -65, 156, 3);
-  // Тонкие красные фонари-дуги
+  // Крыло-БУМЕРАНГ во всю ширину: к центру ниже, к краям выше
+  g.fillStyle = "#15171a";
+  g.beginPath();
+  g.moveTo(-84, -126); g.lineTo(0, -116); g.lineTo(84, -126);
+  g.lineTo(84, -117); g.lineTo(0, -107); g.lineTo(-84, -117);
+  g.closePath(); g.fill();
+  g.fillStyle = "rgba(255,255,255,0.13)";
+  g.beginPath();
+  g.moveTo(-76, -124); g.lineTo(0, -114.5); g.lineTo(76, -124);
+  g.lineTo(76, -122); g.lineTo(0, -112.5); g.lineTo(-76, -122);
+  g.closePath(); g.fill();
+  // Пластины на концах крыла
+  roundRect(g, -89, -131, 8, 18, 2, "#26292d");
+  roundRect(g,  81, -131, 8, 18, 2, "#26292d");
+  // Кабина-капля под крылом
+  roundRect(g, -40, -98, 80, 34, 15, "#1a2026");
+  g.fillStyle = "rgba(255,255,255,0.10)"; g.fillRect(-32, -93, 30, 24);
+  // Белые плечи-крылья
+  roundRect(g, -86, -64, 172, 58, 14, "#e4e7ea");
+  g.fillStyle = "rgba(255,255,255,0.40)"; g.fillRect(-78, -63, 156, 3);
+  // ЧЁРНАЯ середина кормы с зелёной окантовкой (как на фото)
+  roundRect(g, -56, -56, 112, 34, 8, "#17191c");
+  roundRect(g, -52, -57.5, 104, 2.5, 1, "#57d977");
+  // Тонкие фонари на плечах + вертикальный штрих по краю
   for (const side of [-1, 1]) {
-    g.strokeStyle = "#2a0808"; g.lineWidth = 6;
-    g.beginPath();
-    g.moveTo(side * 74, -40); g.quadraticCurveTo(side * 72, -56, side * 48, -56);
-    g.stroke();
-    g.strokeStyle = "#e82121"; g.lineWidth = 2.5;
-    g.beginPath();
-    g.moveTo(side * 73, -41); g.quadraticCurveTo(side * 70, -54, side * 49, -54);
-    g.stroke();
+    roundRect(g, side * 71 - 10, -57, 20, 6, 3, "#2a0808");
+    roundRect(g, side * 71 - 8, -55.5, 16, 3, 1.5, "#e82121");
+    roundRect(g, side * 79 - 2.5, -52, 5, 15, 2.5, "#2a0808");
+    roundRect(g, side * 79 - 1.5, -50.5, 3, 12, 1.5, "#e82121");
   }
-  // Чёрная плашка с именем (как на фото)
-  roundRect(g, -26, -50, 52, 10, 2, "#141618");
-  g.fillStyle = "#e4e7ea"; g.font = "bold 5px Verdana"; g.textAlign = "center";
-  g.fillText("Konisegg", 0, -42.5);
-  plate(g, -30, 32);
+  // Белая плашка «Konisegg» на чёрной панели
+  roundRect(g, -25, -51, 50, 9, 2, "#e4e7ea");
+  g.fillStyle = "#17191c"; g.font = "bold 5px Verdana"; g.textAlign = "center";
+  g.fillText("Konisegg", 0, -44);
+  plate(g, -37, 30);
   // Диффузор с ЗЕЛЁНЫМИ рёбрами
-  roundRect(g, -84, -16, 168, 10, 4, "#101214");
+  roundRect(g, -84, -18, 168, 12, 4, "#101214");
   g.fillStyle = "#57d977";
-  for (const x of [-62, -34, 34, 62]) g.fillRect(x - 2, -14, 4, 7);
+  for (const x of [-64, -36, 36, 64]) g.fillRect(x - 2, -16, 4, 8);
 }
 
 // --- Konisegg Regera: овальная труба по центру ---
