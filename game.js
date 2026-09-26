@@ -468,6 +468,69 @@ const CARS = [
     desc: "Городской малыш: юркий, как воробей." },
   { id: "prius", name: "Tayoda Prius Prime", gearbox: "А", topKmh: 180, zeroTo100: 10.2,
     desc: "Бирюзовый гибрид: наполовину электричка, но коробка обычная." },
+  // ---- ДЕНЬ ДОБИВКИ МАРОК: ещё 20 фото Саши (лимит 100 отменён!) ----
+  { id: "indycar", name: "Болид IndyCar", gearbox: "М", topKmh: 355, zeroTo100: 2.8,
+    noNpc: true,
+    desc: "Американский овальный монстр: на прямой быстрее даже Ф-1!" },
+  { id: "f3", name: "Болид Ф-3", gearbox: "М", topKmh: 270, zeroTo100: 3.1,
+    noNpc: true,
+    desc: "Школа чемпионов: здесь начинают будущие короли Ф-1." },
+  { id: "rafmed", name: "РАФ-22031 Скорая", gearbox: "М", topKmh: 120, zeroTo100: 28,
+    desc: "Белая санитарка с красной полосой: уступи дорогу!" },
+  { id: "raf2909", name: "РАФ-2909 Олимпийский", gearbox: "Э", topKmh: 60, zeroTo100: 20,
+    desc: "Советский ЭЛЕКТРОМОБИЛЬ 1980 года: вёз олимпийский огонь и не коптил!" },
+  { id: "zis110", name: "ЗИС-110", gearbox: "М", topKmh: 140, zeroTo100: 28,
+    desc: "Чёрный правительственный лимузин: хром и восемь цилиндров." },
+  { id: "zis5", name: "ЗИС-5 «Трёхтонка»", gearbox: "М", topKmh: 60, zeroTo100: 45,
+    offroadSoft: true,
+    desc: "Первый ГРУЗОВИК в гараже: деревянные борта, стальной характер." },
+  { id: "utopia", name: "Paganny Utopia", gearbox: "М", topKmh: 337, zeroTo100: 3.0,
+    noNpc: true,
+    desc: "Искусство на колёсах: круглые фонари-турбины и МЕХАНИКА." },
+  { id: "zondar", name: "Paganny Zonda R", gearbox: "М", topKmh: 340, zeroTo100: 2.7,
+    noNpc: true,
+    desc: "Гоночная легенда: букет труб по центру и крыло во всю корму." },
+  { id: "uaero", name: "ZSC Ultimate Aero XT", gearbox: "М", topKmh: 347, zeroTo100: 2.8,
+    noNpc: true,
+    desc: "Бывший рекордсмен мира: шесть круглых фонарей, номер «270 миль»." },
+  { id: "model3", name: "Tesly Model 3", gearbox: "Э", topKmh: 261, zeroTo100: 3.3,
+    desc: "Народная электричка, которая обгоняет спорткары." },
+  { id: "modelx", name: "Tesly Model X", gearbox: "Э", topKmh: 250, zeroTo100: 3.9,
+    offroadSoft: true,
+    desc: "Электро-вездеход с дверями-крыльями (спереди, честное слово!)." },
+  { id: "alpha5", name: "TMC Alpha5", gearbox: "Э", topKmh: 250, zeroTo100: 3.2,
+    desc: "Новый Делориан 2022 года — ЭЛЕКТРО! Жалюзи на месте, огня не надо." },
+  { id: "astra", name: "Opal Astra", gearbox: "А", topKmh: 195, zeroTo100: 9.0,
+    desc: "Серебристый хэтчбек с молнией на корме." },
+  { id: "insignia", name: "Opal Insignia", gearbox: "А", topKmh: 220, zeroTo100: 7.8,
+    desc: "Флагман Опаля: строгий костюм, хромовый штрих." },
+  { id: "daytona", name: "Shelbee Daytona", gearbox: "М", topKmh: 305, zeroTo100: 4.4,
+    desc: "Синее купе №12, обыгравшее Ferrari в Ле-Мане. Обрубленный хвост!" },
+  { id: "patriot", name: "УАЗ Патриот", gearbox: "М", topKmh: 150, zeroTo100: 12,
+    offroadSoft: true,
+    desc: "Запаска на калитке и никакого страха перед грязью." },
+  { id: "hunter", name: "УАЗ Хантер", gearbox: "М", topKmh: 130, zeroTo100: 15,
+    offroadSoft: true,
+    desc: "Внук 469-го: квадратный, честный, вечный." },
+  { id: "eldorado", name: "Kadillark Eldorado 1960", gearbox: "А", topKmh: 175, zeroTo100: 10.5,
+    desc: "Плавники-ракеты и круглые фонари-дюзы: космос 60-х!" },
+  { id: "ct5v", name: "Kadillark CT5-V", gearbox: "А", topKmh: 322, zeroTo100: 3.6,
+    desc: "Чёрный костюм, четыре трубы: самый быстрый Кадиллак в истории." },
+  { id: "p9x8", name: "Pejo 9X8", gearbox: "М", topKmh: 340, zeroTo100: 2.9,
+    noNpc: true,
+    desc: "Гиперкар Ле-Мана БЕЗ заднего крыла — три когтя света с каждой стороны." },
+  // ---- Три Рейндж Ровера (Sand Hover растёт до пяти!) ----
+  { id: "evoque", name: "Sand Hover Evoque", gearbox: "А", topKmh: 230, zeroTo100: 7.5,
+    offroadSoft: true,
+    desc: "Городской модник: узкие красные фонари и покатая крыша." },
+  { id: "vogue", name: "Sand Hover Vogue 2003", gearbox: "А", topKmh: 200, zeroTo100: 9.0,
+    offroadSoft: true,
+    desc: "Квадратный аристократ: огромное стекло и болотные сапоги в багажнике." },
+  { id: "grand", name: "Sand Hover Grand 2022", gearbox: "А", topKmh: 250, zeroTo100: 4.6,
+    offroadSoft: true,
+    desc: "Новый король вездеходов: золотистый, гладкий, как галька." },
+  { id: "p205", name: "Pejo 205 GTI", gearbox: "М", topKmh: 200, zeroTo100: 7.8,
+    desc: "Злой белый малыш из ралли: красная полоска и жёлтый номер." },
   // ---- Гиперкары (восторг Саши: «СКОРОСТЬ ГЕМЕРЫ!!!») ----
   {
     id: "gemera", name: "Konisegg Gemera", gearbox: "А",
@@ -587,6 +650,11 @@ const BRAKE_100_0 = {
   rapide: 2.5, quattroporte: 2.6, ghibli: 2.6, gt3200: 2.9, levante: 2.9,
   corolla: 3.0, chr: 3.0, chrgr: 2.9, corona: 3.3, crown: 2.8,
   supra: 2.5, gsupra: 2.4, yaris: 3.1, prius: 3.0,
+  indycar: 1.5, f3: 1.6, rafmed: 4.6, raf2909: 4.2, zis110: 4.8,
+  zis5: 5.5, utopia: 1.8, zondar: 1.6, uaero: 1.8, model3: 2.5,
+  modelx: 2.7, alpha5: 2.5, astra: 2.9, insignia: 2.8, daytona: 2.6,
+  patriot: 3.9, hunter: 4.1, eldorado: 4.3, ct5v: 2.3, p9x8: 1.6,
+  evoque: 3.0, vogue: 3.4, grand: 2.9, p205: 3.1,
 };
 
 // Досчитываем игровые характеристики из реальных цифр.
@@ -629,6 +697,11 @@ const CAR_PRICES = {
   rapide: 3400, quattroporte: 2800, ghibli: 2200, gt3200: 2000,
   levante: 2400, corolla: 550, chr: 850, chrgr: 950, corona: 450,
   crown: 1400, supra: 2300, gsupra: 2100, yaris: 400, prius: 700,
+  indycar: 6500, f3: 2800, rafmed: 450, raf2909: 600, zis110: 550,
+  zis5: 300, utopia: 8600, zondar: 9200, uaero: 8800, model3: 2200,
+  modelx: 2800, alpha5: 3000, astra: 650, insignia: 900, daytona: 3200,
+  patriot: 700, hunter: 550, eldorado: 1200, ct5v: 2900, p9x8: 7800,
+  evoque: 1600, vogue: 1300, grand: 2600, p205: 900,
   pejo308: 1300, volga3110: 320, volga24: 300, volga21: 380,
   sportage: 850, k5: 950, sonata: 900, tucson: 800, i30: 600,
   zis: -1,   // −1 = не продаётся, только код «вечная ностальгия»
@@ -2336,6 +2409,12 @@ const CAR_CATEGORY = {
   quattroporte: "lux", ghibli: "sport", gt3200: "sport", levante: "suv",
   corolla: "city", chr: "suv", chrgr: "suv", corona: "city",
   crown: "lux", supra: "sport", gsupra: "sport", yaris: "city", prius: "city",
+  indycar: "hyper", f3: "hyper", rafmed: "ussr", raf2909: "ussr",
+  zis110: "ussr", zis5: "ussr", utopia: "hyper", zondar: "hyper",
+  uaero: "hyper", model3: "sport", modelx: "suv", alpha5: "sport",
+  astra: "city", insignia: "city", daytona: "sport", patriot: "suv",
+  hunter: "suv", eldorado: "lux", ct5v: "sport", p9x8: "hyper",
+  evoque: "suv", vogue: "suv", grand: "suv", p205: "city",
 };
 // Марка каждой машины — для вкладки «По марке» (заказ Саши)
 const CAR_BRAND = {
@@ -2373,6 +2452,14 @@ const CAR_BRAND = {
   corolla: "Tayoda", chr: "Tayoda", chrgr: "Tayoda", corona: "Tayoda",
   crown: "Tayoda", supra: "Tayoda", gsupra: "Tayoda", yaris: "Tayoda",
   prius: "Tayoda",
+  indycar: "Нет марки", f3: "Нет марки", rafmed: "РАФ", raf2909: "РАФ",
+  zis110: "ЗИС", zis5: "ЗИС", utopia: "Paganny", zondar: "Paganny",
+  uaero: "ZSC", model3: "Tesly", modelx: "Tesly", alpha5: "TMC",
+  astra: "Opal", insignia: "Opal", daytona: "Shelbee",
+  patriot: "УАЗ", hunter: "УАЗ", eldorado: "Kadillark",
+  ct5v: "Kadillark", p9x8: "Pejo",
+  evoque: "Sand Hover", vogue: "Sand Hover", grand: "Sand Hover",
+  p205: "Pejo",
 };
 let garageCat = 0;      // номер выбранной категории в CATEGORIES
 let garageBrand = null; // выбранная марка (null = фильтруем по типу)
@@ -2707,6 +2794,30 @@ const PAINT_SLOTS = {
   gsupra: ["#d8242b", "#a81a20"],
   yaris: ["#f0f1f3", "#d6d8dc"],
   prius: ["#2e9e96", "#22776f"],
+  indycar: ["#c8202a", "#9e161e"],
+  f3: ["#eceef0", "#d2d5d9"],
+  rafmed: ["#eef0f2", "#d4d7db"],
+  raf2909: ["#8a3b2e", "#6b2d22"],
+  zis110: ["#17191c", "#101214"],
+  zis5: ["#3f5a3c", "#2f4630"],
+  utopia: ["#cfc9bd", "#b5ad9e"],
+  zondar: ["#26282c", "#1a1c20"],
+  uaero: ["#eceef0", "#d2d5d9"],
+  model3: ["#17191c", "#101214"],
+  modelx: ["#f0f1f3", "#d6d8dc"],
+  alpha5: ["#c9ccd1", "#b8bcc2"],
+  astra: ["#c6cad0", "#acb1b8"],
+  insignia: ["#6e625a", "#584e47"],
+  daytona: ["#2456a8", "#1a3f7e"],
+  patriot: ["#6b6f66", "#54574f"],
+  hunter: ["#3a3d36", "#2b2d28"],
+  eldorado: ["#1d2a4a", "#141d36"],
+  ct5v: ["#1a1c20", "#111316"],
+  p9x8: ["#26292d", "#191c1f"],
+  evoque: ["#eceef0", "#d2d5d9"],
+  vogue: ["#c6cad0", "#acb1b8"],
+  grand: ["#c2a281", "#a68864"],
+  p205: ["#f0ede4", "#d6d2c6"],
   merc190: ["#1a1c20", "#131519"],
   amggt53: ["#5a5e63", "#4d5156"],
   maybach: ["#ece9e2", "#dcd9d2"],
@@ -2760,7 +2871,12 @@ const RIM_X = { aveo: 66, picanto: 56, corsa: 59, focus: 73, delorean: 75,
   m2: 76, m4: 76, b750: 72, i7: 72, vantage: 76, dbx: 68, rapide: 73,
   quattroporte: 72, ghibli: 71, gt3200: 72, levante: 68, corolla: 68,
   chr: 66, chrgr: 66, corona: 66, crown: 71, supra: 78, gsupra: 77,
-  yaris: 60, prius: 66 };
+  yaris: 60, prius: 66,
+  indycar: 84, f3: 82, rafmed: 62, raf2909: 62, zis110: 68, zis5: 64,
+  utopia: 80, zondar: 82, uaero: 78, model3: 70, modelx: 68, alpha5: 74,
+  astra: 62, insignia: 70, daytona: 72, patriot: 64, hunter: 64,
+  eldorado: 74, ct5v: 74, p9x8: 82, evoque: 66, vogue: 66, grand: 68,
+  p205: 60 };
 
 // ---------- ИГРОВАЯ ВАЛЮТА 🪙 ----------
 // Зарабатывается в гонках (по месту на финише), тратится на железо.
@@ -2891,6 +3007,22 @@ const MOD_FIT = {
   mc12: { noSpoiler: true, stripeTop: -66 },  // заводское крыло выше крыши!
   mc20: { noSpoiler: true, stripeTop: -62 },  // крыло уже с завода (фото)
   supra: { noSpoiler: true, stripeTop: -62 }, // ОГРОМНОЕ крыло с завода!
+  indycar: { noSpoiler: true },
+  f3: { noSpoiler: true },
+  zondar: { noSpoiler: true, stripeTop: -70 },
+  uaero: { noSpoiler: true, stripeTop: -70 },
+  p9x8: { noSpoiler: true, stripeTop: -70 },  // у него НЕТ крыла — фишка!
+  rafmed: { spoilerY: -124, stripeTop: -66 },
+  raf2909: { spoilerY: -118, stripeTop: -64 },
+  zis5: { spoilerY: -118, stripeTop: -66 },
+  patriot: { spoilerY: -128, stripeTop: -68 },
+  hunter: { spoilerY: -124, stripeTop: -68 },
+  evoque: { spoilerY: -112, stripeTop: -62 },
+  vogue: { spoilerY: -128, stripeTop: -68 },
+  grand: { spoilerY: -126, stripeTop: -66 },
+  p205: { spoilerY: -106, stripeTop: -58 },
+  eldorado: { stripeTop: -60 },
+  alpha5: { noSpoiler: true, stripeTop: -60 },  // жалюзи и хвост-клин
   yaris: { spoilerY: -104, stripeTop: -58 },
   prius: { noSpoiler: true, stripeTop: -58 }, // планка поперёк стекла — своя!
   chr: { spoilerY: -108, stripeTop: -58 },
@@ -7551,6 +7683,676 @@ function drawPrius(g) {
   roundRect(g, -78, -20, 156, 11, 5, "#26292d");
 }
 
+// ---------- ДЕНЬ ДОБИВКИ МАРОК: ещё 20 машин по фото ----------
+
+// Значок Opal: молния в кольце
+function opalBadge(g, y) {
+  g.strokeStyle = "#c9d0d7"; g.lineWidth = 2;
+  g.beginPath(); g.arc(0, y, 8, 0, Math.PI * 2); g.stroke();
+  g.fillStyle = "#c9d0d7";
+  g.beginPath();
+  g.moveTo(-6, y - 1.5); g.lineTo(1, y - 1.5); g.lineTo(6, y + 1.5);
+  g.lineTo(-1, y + 1.5);
+  g.closePath(); g.fill();
+}
+
+// --- Болид IndyCar: американский овальный монстр ---
+function drawIndycar(g) {
+  g.fillStyle = "rgba(0,0,0,0.4)";
+  g.beginPath(); g.ellipse(0, 8, 112, 12, 0, 0, Math.PI * 2); g.fill();
+  g.strokeStyle = "#1c1e22"; g.lineWidth = 4;
+  for (const side of [-1, 1]) {
+    g.beginPath(); g.moveTo(side * 56, -24); g.lineTo(side * 82, -34); g.stroke();
+    g.beginPath(); g.moveTo(side * 56, -10); g.lineTo(side * 84, -14); g.stroke();
+  }
+  // Гигантские слики
+  roundRect(g, -106, -50, 42, 62, 12, "#0b0b0b");
+  roundRect(g,  64, -50, 42, 62, 12, "#0b0b0b");
+  g.fillStyle = "#2a2d31";
+  g.fillRect(-100, -46, 30, 4); g.fillRect(70, -46, 30, 4);
+  // Задний «бампер»-обтекатель поверх колёс — фишка Индикара!
+  roundRect(g, -108, -56, 46, 14, 6, "#eceef0");
+  roundRect(g,  62, -56, 46, 14, 6, "#eceef0");
+  // Днище-диффузор
+  roundRect(g, -60, -26, 120, 22, 6, "#141416");
+  // Красный кожух мотора с белой стрелой
+  g.fillStyle = "#c8202a";
+  g.beginPath();
+  g.moveTo(-26, -26); g.lineTo(26, -26); g.lineTo(10, -84); g.lineTo(-10, -84);
+  g.closePath(); g.fill();
+  g.fillStyle = "#eceef0";
+  g.beginPath();
+  g.moveTo(-5, -26); g.lineTo(5, -26); g.lineTo(2, -70); g.lineTo(-2, -70);
+  g.closePath(); g.fill();
+  // Аэроскрин-дуга над кокпитом
+  g.strokeStyle = "#2a2d31"; g.lineWidth = 5;
+  g.beginPath(); g.arc(0, -74, 16, Math.PI, 0); g.stroke();
+  // Низкое широкое крыло на двух пилонах
+  roundRect(g, -20, -102, 8, 20, 3, "#101214");
+  roundRect(g,  12, -102, 8, 20, 3, "#101214");
+  roundRect(g, -78, -108, 156, 8, 3, "#c8202a");
+  g.fillStyle = "rgba(255,255,255,0.25)"; g.fillRect(-70, -107, 140, 2);
+  roundRect(g, -82, -110, 10, 16, 3, "#eceef0");
+  roundRect(g,  72, -110, 10, 16, 3, "#eceef0");
+  // Дождевой фонарь
+  roundRect(g, -2.5, -44, 5, 14, 2, "#ff2020");
+}
+
+// --- Болид Ф-3: белая школа чемпионов ---
+function drawF3car(g) {
+  g.fillStyle = "rgba(0,0,0,0.4)";
+  g.beginPath(); g.ellipse(0, 8, 104, 12, 0, 0, Math.PI * 2); g.fill();
+  g.strokeStyle = "#1c1e22"; g.lineWidth = 4;
+  for (const side of [-1, 1]) {
+    g.beginPath(); g.moveTo(side * 52, -22); g.lineTo(side * 78, -32); g.stroke();
+    g.beginPath(); g.moveTo(side * 52, -10); g.lineTo(side * 80, -14); g.stroke();
+  }
+  roundRect(g, -100, -48, 40, 60, 12, "#0b0b0b");
+  roundRect(g,  60, -48, 40, 60, 12, "#0b0b0b");
+  g.fillStyle = "#2a2d31";
+  g.fillRect(-94, -44, 28, 4); g.fillRect(66, -44, 28, 4);
+  roundRect(g, -58, -26, 116, 22, 6, "#141416");
+  // Белый кожух мотора
+  g.fillStyle = "#eceef0";
+  g.beginPath();
+  g.moveTo(-24, -26); g.lineTo(24, -26); g.lineTo(8, -82); g.lineTo(-8, -82);
+  g.closePath(); g.fill();
+  g.fillStyle = "rgba(0,0,0,0.10)"; g.fillRect(-8, -50, 16, 24);
+  // ЧЁРНОЕ крыло (как на фото) на пилоне с боковыми пластинами
+  roundRect(g, -6, -104, 12, 24, 3, "#101214");
+  roundRect(g, -74, -102, 148, 9, 3, "#111316");
+  roundRect(g, -80, -108, 8, 22, 2, "#111316");
+  roundRect(g,  72, -108, 8, 22, 2, "#111316");
+  roundRect(g, -2.5, -42, 5, 14, 2, "#ff2020");
+}
+
+// --- РАФ-22031: скорая помощь, уступи дорогу! ---
+function drawRafMed(g) {
+  carBase(g, -26, 32);
+  // Высокий белый фургон
+  roundRect(g, -72, -122, 144, 116, 9, "#eef0f2");
+  g.fillStyle = "rgba(255,255,255,0.45)"; g.fillRect(-64, -121, 128, 3);
+  // Заднее стекло
+  roundRect(g, -54, -112, 108, 40, 7, "#1a2026");
+  g.fillStyle = "rgba(255,255,255,0.12)"; g.fillRect(-46, -107, 44, 30);
+  // Красная полоса и красный крест в круге
+  roundRect(g, -72, -62, 144, 12, 2, "#d1202a");
+  circle(g, 0, -40, 11, "#eef0f2");
+  g.strokeStyle = "#d1202a"; g.lineWidth = 1.5;
+  g.beginPath(); g.arc(0, -40, 11, 0, Math.PI * 2); g.stroke();
+  g.fillStyle = "#d1202a";
+  g.fillRect(-2.5, -48, 5, 16); g.fillRect(-8, -42.5, 16, 5);
+  // Оранжевый маячок на крыше
+  roundRect(g, -8, -128, 16, 7, 3, "#e8821e");
+  g.fillStyle = "rgba(255,190,80,0.5)";
+  g.beginPath(); g.ellipse(0, -128, 14, 6, 0, 0, Math.PI * 2); g.fill();
+  plate(g, -28, 36);
+  roundRect(g, -66, -14, 132, 7, 3, "#aab0b6");
+}
+
+// --- РАФ-2909: олимпийский ЭЛЕКТРО-пикап с тентом (1980!) ---
+function drawRaf2909(g) {
+  carBase(g, -26, 32);
+  // Тёмный кузов с белой полосой (как на чёрно-белом фото)
+  roundRect(g, -72, -74, 144, 68, 8, "#8a3b2e");
+  roundRect(g, -72, -86, 144, 14, 4, "#eef0f2");   // белый пояс
+  // ТЕНТ — брезентовый горб над кузовом
+  roundRect(g, -64, -122, 128, 40, 10, "#4a453e");
+  g.fillStyle = "rgba(255,255,255,0.08)";
+  for (let x = -52; x <= 40; x += 18) g.fillRect(x, -120, 2, 36);
+  // Фонарики по краям
+  for (const side of [-1, 1]) {
+    roundRect(g, side * 62 - 5, -68, 10, 16, 3, "#3d1512");
+    roundRect(g, side * 62 - 3, -65, 6, 6, 2, "#d43535");
+  }
+  // Белый квадрат с факелоносцем (олимпийская эмблема)
+  roundRect(g, -14, -62, 28, 24, 3, "#eef0f2");
+  g.fillStyle = "#33363b";
+  circle(g, 0, -56, 2.5, "#33363b");                 // голова бегуна
+  g.fillRect(-1.5, -54, 3, 8);                        // тело
+  g.fillRect(-6, -52, 12, 2);                         // руки
+  g.fillStyle = "#e8821e"; g.fillRect(5, -58, 2, 6);  // факел!
+  plate(g, -30, 36);
+  roundRect(g, -66, -14, 132, 7, 3, "#aab0b6");
+}
+
+// --- ЗИС-110: чёрный правительственный лимузин ---
+function drawZis110(g) {
+  carBase(g);
+  roundRect(g, -48, -94, 96, 30, 12, "#17191c");
+  roundRect(g, -42, -90, 84, 22, 8, "#1a2026");
+  g.fillStyle = "rgba(255,255,255,0.10)"; g.fillRect(-34, -86, 30, 14);
+  // Округлый чёрный кузов
+  roundRect(g, -82, -66, 164, 60, 16, "#17191c");
+  g.fillStyle = "rgba(255,255,255,0.14)"; g.fillRect(-72, -65, 144, 3);
+  // Маленькие круглые фонарики
+  for (const side of [-1, 1]) {
+    circle(g, side * 62, -50, 6, "#3d0a0a");
+    circle(g, side * 62, -50, 3.5, "#c22020");
+  }
+  // Шильдик ЗИС
+  g.fillStyle = "#c9d0d7"; g.font = "bold 6px Verdana"; g.textAlign = "center";
+  g.fillText("ЗИС", 0, -52);
+  plate(g, -42);
+  // Массивный хромовый бампер с клыками
+  roundRect(g, -80, -24, 160, 11, 5, "#c2c8ce");
+  roundRect(g, -46, -27, 8, 15, 3, "#b4bac0");
+  roundRect(g,  38, -27, 8, 15, 3, "#b4bac0");
+  roundRect(g, -20, -12, 10, 4, 2, "#7c8288");
+}
+
+// --- ЗИС-5 «Трёхтонка»: первый ГРУЗОВИК в гараже! ---
+function drawZis5(g) {
+  carBase(g, -30, 40);
+  // Кабина ПОЗАДИ кузова: виден лишь краешек крыши тёмным
+  // оттенком, зато по бокам торчат зеркала на ножках — по ним
+  // грузовик узнаётся сразу (третья попытка, правки Саши!)
+  roundRect(g, -38, -106, 76, 12, 6, "#2f4630");
+  g.strokeStyle = "#26292d"; g.lineWidth = 2.5;
+  g.beginPath(); g.moveTo(-36, -100); g.lineTo(-80, -104); g.stroke();
+  g.beginPath(); g.moveTo(36, -100); g.lineTo(80, -104); g.stroke();
+  roundRect(g, -88, -111, 9, 13, 2, "#26292d");
+  roundRect(g,  79, -111, 9, 13, 2, "#26292d");
+  // Зелёная стальная рама кузова
+  roundRect(g, -72, -96, 144, 86, 4, "#3f5a3c");
+  // ДЕРЕВЯННЫЙ задний борт: светлые доски со щелями
+  g.fillStyle = "#8a6b46";
+  g.fillRect(-66, -90, 132, 72);
+  g.fillStyle = "#6d5236";
+  for (let y = -78; y <= -24; y += 15) g.fillRect(-66, y, 132, 3);
+  g.fillStyle = "rgba(255,255,255,0.10)"; g.fillRect(-66, -90, 132, 2);
+  // Стальные петли борта
+  g.fillStyle = "#26292d";
+  g.fillRect(-46, -92, 5, 76); g.fillRect(41, -92, 5, 76);
+  // Чёрные крылья над колёсами — колёса ТОРЧАТ из-под кузова
+  roundRect(g, -90, -36, 28, 16, 7, "#17191c");
+  roundRect(g,  62, -36, 28, 16, 7, "#17191c");
+  // Два фонарика по краям (у настоящего был один слева, но Саша
+  // спросил «фара одна?» — ставим пару, так красивее!)
+  for (const side of [-1, 1]) {
+    roundRect(g, side * 60 - 4.5, -20, 9, 8, 2, "#3d0a0a");
+    roundRect(g, side * 60 - 3, -18.5, 6, 5, 1.5, "#c22020");
+  }
+  plate(g, -16, 32);
+  // Рама снизу
+  roundRect(g, -60, -4, 120, 4, 2, "#26292d");
+}
+
+// --- Paganny Utopia: фонари-турбины и механика ---
+function drawUtopia(g) {
+  carBase(g);
+  roundRect(g, -46, -92, 92, 30, 15, "#1a2026");
+  g.fillStyle = "rgba(255,255,255,0.10)"; g.fillRect(-38, -87, 34, 20);
+  // Кузов с круглыми плечами-крыльями
+  roundRect(g, -86, -64, 172, 58, 17, "#cfc9bd");
+  g.fillStyle = "rgba(255,255,255,0.25)"; g.fillRect(-76, -63, 152, 3);
+  // Четыре круглых фонаря-ТУРБИНЫ (по два на крыло)
+  for (const side of [-1, 1]) {
+    for (const dx of [-13, 13]) {
+      circle(g, side * 58 + dx, -46, 9, "#2b2620");
+      g.strokeStyle = "#e8821e"; g.lineWidth = 2.5;
+      g.beginPath(); g.arc(side * 58 + dx, -46, 6, 0, Math.PI * 2); g.stroke();
+      circle(g, side * 58 + dx, -46, 2, "#ffb14f");
+    }
+  }
+  // Круглая корзина из ЧЕТЫРЁХ труб по центру
+  circle(g, 0, -38, 13, "#33363b");
+  for (const [dx, dy] of [[-5, -5], [5, -5], [-5, 5], [5, 5]])
+    circle(g, dx, -38 + dy, 4, "#7c8288");
+  g.fillStyle = "#5c5347"; g.font = "italic bold 5px Georgia"; g.textAlign = "center";
+  g.fillText("Paganny", 0, -58);
+  plate(g, -20, 32);
+  roundRect(g, -80, -10, 160, 6, 3, "#101214");
+}
+
+// --- Paganny Zonda R: гоночный карбон и букет труб ---
+function drawZondaR(g) {
+  carBase(g);
+  // Крыло ВО ВСЮ ширину на боковых пластинах. Пластины тянутся ДО
+  // КУЗОВА (-64): кабина уже пластин, короткие висели бы в воздухе —
+  // урок Супры и Ф-1!
+  roundRect(g, -84, -116, 168, 9, 3, "#111316");
+  g.fillStyle = "rgba(255,255,255,0.10)"; g.fillRect(-76, -115, 152, 2);
+  roundRect(g, -70, -108, 8, 44, 3, "#15171a");
+  roundRect(g,  62, -108, 8, 44, 3, "#15171a");
+  roundRect(g, -44, -94, 88, 30, 14, "#1a2026");
+  // Тёмный карбоновый кузов
+  roundRect(g, -86, -66, 172, 60, 12, "#26282c");
+  g.fillStyle = "rgba(255,255,255,0.08)"; g.fillRect(-78, -65, 156, 3);
+  // Круглые фонари по два
+  for (const side of [-1, 1]) {
+    for (const dx of [-11, 11]) {
+      circle(g, side * 58 + dx, -50, 7, "#3d0a0a");
+      circle(g, side * 58 + dx, -50, 4, "#e82121");
+    }
+  }
+  // БУКЕТ из четырёх труб ромбом по центру (фишка Зонды!)
+  circle(g, 0, -46, 14, "#141618");
+  for (const [dx, dy] of [[0, -6], [-6, 0], [6, 0], [0, 6]]) {
+    g.strokeStyle = "#c9d0d7"; g.lineWidth = 2;
+    g.beginPath(); g.arc(dx, -46 + dy, 3.5, 0, Math.PI * 2); g.stroke();
+  }
+  g.fillStyle = "#8f959c"; g.font = "italic bold 5px Georgia"; g.textAlign = "center";
+  g.fillText("Zonda R", 56, -36);
+  // Номер — над диффузором, а не В бампере (правка Саши)
+  plate(g, -31, 30);
+  // Огромный диффузор с рёбрами
+  roundRect(g, -84, -18, 168, 12, 4, "#101214");
+  g.fillStyle = "#1e2124";
+  for (const x of [-56, -28, 28, 56]) g.fillRect(x - 2, -16, 4, 9);
+}
+
+// --- ZSC Ultimate Aero XT: шесть круглых фонарей, 270 миль ---
+function drawUAero(g) {
+  carBase(g);
+  roundRect(g, -46, -94, 92, 32, 14, "#1a2026");
+  g.fillStyle = "rgba(255,255,255,0.10)"; g.fillRect(-38, -89, 34, 22);
+  // Горбик-спойлер на кромке
+  roundRect(g, -40, -66, 80, 6, 3, "#d2d5d9");
+  roundRect(g, -84, -62, 168, 56, 13, "#eceef0");
+  g.fillStyle = "rgba(255,255,255,0.40)"; g.fillRect(-76, -61, 152, 3);
+  // По ТРИ круглых фонаря с каждой стороны!
+  for (const side of [-1, 1]) {
+    for (const dx of [-16, 0, 16]) {
+      circle(g, side * 58 + dx * side, -50, 7, "#3d0a0a");
+      circle(g, side * 58 + dx * side, -50, 4.5, "#e82121");
+    }
+  }
+  // Решётка-жабры по центру
+  g.fillStyle = "#33363b";
+  for (let y = -56; y <= -42; y += 5) g.fillRect(-26, y, 52, 3);
+  plate(g, -38, 36);
+  // Чёрный низ и сдвоенная труба-овал по центру
+  roundRect(g, -80, -22, 160, 13, 5, "#17191c");
+  roundRect(g, -14, -20, 28, 9, 4.5, "#26292d");
+  circle(g, -6, -15.5, 3.5, "#7c8288"); circle(g, 6, -15.5, 3.5, "#7c8288");
+}
+
+// --- Tesly Model 3: чёрная народная электричка ---
+function drawModel3(g) {
+  carBase(g);
+  roundRect(g, -52, -94, 104, 32, 12, "#1a2026");
+  g.fillStyle = "rgba(255,255,255,0.08)"; g.fillRect(-44, -89, 40, 22);
+  roundRect(g, -84, -64, 168, 58, 13, "#17191c");
+  g.fillStyle = "rgba(255,255,255,0.10)"; g.fillRect(-76, -63, 152, 3);
+  // Фонари-росчерки, загнутые к центру
+  for (const side of [-1, 1]) {
+    g.strokeStyle = "#2a0808"; g.lineWidth = 7;
+    g.beginPath();
+    g.moveTo(side * 76, -44); g.quadraticCurveTo(side * 66, -56, side * 34, -52);
+    g.stroke();
+    g.strokeStyle = "#e82121"; g.lineWidth = 3;
+    g.beginPath();
+    g.moveTo(side * 74, -45); g.quadraticCurveTo(side * 65, -54, side * 35, -50.5);
+    g.stroke();
+  }
+  // Буквы T E S L Y хромом через багажник (как на фото)
+  g.fillStyle = "#c9d0d7"; g.font = "bold 6px Verdana"; g.textAlign = "center";
+  g.fillText("T E S L Y", 0, -38);
+  plate(g, -32, 36);
+  // Гладкий низ без труб
+  roundRect(g, -80, -16, 160, 9, 4, "#26292d");
+}
+
+// --- Tesly Model X: белый электро-вездеход ---
+function drawModelX(g) {
+  carBase(g, -28, 34);
+  roundRect(g, -54, -102, 108, 34, 12, "#1a2026");
+  g.fillStyle = "rgba(255,255,255,0.12)"; g.fillRect(-46, -97, 42, 24);
+  roundRect(g, -86, -70, 172, 64, 12, "#f0f1f3");
+  g.fillStyle = "rgba(255,255,255,0.45)"; g.fillRect(-78, -69, 156, 3);
+  // Хромовая полоса через корму + тонкие тёмные фонари
+  roundRect(g, -60, -54, 120, 3, 1.5, "#c9d0d7");
+  for (const side of [-1, 1]) {
+    roundRect(g, side * 62 - 20, -62, 40, 10, 5, "#26292d");
+    roundRect(g, side * 62 - 17, -60, 34, 5, 2.5, "#c22020");
+  }
+  // Эмблема T
+  g.fillStyle = "#7c8288";
+  g.fillRect(-5, -66, 10, 2);
+  g.fillRect(-1.5, -64, 3, 7);
+  g.font = "bold 4.5px Verdana"; g.textAlign = "center";
+  g.fillText("MODEL X", -56, -42);
+  plate(g, -46);
+  // Чёрный диффузор
+  roundRect(g, -82, -26, 164, 14, 5, "#26292d");
+}
+
+// --- TMC Alpha5: новый ЭЛЕКТРО-Делориан с жалюзи ---
+function drawAlpha5(g) {
+  carBase(g);
+  // Чёрное стекло с ЖАЛЮЗИ (наследство DMC-12!)
+  roundRect(g, -52, -102, 104, 36, 10, "#141618");
+  g.fillStyle = "#26292d";
+  for (let y = -98; y <= -72; y += 6) g.fillRect(-46, y, 92, 3.5);
+  // Серебристый клин кузова
+  roundRect(g, -86, -66, 172, 60, 11, "#c9ccd1");
+  g.fillStyle = "rgba(255,255,255,0.28)"; g.fillRect(-78, -65, 156, 3);
+  // Красная лента-фонарь во всю ширину с буквами
+  roundRect(g, -80, -58, 160, 11, 4, "#2a0808");
+  roundRect(g, -77, -55.5, 154, 6, 3, "#e82121");
+  g.fillStyle = "#2a0808"; g.font = "bold 5px Verdana"; g.textAlign = "center";
+  g.fillText("A L P H A 5", 0, -50.5);
+  // Чёрная панель низа с V-образным огоньком
+  roundRect(g, -70, -42, 140, 26, 6, "#1a1c20");
+  g.strokeStyle = "#e82121"; g.lineWidth = 3;
+  g.beginPath();
+  g.moveTo(-12, -26); g.lineTo(0, -20); g.lineTo(12, -26);
+  g.stroke();
+  plate(g, -40, 36);
+  // Гладкий диффузор — электро, труб нет!
+  roundRect(g, -80, -14, 160, 8, 4, "#26292d");
+}
+
+// --- Opal Astra: серебристый хэтчбек с молнией ---
+function drawAstra(g) {
+  carBase(g, -26, 32);
+  roundRect(g, -50, -100, 100, 40, 11, "#c6cad0");
+  roundRect(g, -44, -96, 88, 30, 8, "#1a2026");
+  g.fillStyle = "rgba(255,255,255,0.12)"; g.fillRect(-36, -91, 32, 20);
+  roundRect(g, -74, -62, 148, 56, 11, "#c6cad0");
+  g.fillStyle = "rgba(255,255,255,0.30)"; g.fillRect(-66, -61, 132, 3);
+  // Округлые фонари по краям
+  for (const side of [-1, 1]) {
+    roundRect(g, side * 56 - 13, -58, 26, 18, 7, "#3d1512");
+    roundRect(g, side * 56 - 9, -54, 18, 10, 4, "#d43535");
+  }
+  opalBadge(g, -48);
+  plate(g, -38, 36);
+  roundRect(g, -70, -18, 140, 10, 5, "#acb1b8");
+  roundRect(g, -30, -11, 10, 4, 2, "#7c8288");
+}
+
+// --- Opal Insignia: строгий флагман ---
+function drawInsignia(g) {
+  carBase(g);
+  roundRect(g, -52, -94, 104, 30, 10, "#1a2026");
+  g.fillStyle = "rgba(255,255,255,0.10)"; g.fillRect(-44, -89, 40, 20);
+  roundRect(g, -84, -66, 168, 60, 12, "#6e625a");
+  g.fillStyle = "rgba(255,255,255,0.16)"; g.fillRect(-76, -65, 152, 3);
+  // Широкие фонари с внутренним вырезом + хромовый штрих
+  roundRect(g, -64, -55, 128, 3, 1.5, "#aab0b6");
+  for (const side of [-1, 1]) {
+    roundRect(g, side * 58 - 24, -60, 48, 11, 5, "#3d1512");
+    roundRect(g, side * 58 - 20, -57, 40, 5, 2.5, "#d43535");
+  }
+  opalBadge(g, -62);
+  plate(g, -42);
+  roundRect(g, -80, -22, 160, 12, 5, "#584e47");
+  roundRect(g, -58, -14, 116, 3, 1.5, "#33363b");
+}
+
+// --- Shelbee Daytona: синее купе №12, гроза Ле-Мана ---
+function drawDaytona(g) {
+  carBase(g);
+  // Округлая спина с ОБРУБЛЕННЫМ хвостом (камм-тейл)
+  roundRect(g, -56, -100, 112, 38, 18, "#2456a8");
+  roundRect(g, -46, -94, 92, 24, 10, "#1a2026");
+  roundRect(g, -80, -64, 160, 58, 10, "#2456a8");
+  g.fillStyle = "rgba(255,255,255,0.16)"; g.fillRect(-72, -63, 144, 3);
+  // ДВЕ белые полосы сверху вниз
+  g.fillStyle = "#eceef0";
+  g.fillRect(-20, -100, 16, 94);
+  g.fillRect(4, -100, 16, 94);
+  // Белый круг с номером 12
+  circle(g, 0, -44, 15, "#eceef0");
+  g.fillStyle = "#17191c"; g.font = "bold 15px Verdana"; g.textAlign = "center";
+  g.fillText("12", 0, -38);
+  // Крохотные круглые фонарики по два
+  for (const side of [-1, 1]) {
+    circle(g, side * 62, -52, 4.5, "#3d0a0a");
+    circle(g, side * 62, -52, 2.5, "#c22020");
+    circle(g, side * 50, -52, 4.5, "#3d0a0a");
+    circle(g, side * 50, -52, 2.5, "#c22020");
+  }
+  g.fillStyle = "#eceef0"; g.font = "bold 5px Verdana";
+  g.fillText("USA", -58, -34);
+  plate(g, -24, 32);
+  roundRect(g, -76, -10, 152, 5, 2, "#17191c");
+}
+
+// --- УАЗ Патриот: запаска с надписью PATRIOT ---
+function drawPatriot(g) {
+  carBase(g, -28, 36);
+  roundRect(g, -66, -128, 132, 40, 8, "#6b6f66");
+  roundRect(g, -58, -122, 116, 28, 6, "#1a2026");
+  g.fillStyle = "rgba(255,255,255,0.10)"; g.fillRect(-50, -117, 46, 18);
+  roundRect(g, -74, -90, 148, 84, 8, "#6b6f66");
+  g.fillStyle = "rgba(255,255,255,0.14)"; g.fillRect(-66, -89, 132, 3);
+  // Вертикальные фонари
+  for (const side of [-1, 1]) {
+    roundRect(g, side * 64 - 6, -84, 12, 28, 4, "#3d1512");
+    roundRect(g, side * 64 - 3.5, -80, 7, 10, 3, "#d43535");
+    roundRect(g, side * 64 - 3.5, -68, 7, 8, 3, "#e8b021");
+  }
+  // ЗАПАСКА на калитке с чехлом PATRIOT
+  circle(g, 0, -52, 26, "#26292d");
+  circle(g, 0, -52, 21, "#33363b");
+  g.fillStyle = "#c9d0d7"; g.font = "bold 6px Verdana"; g.textAlign = "center";
+  g.fillText("PATRIOT", 0, -50);
+  plate(g, -20, 36);
+  roundRect(g, -70, -12, 140, 6, 3, "#54574f");
+}
+
+// --- УАЗ Хантер: квадратный, честный, вечный ---
+function drawHunter(g) {
+  carBase(g, -28, 36);
+  roundRect(g, -64, -124, 128, 44, 6, "#3a3d36");
+  roundRect(g, -56, -118, 112, 30, 5, "#1a2026");
+  g.fillStyle = "rgba(255,255,255,0.10)"; g.fillRect(-48, -113, 44, 20);
+  roundRect(g, -70, -84, 140, 78, 6, "#3a3d36");
+  g.fillStyle = "rgba(255,255,255,0.12)"; g.fillRect(-62, -83, 124, 3);
+  // Простые прямоугольные фонарики
+  for (const side of [-1, 1]) {
+    roundRect(g, side * 58 - 7, -78, 14, 10, 2, "#3d1512");
+    roundRect(g, side * 58 - 5, -76, 10, 6, 1.5, "#d43535");
+    roundRect(g, side * 58 - 5, -66, 10, 5, 1.5, "#e8b021");
+  }
+  // Запаска с эмблемой УАЗ (птичка в круге)
+  circle(g, 0, -50, 24, "#26292d");
+  circle(g, 0, -50, 19, "#17191c");
+  g.strokeStyle = "#c9d0d7"; g.lineWidth = 2;
+  g.beginPath(); g.arc(0, -50, 12, 0, Math.PI * 2); g.stroke();
+  g.beginPath();
+  g.moveTo(-8, -52); g.quadraticCurveTo(0, -44, 8, -52);
+  g.stroke();
+  plate(g, -18, 36);
+  roundRect(g, -66, -10, 132, 5, 2, "#2b2d28");
+}
+
+// --- Kadillark Eldorado 1960: плавники-ракеты! ---
+function drawEldorado(g) {
+  carBase(g);
+  roundRect(g, -50, -90, 100, 28, 8, "#1a2026");
+  g.fillStyle = "rgba(255,255,255,0.10)"; g.fillRect(-42, -85, 38, 18);
+  // Низкий ДЛИННЮЩИЙ кузов
+  roundRect(g, -88, -62, 176, 56, 8, "#1d2a4a");
+  g.fillStyle = "rgba(255,255,255,0.14)"; g.fillRect(-80, -61, 160, 3);
+  // ПЛАВНИКИ по краям — острые кили вверх. Цвет ставим ВНУТРИ цикла:
+  // фонари ниже перебивают кисть, и второй плавник выходил красным!
+  for (const side of [-1, 1]) {
+    g.fillStyle = "#1d2a4a";
+    g.beginPath();
+    g.moveTo(side * 88, -60); g.lineTo(side * 88, -84);
+    g.lineTo(side * 64, -62);
+    g.closePath(); g.fill();
+    // Круглые фонари-ДЮЗЫ на плавниках, по два
+    circle(g, side * 76, -54, 5.5, "#3d0a0a");
+    circle(g, side * 76, -54, 3.5, "#e82121");
+    circle(g, side * 64, -50, 5.5, "#3d0a0a");
+    circle(g, side * 64, -50, 3.5, "#e82121");
+  }
+  // Герб Кадиллака (упрощённый щит)
+  g.fillStyle = "#c9a24a";
+  g.beginPath();
+  g.moveTo(-5, -58); g.lineTo(5, -58); g.lineTo(5, -50); g.lineTo(0, -46);
+  g.lineTo(-5, -50);
+  g.closePath(); g.fill();
+  plate(g, -40);
+  // Хромовый бампер во всю ширину
+  roundRect(g, -86, -24, 172, 12, 5, "#c2c8ce");
+  g.fillStyle = "rgba(0,0,0,0.15)"; g.fillRect(-78, -19, 156, 2);
+}
+
+// --- Kadillark CT5-V: чёрный костюм, четыре трубы ---
+function drawCT5V(g) {
+  carBase(g);
+  roundRect(g, -52, -94, 104, 30, 10, "#1a2026");
+  g.fillStyle = "rgba(255,255,255,0.08)"; g.fillRect(-44, -89, 40, 20);
+  // Карбоновая губка на багажнике
+  roundRect(g, -50, -66, 100, 4, 2, "#0b0d0f");
+  roundRect(g, -84, -64, 168, 58, 10, "#1a1c20");
+  g.fillStyle = "rgba(255,255,255,0.10)"; g.fillRect(-76, -63, 152, 3);
+  // Вертикальные фонари-лезвия (фирменный стиль!)
+  for (const side of [-1, 1]) {
+    roundRect(g, side * 74 - 5, -60, 10, 26, 4, "#2a0d0d");
+    roundRect(g, side * 74 - 3, -57, 6, 20, 3, "#e82121");
+  }
+  g.fillStyle = "#c9a24a";
+  g.beginPath();
+  g.moveTo(-5, -58); g.lineTo(5, -58); g.lineTo(5, -50); g.lineTo(0, -46);
+  g.lineTo(-5, -50);
+  g.closePath(); g.fill();
+  g.fillStyle = "#8f959c"; g.font = "bold 5px Verdana"; g.textAlign = "center";
+  g.fillText("CT5-V", 60, -40);
+  plate(g, -40);
+  // Диффузор и ЧЕТЫРЕ прямоугольные трубы
+  roundRect(g, -80, -22, 160, 13, 5, "#101214");
+  for (const x of [-62, -46, 46, 62]) roundRect(g, x - 6, -18, 12, 6, 2, "#4a4f54");
+}
+
+// --- Pejo 9X8: гиперкар Ле-Мана БЕЗ крыла ---
+function drawP9X8(g) {
+  carBase(g);
+  // Горб-капсула кокпита
+  roundRect(g, -34, -100, 68, 36, 16, "#26292d");
+  roundRect(g, -26, -94, 52, 22, 9, "#141618");
+  // Широченный низкий кузов
+  roundRect(g, -88, -66, 176, 60, 10, "#26292d");
+  g.fillStyle = "rgba(255,255,255,0.08)"; g.fillRect(-80, -65, 160, 3);
+  // ТРИ вертикальных КОГТЯ света с каждой стороны
+  for (const side of [-1, 1]) {
+    for (const dx of [0, 12, 24]) {
+      roundRect(g, side * (52 + dx) - 3.5, -60, 7, 24, 3, "#3d0a0a");
+      roundRect(g, side * (52 + dx) - 2, -57, 4, 18, 2, "#ff2d2d");
+    }
+  }
+  // Зелёные штрихи /// и львиный гребень
+  g.fillStyle = "#9fd626";
+  for (const x of [-8, -1, 6]) {
+    g.beginPath();
+    g.moveTo(x, -42); g.lineTo(x + 4, -42); g.lineTo(x + 1, -32); g.lineTo(x - 3, -32);
+    g.closePath(); g.fill();
+  }
+  g.fillStyle = "#c9d0d7"; g.font = "bold 4.5px Verdana"; g.textAlign = "center";
+  g.fillText("9X8", 0, -70);
+  plate(g, -26, 32);
+  // Гигантский диффузор (крыла-то нет — всё делает днище!)
+  roundRect(g, -86, -16, 172, 10, 4, "#101214");
+  g.fillStyle = "#1e2124";
+  for (const x of [-60, -30, 30, 60]) g.fillRect(x - 2, -14, 4, 7);
+}
+
+// --- Sand Hover Evoque: городской модник ---
+function drawEvoque(g) {
+  carBase(g, -28, 34);
+  // Покатая крыша-купол
+  roundRect(g, -54, -108, 108, 30, 12, "#eceef0");
+  roundRect(g, -48, -103, 96, 20, 8, "#1a2026");
+  roundRect(g, -80, -80, 160, 74, 11, "#eceef0");
+  g.fillStyle = "rgba(255,255,255,0.40)"; g.fillRect(-72, -79, 144, 3);
+  // Узкие КРАСНЫЕ фонари и чёрная панель с буквами
+  roundRect(g, -58, -74, 116, 9, 4, "#17191c");
+  g.fillStyle = "#c9d0d7"; g.font = "bold 4px Verdana"; g.textAlign = "center";
+  g.fillText("S A N D  H O V E R", 0, -67.5);
+  for (const side of [-1, 1]) {
+    roundRect(g, side * 66 - 12, -74, 24, 9, 4, "#2a0808");
+    roundRect(g, side * 66 - 9, -72, 18, 5, 2.5, "#e82121");
+  }
+  plate(g, -58, 40);
+  // Серый низ и защита-лыжа
+  roundRect(g, -76, -32, 152, 20, 8, "#b9bec4");
+  roundRect(g, -40, -28, 80, 12, 6, "#d2d5d9");
+}
+
+// --- Sand Hover Vogue 2003: квадратный аристократ ---
+function drawVogue(g) {
+  carBase(g, -28, 36);
+  // Огромное почти вертикальное стекло
+  roundRect(g, -66, -128, 132, 52, 7, "#c6cad0");
+  roundRect(g, -58, -122, 116, 40, 5, "#1a2026");
+  g.fillStyle = "rgba(255,255,255,0.12)"; g.fillRect(-50, -117, 46, 30);
+  roundRect(g, -74, -78, 148, 72, 7, "#c6cad0");
+  g.fillStyle = "rgba(255,255,255,0.30)"; g.fillRect(-66, -77, 132, 3);
+  // Буквы через багажник
+  g.fillStyle = "#63666e"; g.font = "bold 4.5px Verdana"; g.textAlign = "center";
+  g.fillText("S A N D  H O V E R", 0, -66);
+  // Круглые фонарики парами по углам (фишка Вога!)
+  for (const side of [-1, 1]) {
+    circle(g, side * 64, -68, 6, "#3d0a0a");
+    circle(g, side * 64, -68, 3.5, "#e82121");
+    circle(g, side * 64, -54, 6, "#3d1205");
+    circle(g, side * 64, -54, 3.5, "#e8821e");
+  }
+  // Хромовая планка и номер
+  roundRect(g, -40, -58, 80, 4, 2, "#aab0b6");
+  plate(g, -50, 40);
+  roundRect(g, -70, -24, 140, 12, 5, "#acb1b8");
+  roundRect(g, -60, -14, 120, 3, 1.5, "#33363b");
+}
+
+// --- Sand Hover Grand 2022: золотистый король ---
+function drawGrand(g) {
+  carBase(g, -28, 36);
+  roundRect(g, -60, -126, 120, 44, 9, "#c2a281");
+  roundRect(g, -52, -120, 104, 32, 7, "#1a2026");
+  g.fillStyle = "rgba(255,255,255,0.10)"; g.fillRect(-44, -115, 42, 22);
+  roundRect(g, -78, -84, 156, 78, 10, "#c2a281");
+  g.fillStyle = "rgba(255,255,255,0.25)"; g.fillRect(-70, -83, 140, 3);
+  // ЧЁРНАЯ гладкая панель во всю корму с буквами (стиль 2022)
+  roundRect(g, -64, -78, 128, 26, 8, "#141618");
+  g.fillStyle = "#c9d0d7"; g.font = "bold 4.5px Verdana"; g.textAlign = "center";
+  g.fillText("S A N D  H O V E R", 0, -68);
+  plate(g, -66, 40);
+  // Тонюсенькие вертикальные огоньки прячутся по краям панели
+  roundRect(g, -62, -76, 3, 22, 1.5, "#e82121");
+  roundRect(g,  59, -76, 3, 22, 1.5, "#e82121");
+  // Хромовый штрих и серый низ
+  roundRect(g, -60, -44, 120, 3, 1.5, "#c9ccd1");
+  roundRect(g, -74, -30, 148, 18, 7, "#a68864");
+  roundRect(g, -44, -24, 88, 10, 5, "#8f959c");
+}
+
+// --- Pejo 205 GTI: злой белый малыш из ралли ---
+function drawP205(g) {
+  carBase(g, -26, 32);
+  // Высокая корма хэтчбека с большим стеклом
+  roundRect(g, -58, -104, 116, 44, 9, "#f0ede4");
+  roundRect(g, -50, -99, 100, 32, 7, "#1a2026");
+  g.fillStyle = "rgba(255,255,255,0.12)"; g.fillRect(-42, -94, 40, 22);
+  roundRect(g, -68, -62, 136, 56, 8, "#f0ede4");
+  g.fillStyle = "rgba(255,255,255,0.35)"; g.fillRect(-60, -61, 120, 3);
+  // Серая панель во всю корму с КРАСНОЙ полоской (фишка GTI!)
+  roundRect(g, -64, -56, 128, 22, 4, "#5c6166");
+  roundRect(g, -64, -35, 128, 3, 1.5, "#d1202a");
+  g.fillStyle = "#c9d0d7"; g.font = "bold 4px Verdana"; g.textAlign = "center";
+  g.fillText("PEJO", -44, -46);
+  g.fillText("205", 34, -46);
+  g.fillStyle = "#d1202a"; g.font = "bold 4.5px Verdana";
+  g.fillText("GTI", 52, -46);
+  // Фонарики по краям панели
+  roundRect(g, -62, -52, 14, 12, 2, "#3d1512");
+  roundRect(g, -59, -49, 8, 6, 1.5, "#d43535");
+  roundRect(g,  48, -52, 14, 12, 2, "#3d1512");
+  roundRect(g,  51, -49, 8, 6, 1.5, "#d43535");
+  // ЖЁЛТЫЙ европейский номер (как на фото!)
+  roundRect(g, -20, -30, 40, 11, 2, "#f0c419");
+  g.fillStyle = "#222"; g.font = "bold 7px Verdana"; g.textAlign = "center";
+  g.fillText("САША", 0, -21.5);
+  roundRect(g, -64, -16, 128, 8, 4, "#d6d2c6");
+  roundRect(g, -26, -10, 9, 3.5, 1.5, "#7c8288");
+}
+
 // Трезубец Mazerety — фирменный значок из трёх зубцов
 function trident(g, y, color) {
   g.fillStyle = color;
@@ -7666,6 +8468,14 @@ const CAR_DRAWERS = {
   corolla: drawCorolla, chr: drawCHR, chrgr: drawCHRGR,
   corona: drawCorona, crown: drawCrown, supra: drawSupra,
   gsupra: drawGSupra, yaris: drawYaris, prius: drawPrius,
+  indycar: drawIndycar, f3: drawF3car, rafmed: drawRafMed,
+  raf2909: drawRaf2909, zis110: drawZis110, zis5: drawZis5,
+  utopia: drawUtopia, zondar: drawZondaR, uaero: drawUAero,
+  model3: drawModel3, modelx: drawModelX, alpha5: drawAlpha5,
+  astra: drawAstra, insignia: drawInsignia, daytona: drawDaytona,
+  patriot: drawPatriot, hunter: drawHunter, eldorado: drawEldorado,
+  ct5v: drawCT5V, p9x8: drawP9X8,
+  evoque: drawEvoque, vogue: drawVogue, grand: drawGrand, p205: drawP205,
 };
 
 // Огненный след: два пылающих следа за колёсами, три слоя пламени

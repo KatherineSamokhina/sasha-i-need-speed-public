@@ -119,6 +119,18 @@ body {
   padding: 16px 0 14px;
 }
 
+/* Чёрный скролл ВЕЗДЕ (Саша: «почему белые?») — у самой страницы
+   скроллы оставались белыми и светились по краям тёмной игры */
+html, body {
+  scrollbar-color: #23283a #0b0d12;
+  scrollbar-width: thin;
+}
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: #0b0d12; }
+::-webkit-scrollbar-thumb { background: #23283a; border-radius: 6px; }
+::-webkit-scrollbar-thumb:hover { background: #3a4158; }
+::-webkit-scrollbar-corner { background: #0b0d12; }
+
 /* Чёрный скролл (правка Саши) — в настройках и списке достижений */
 #settings, #achv-list {
   scrollbar-color: #23283a #0b0d12;   /* Firefox */
