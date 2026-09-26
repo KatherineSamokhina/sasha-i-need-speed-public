@@ -8381,7 +8381,7 @@ function drawJesko(g) {
   for (const side of [-1, 1]) {
     g.beginPath();
     g.moveTo(side * 16, -113); g.lineTo(side * 25, -113);
-    g.lineTo(side * 31, -76); g.lineTo(side * 20, -76);
+    g.lineTo(side * 33, -62); g.lineTo(side * 22, -62);
     g.closePath(); g.fill();
   }
   // Крыло-БУМЕРАНГ во всю ширину: к центру ниже и ТОЛЩЕ, к краям
