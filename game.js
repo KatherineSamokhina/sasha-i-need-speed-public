@@ -573,7 +573,7 @@ const CARS = [
   { id: "tourbillon", name: "Bugatty Tourbillon", gearbox: "А",
     topKmh: 360, zeroTo100: 2.0,
     noNpc: true,
-    desc: "НОВЫЙ КОРОЛЬ: упёрся в потолок игры — 360! Кольцо света и V16." },
+    desc: "Кольцо света и V16: 360 км/ч — вице-король за Агерой." },
   { id: "bolide", name: "Bugatty Bolide", gearbox: "М",
     topKmh: 356, zeroTo100: 2.2,
     noNpc: true,
@@ -644,11 +644,11 @@ const CARS = [
     desc: "Белая капля-ракета: плавники, лента огня и электроника на 320.",
   },
   {
-    id: "agera", name: "Konisegg Agera", gearbox: "А",
-    topKmh: 340,      // электроника держит (по традиции лимитов Саши)
-    zeroTo100: 2.9,
+    id: "agera", name: "Konisegg Agera RS", gearbox: "А",
+    topKmh: 447,      // МИРОВОЙ РЕКОРД (Невада, 2017)! Король скорости
+    zeroTo100: 2.9,   // — решение Саши. Движок проверен: держит!
     noNpc: true,
-    desc: "Старший брат Гемеры: круглая корма и рёв на всю Швецию.",
+    desc: "МИРОВОЙ РЕКОРДСМЕН: 447 км/ч в Неваде. Король скорости!",
   },
   {
     id: "zonta", name: "Paganny Zonta", gearbox: "М",
@@ -739,7 +739,8 @@ const CAR_PRICES = {
   merc190: 1400, amggt53: 2600, maybach: 2800, gle: 1500,
   astro: 650, cobra: 2100, defendor: 750, pejo206: 500,
   raf977: 350, uaz469: 400, zis101: 500, f2: 3500,
-  agera: 8200, zonta: 7000, aero: 7800, m3e30: 1500, m5: 2700,
+  agera: 30000,   // король скорости — королевская цена (заказ Саши)!
+  zonta: 7000, aero: 7800, m3e30: 1500, m5: 2700,
   timemachine: -2,   // −2 = не продаётся, только за ДОСТИЖЕНИЕ!
   police: 2200, cybercraft: 3000, models: 2600,
   db5: 2000, dbs: 4800, mc12: 7500, mc20: 5200,
