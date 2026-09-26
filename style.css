@@ -75,13 +75,16 @@ body {
 /* Главное меню — ДВА столбца (правка Саши) */
 .menu-grid {
   display: grid;
-  grid-template-columns: 300px 300px;
-  grid-gap: 10px 14px;   /* старое имя — для старых WebView */
-  gap: 10px 14px;
+  grid-template-columns: 310px 310px;
+  grid-gap: 10px 16px;   /* старое имя — для старых WebView */
+  gap: 10px 16px;
   margin-top: 6px;
 }
 
-.menu-grid button {
+/* Селектор УСИЛЕН (.overlay впереди): ниже в файле живёт правило
+   .overlay button { min-width: 320px } — оно побеждало, кнопки
+   выпирали из колонок и съедали зазор («кнопки меню слились»!) */
+.overlay .menu-grid button {
   min-width: 0;
   width: 100%;
   font-size: 16px;
