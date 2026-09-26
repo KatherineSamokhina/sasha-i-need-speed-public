@@ -8375,28 +8375,33 @@ function drawJesko(g) {
   roundRect(g, -40, -98, 80, 34, 15, "#e4e7ea");
   g.fillStyle = "rgba(0,0,0,0.14)";
   for (const y of [-90, -84, -78]) g.fillRect(-26, y, 52, 2.5);
-  // Лебединые пилоны — стоят НА панели
+  // Лебединые пилоны — стоят НА панели, шире расставлены и
+  // глубоко входят в крыло («спойлер только доведи»)
   g.fillStyle = "#26292d";
   for (const side of [-1, 1]) {
     g.beginPath();
-    g.moveTo(side * 12, -110); g.lineTo(side * 21, -110);
-    g.lineTo(side * 28, -76); g.lineTo(side * 17, -76);
+    g.moveTo(side * 16, -113); g.lineTo(side * 25, -113);
+    g.lineTo(side * 31, -76); g.lineTo(side * 20, -76);
     g.closePath(); g.fill();
   }
-  // Крыло-БУМЕРАНГ во всю ширину: к центру ниже, к краям выше
+  // Крыло-БУМЕРАНГ во всю ширину: к центру ниже и ТОЛЩЕ, к краям
+  // выше и тоньше — как настоящий карбоновый профиль
   g.fillStyle = "#15171a";
   g.beginPath();
   g.moveTo(-84, -126); g.lineTo(0, -116); g.lineTo(84, -126);
-  g.lineTo(84, -117); g.lineTo(0, -107); g.lineTo(-84, -117);
+  g.lineTo(84, -118); g.lineTo(0, -105); g.lineTo(-84, -118);
   g.closePath(); g.fill();
   g.fillStyle = "rgba(255,255,255,0.13)";
   g.beginPath();
-  g.moveTo(-76, -124); g.lineTo(0, -114.5); g.lineTo(76, -124);
-  g.lineTo(76, -122); g.lineTo(0, -112.5); g.lineTo(-76, -122);
+  g.moveTo(-76, -124.5); g.lineTo(0, -114.5); g.lineTo(76, -124.5);
+  g.lineTo(76, -122.5); g.lineTo(0, -112.5); g.lineTo(-76, -122.5);
   g.closePath(); g.fill();
-  // Пластины на концах крыла
-  roundRect(g, -89, -131, 8, 18, 2, "#26292d");
-  roundRect(g,  81, -131, 8, 18, 2, "#26292d");
+  // КРУПНЫЕ пластины на концах крыла (на настоящих — номер 25!)
+  roundRect(g, -90, -134, 9, 22, 2.5, "#26292d");
+  roundRect(g,  81, -134, 9, 22, 2.5, "#26292d");
+  g.fillStyle = "#8f959c"; g.font = "bold 5px Verdana"; g.textAlign = "center";
+  g.fillText("25", -85.5, -124);
+  g.fillText("25", 85.5, -124);
   // Белые плечи-крылья
   roundRect(g, -86, -64, 172, 58, 14, "#e4e7ea");
   g.fillStyle = "rgba(255,255,255,0.40)"; g.fillRect(-78, -63, 156, 3);
