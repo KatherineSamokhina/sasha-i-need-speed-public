@@ -1596,14 +1596,20 @@ function crash(title, text) {
   document.getElementById("crash").classList.remove("hidden");
 }
 
+// Экраны-квадраты: пока открыт ЛЮБОЙ из них, холст игры спрятан —
+// иначе края игры выглядывали из-за квадрата («видишь сзади?»)
+const SQUARE_SCREENS = ["menu", "settings", "city", "races", "garage",
+  "tuning", "mp", "achv", "tutorial", "cats"];
+
 // Показать/спрятать экран по id
 function show(id, on) {
   document.getElementById(id).classList.toggle("hidden", !on);
-  // Меню-квадрат больше холста игры, и края игры выглядывали
-  // из-за него («видишь сзади?» — Саша). Пока меню открыто,
-  // холст прячем совсем
-  if (id === "menu")
-    document.getElementById("game").style.visibility = on ? "hidden" : "";
+  if (SQUARE_SCREENS.includes(id)) {
+    const anyOpen = SQUARE_SCREENS.some((s) =>
+      !document.getElementById(s).classList.contains("hidden"));
+    document.getElementById("game").style.visibility =
+      anyOpen ? "hidden" : "";
+  }
 }
 // Игра начинается С МЕНЮ — холст спрятан с самого старта
 document.getElementById("game").style.visibility = "hidden";
