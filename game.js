@@ -8690,11 +8690,12 @@ function drawGT3RS(g) {
   roundRect(g, -78, -120, 156, 10, 3, "#141618");
   g.fillStyle = "rgba(255,255,255,0.12)"; g.fillRect(-70, -119, 140, 2.5);
   // ЛЕБЕДИНЫЕ шеи: крепятся к ВЕРХУ лезвия и спускаются на кузов
+  // СНАРУЖИ стекла, не сквозь него (правка Саши)!
   g.fillStyle = "#26292d";
   for (const side of [-1, 1]) {
     g.beginPath();
-    g.moveTo(side * 24, -123); g.lineTo(side * 31, -123);
-    g.lineTo(side * 41, -58); g.lineTo(side * 30, -58);
+    g.moveTo(side * 50, -123); g.lineTo(side * 57, -123);
+    g.lineTo(side * 64, -58); g.lineTo(side * 53, -58);
     g.closePath(); g.fill();
   }
   roundRect(g, -83, -127, 9, 20, 2.5, "#26292d");
