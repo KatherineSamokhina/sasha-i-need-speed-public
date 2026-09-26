@@ -8820,9 +8820,10 @@ function drawP918(g) {
 // --- Nisan Skyline R34: четыре круглых фонаря, легенда JDM ---
 function drawR34(g) {
   carBase(g);
-  // Крыло-полка на двух стойках
-  roundRect(g, -58, -108, 8, 26, 3, "#33363b");
-  roundRect(g,  50, -108, 8, 26, 3, "#33363b");
+  // Крыло-полка на двух стойках — стойки ДО САМОГО кузова
+  // («спойлера висят» — закон Ф-1 обязателен для всех!)
+  roundRect(g, -58, -108, 8, 44, 3, "#33363b");
+  roundRect(g,  50, -108, 8, 44, 3, "#33363b");
   roundRect(g, -70, -114, 140, 8, 3, "#a9aeb5");
   g.fillStyle = "rgba(255,255,255,0.20)"; g.fillRect(-62, -113, 124, 2);
   roundRect(g, -48, -96, 96, 32, 10, "#1a2026");
@@ -8919,10 +8920,11 @@ function drawTourbillon(g) {
 // --- Bugatty Bolide: крыло-Х и четыре трубы квадратом ---
 function drawBolide(g) {
   carBase(g);
-  // Синее крыло-навес с надписью и Х-стойки под ним
+  // Синее крыло-навес с надписью и Х-стойки под ним — стойки
+  // упираются В КУЗОВ, а не в воздух («спойлера висят»)
   g.strokeStyle = "#2f639a"; g.lineWidth = 6;
-  g.beginPath(); g.moveTo(-60, -80); g.lineTo(-30, -108); g.stroke();
-  g.beginPath(); g.moveTo(60, -80); g.lineTo(30, -108); g.stroke();
+  g.beginPath(); g.moveTo(-64, -66); g.lineTo(-30, -110); g.stroke();
+  g.beginPath(); g.moveTo(64, -66); g.lineTo(30, -110); g.stroke();
   roundRect(g, -78, -118, 156, 12, 5, "#3f83c4");
   g.fillStyle = "#eceef0"; g.font = "bold 6px Verdana"; g.textAlign = "center";
   g.fillText("B U G A T T Y", 0, -109.5);
