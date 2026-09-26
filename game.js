@@ -562,6 +562,22 @@ const CARS = [
     topKmh: 345, zeroTo100: 2.6,
     noNpc: true,
     desc: "Гибрид-гиперкар: выхлопные трубы торчат ВВЕРХ за кабиной!" },
+  // ---- Skyline + ТРИ Bugatty (фото Саши) ----
+  { id: "r34", name: "Nisan Skyline R34", gearbox: "М",
+    topKmh: 250, zeroTo100: 4.9,
+    desc: "Легенда JDM: четыре круглых фонаря и крыло-полка." },
+  { id: "chiron", name: "Bugatty Chiron", gearbox: "А",
+    topKmh: 358, zeroTo100: 2.4,
+    noNpc: true,
+    desc: "1500 сил: подкова, плавник и лента света во всю корму." },
+  { id: "tourbillon", name: "Bugatty Tourbillon", gearbox: "А",
+    topKmh: 360, zeroTo100: 2.0,
+    noNpc: true,
+    desc: "НОВЫЙ КОРОЛЬ: упёрся в потолок игры — 360! Кольцо света и V16." },
+  { id: "bolide", name: "Bugatty Bolide", gearbox: "М",
+    topKmh: 356, zeroTo100: 2.2,
+    noNpc: true,
+    desc: "Трековый монстр: крыло-Х и четыре трубы квадратом." },
   // ---- Гиперкары (восторг Саши: «СКОРОСТЬ ГЕМЕРЫ!!!») ----
   {
     id: "gemera", name: "Konisegg Gemera", gearbox: "А",
@@ -688,6 +704,7 @@ const BRAKE_100_0 = {
   evoque: 3.0, vogue: 3.4, grand: 2.9, p205: 3.1,
   jesko: 1.5, regera: 1.7, niva: 3.8, chaika: 4.6, chaikacan: 4.5,
   p930: 2.8, turbos: 2.0, gt3rs: 1.9, p918: 1.8,
+  r34: 2.4, chiron: 1.7, tourbillon: 1.6, bolide: 1.4,
 };
 
 // Досчитываем игровые характеристики из реальных цифр.
@@ -737,6 +754,7 @@ const CAR_PRICES = {
   evoque: 1600, vogue: 1300, grand: 2600, p205: 900,
   jesko: 9500, regera: 8400, niva: 500, chaika: 800, chaikacan: 1000,
   p930: 2500, turbos: 4500, gt3rs: 4200, p918: 8700,
+  r34: 2400, chiron: 9800, tourbillon: 10500, bolide: 9900,
   pejo308: 1300, volga3110: 320, volga24: 300, volga21: 380,
   sportage: 850, k5: 950, sonata: 900, tucson: 800, i30: 600,
   zis: -1,   // −1 = не продаётся, только код «вечная ностальгия»
@@ -796,7 +814,7 @@ const COLORS = {
 let segments = [];     // все кусочки дороги
 let trackLength = 0;   // полная длина трассы
 let currentTrack = 0;  // какая трасса выбрана (T — переключить)
-const TRACK_NAMES = ["Зелёное кольцо", "Горный серпантин", "Поля", "Пустыня", "Офроуд", "Трасса"];
+const TRACK_NAMES = ["Зелёное кольцо", "Горный серпантин", "Поля", "Пустыня", "Офроуд", "Трасса", "Гиперкольцо"];
 
 // Палитра карты: у полей — сочная зелень, у пустыни — песок,
 // у офроуда — грязь. Задаётся при постройке трассы.
@@ -822,6 +840,13 @@ function setTheme(id) {
     PAL.DARK  = { road: "#816f52", grass: "#6b5030", rumble: "#4e3d20" };
     PAL.START = { road: "#d9cbb0", grass: "#7a5c34", rumble: "#d9cbb0" };
     PAL.hillFar = "#8a6a4a"; PAL.hillNear = "#9c7a4e";
+  } else if (id === 6) {       // ГИПЕРКОЛЬЦО: синие зоны вылета,
+    // как на трассе Поль Рикар с фото Болида (заказ Саши)!
+    PAL.LIGHT = { road: "#5c5c62", grass: "#3f6fb0", rumble: "#f2f2f2", lane: "#ffffff" };
+    PAL.DARK  = { road: "#55555b", grass: "#3563a0", rumble: "#e03a30" };
+    PAL.START = { road: "#f0f0f0", grass: "#3f6fb0", rumble: "#f0f0f0" };
+    PAL.FOG = "196, 210, 228";
+    PAL.hillFar = "#4a5058"; PAL.hillNear = "#5b6470";
   }
 }
 setTheme(0);
@@ -919,7 +944,18 @@ function buildTrack(id) {
   setTheme(id);
   segments = [];
 
-  if (id === 5) {
+  if (id === 6) {
+    // «ГИПЕРКОЛЬЦО»: скоростной храм для гиперкаров — длиннющие
+    // прямые и быстрые дуги, где 350+ км/ч наконец растянутся!
+    addRoad(80, 130, 80,  0,  0);
+    addRoad(40,  60, 40,  2,  0);
+    addRoad(60, 110, 60,  0,  0);
+    addRoad(30,  40, 30, -4,  2);
+    addRoad(80, 150, 80,  0, -2);
+    addRoad(40,  60, 40,  3,  0);
+    addRoad(50, 100, 50,  0,  0);
+    addRoad(30,  50, 30, -3,  0);
+  } else if (id === 5) {
     // «ТРАССА»: техничное гоночное кольцо, ОКРУЖЁННОЕ БОЧКАМИ
     // (спецификация Саши). Вылетел с дороги — собрал бочку!
     addRoad(50, 40, 50,  0,  0);
@@ -1361,6 +1397,10 @@ function setupRace() {
   // На офроуде соперники — только внедорожники (их мало — и гонка меньше!)
   if (raceKind === "circuit" && currentTrack === 4)
     pool = pool.filter((c) => c.offroadSoft);
+  // На ГИПЕРКОЛЬЦЕ спаунятся ТОЛЬКО гиперкары (заказ Саши) —
+  // правило noNpc здесь отменяется: это ИХ трасса!
+  if (raceKind === "circuit" && currentTrack === 6)
+    pool = CARS.filter((c) => c.id !== car.id && CAR_CATEGORY[c.id] === "hyper");
   const count = Math.min(raceKind === "drag" ? 1 : OPP_COUNT, pool.length);
   for (let i = 0; i < count; i++) {
     // БАЛАНС (правило Саши): соперники НЕ БЫСТРЕЕ машины игрока.
@@ -2453,6 +2493,7 @@ const CAR_CATEGORY = {
   jesko: "hyper", regera: "hyper", niva: "ussr", chaika: "ussr",
   chaikacan: "ussr",
   p930: "sport", turbos: "sport", gt3rs: "sport", p918: "hyper",
+  r34: "sport", chiron: "hyper", tourbillon: "hyper", bolide: "hyper",
 };
 // Марка каждой машины — для вкладки «По марке» (заказ Саши)
 const CAR_BRAND = {
@@ -2501,6 +2542,8 @@ const CAR_BRAND = {
   niva: "ВАЗ", chaika: "ГАЗ",   // Чайка — в ГАЗы (заказ Саши)!
   chaikacan: "ГАЗ",
   p930: "Porshe", turbos: "Porshe", gt3rs: "Porshe", p918: "Porshe",
+  r34: "Nisan", chiron: "Bugatty", tourbillon: "Bugatty",
+  bolide: "Bugatty",
 };
 let garageCat = 0;      // номер выбранной категории в CATEGORIES
 let garageBrand = null; // выбранная марка (null = фильтруем по типу)
@@ -2868,6 +2911,10 @@ const PAINT_SLOTS = {
   turbos: ["#c9cdd2", "#aeb3ba"],
   gt3rs: ["#bfc4ca", "#a5abb2"],
   p918: ["#eceef0", "#d2d5d9"],
+  r34: ["#c3c8ce", "#a9aeb5"],
+  chiron: ["#9fb8d4", "#7f9cbd"],
+  tourbillon: ["#1d2024", "#141619"],
+  bolide: ["#3f83c4", "#2f639a"],
   merc190: ["#1a1c20", "#131519"],
   amggt53: ["#5a5e63", "#4d5156"],
   maybach: ["#ece9e2", "#dcd9d2"],
@@ -2927,7 +2974,8 @@ const RIM_X = { aveo: 66, picanto: 56, corsa: 59, focus: 73, delorean: 75,
   astra: 62, insignia: 70, daytona: 72, patriot: 64, hunter: 64,
   eldorado: 74, ct5v: 74, p9x8: 82, evoque: 66, vogue: 66, grand: 68,
   p205: 60, jesko: 80, regera: 80, niva: 60, chaika: 72,
-  chaikacan: 72, p930: 74, turbos: 78, gt3rs: 79, p918: 79 };
+  chaikacan: 72, p930: 74, turbos: 78, gt3rs: 79, p918: 79,
+  r34: 77, chiron: 82, tourbillon: 82, bolide: 84 };
 
 // ---------- ИГРОВАЯ ВАЛЮТА 🪙 ----------
 // Зарабатывается в гонках (по месту на финише), тратится на железо.
@@ -3081,6 +3129,10 @@ const MOD_FIT = {
   turbos: { noSpoiler: true, stripeTop: -58 }, // выдвижной свой
   gt3rs: { noSpoiler: true, stripeTop: -60 },
   p918: { noSpoiler: true, stripeTop: -58 },
+  r34: { noSpoiler: true, stripeTop: -60 },
+  chiron: { noSpoiler: true, stripeTop: -64 },
+  tourbillon: { noSpoiler: true, stripeTop: -64 },
+  bolide: { noSpoiler: true, stripeTop: -66 },
   eldorado: { stripeTop: -60 },
   alpha5: { noSpoiler: true, stripeTop: -60 },  // жалюзи и хвост-клин
   yaris: { spoilerY: -104, stripeTop: -58 },
@@ -8765,6 +8817,141 @@ function drawP918(g) {
   for (const x of [-56, -28, 0, 28, 56]) g.fillRect(x - 2, -18, 4, 9);
 }
 
+// --- Nisan Skyline R34: четыре круглых фонаря, легенда JDM ---
+function drawR34(g) {
+  carBase(g);
+  // Крыло-полка на двух стойках
+  roundRect(g, -58, -108, 8, 26, 3, "#33363b");
+  roundRect(g,  50, -108, 8, 26, 3, "#33363b");
+  roundRect(g, -70, -114, 140, 8, 3, "#a9aeb5");
+  g.fillStyle = "rgba(255,255,255,0.20)"; g.fillRect(-62, -113, 124, 2);
+  roundRect(g, -48, -96, 96, 32, 10, "#1a2026");
+  g.fillStyle = "rgba(255,255,255,0.10)"; g.fillRect(-40, -91, 36, 22);
+  // Серебристый кузов
+  roundRect(g, -84, -66, 168, 60, 10, "#c3c8ce");
+  g.fillStyle = "rgba(255,255,255,0.28)"; g.fillRect(-76, -65, 152, 3);
+  // ЧЕТЫРЕ КРУГЛЫХ ФОНАРЯ — визитка Скайлайна!
+  for (const side of [-1, 1]) {
+    for (const dx of [-13, 13]) {
+      circle(g, side * 52 + dx, -50, 9, "#2a0d0d");
+      circle(g, side * 52 + dx, -50, 6, "#e82121");
+      circle(g, side * 52 + dx, -50, 2.5, "#7a1216");
+    }
+  }
+  g.fillStyle = "#63666e"; g.font = "bold 4.5px Verdana"; g.textAlign = "center";
+  g.fillText("SKYLINE", 0, -62);
+  plate(g, -36, 34);
+  // Чёрная вставка бампера и БОЛЬШАЯ труба слева (как на фото)
+  roundRect(g, -78, -24, 156, 13, 5, "#26292d");
+  circle(g, -52, -13, 6.5, "#8f959c"); circle(g, -52, -13, 4, "#33363b");
+}
+
+// --- Bugatty Chiron: подкова, плавник и лента света ---
+function drawChiron(g) {
+  carBase(g);
+  // Центральный ПЛАВНИК-хребет от крыши до кормы
+  roundRect(g, -50, -96, 100, 34, 15, "#9fb8d4");
+  roundRect(g, -42, -90, 84, 24, 10, "#1a2026");
+  roundRect(g, -2, -100, 4, 40, 2, "#7f9cbd");
+  // Овальные плечи
+  roundRect(g, -87, -64, 174, 58, 17, "#9fb8d4");
+  g.fillStyle = "rgba(255,255,255,0.25)"; g.fillRect(-79, -63, 158, 3);
+  // ТОНКАЯ лента света во всю ширину с изгибом
+  g.strokeStyle = "#2a0808"; g.lineWidth = 7;
+  g.beginPath();
+  g.moveTo(-74, -44); g.quadraticCurveTo(0, -56, 74, -44);
+  g.stroke();
+  g.strokeStyle = "#ff2d2d"; g.lineWidth = 3;
+  g.beginPath();
+  g.moveTo(-72, -44); g.quadraticCurveTo(0, -54, 72, -44);
+  g.stroke();
+  // Подкова-эмблема и роспись
+  g.strokeStyle = "#c9d0d7"; g.lineWidth = 2;
+  g.beginPath(); g.arc(0, -60, 5, Math.PI * 0.9, Math.PI * 2.1); g.stroke();
+  g.fillStyle = "#dbe2ea"; g.font = "italic bold 5px Georgia"; g.textAlign = "center";
+  g.fillText("Chiron", 0, -36);
+  plate(g, -32, 30);
+  // Чёрный низ и ОГРОМНЫЙ центральный блок выхлопа
+  roundRect(g, -82, -18, 164, 11, 5, "#17191c");
+  roundRect(g, -22, -22, 44, 14, 5, "#26292d");
+  for (const x of [-13, -4.5, 4.5, 13]) roundRect(g, x - 3.5, -19, 7, 8, 3, "#63666e");
+}
+
+// --- Bugatty Tourbillon: кольцо света, король скорости 360! ---
+function drawTourbillon(g) {
+  carBase(g);
+  roundRect(g, -48, -96, 96, 32, 15, "#1d2024");
+  roundRect(g, -40, -90, 80, 22, 9, "#141618");
+  roundRect(g, -2, -100, 4, 38, 2, "#141619");   // плавник
+  // Широченная чёрная корма
+  roundRect(g, -88, -66, 176, 60, 16, "#1d2024");
+  g.fillStyle = "rgba(255,255,255,0.08)"; g.fillRect(-80, -65, 160, 3);
+  // ОГРОМНОЕ КОЛЬЦО СВЕТА почти во всю корму (фишка фото!)
+  g.strokeStyle = "#5c1015"; g.lineWidth = 7;
+  g.beginPath();
+  g.moveTo(-70, -30); g.quadraticCurveTo(-78, -58, -40, -60);
+  g.lineTo(40, -60); g.quadraticCurveTo(78, -58, 70, -30);
+  g.stroke();
+  g.strokeStyle = "#ff2d2d"; g.lineWidth = 3;
+  g.beginPath();
+  g.moveTo(-68, -31); g.quadraticCurveTo(-75, -56, -40, -58);
+  g.lineTo(40, -58); g.quadraticCurveTo(75, -56, 68, -31);
+  g.stroke();
+  // Буквы BUGATTY внутри верхней дуги кольца
+  g.fillStyle = "#c9d0d7"; g.font = "bold 4.5px Verdana"; g.textAlign = "center";
+  g.fillText("B U G A T T Y", 0, -50);
+  g.font = "italic bold 6px Georgia";
+  g.fillText("Tourbillon", 0, -40);
+  plate(g, -34, 30);
+  // Х-образные стойки диффузора
+  roundRect(g, -84, -18, 168, 11, 5, "#101214");
+  g.strokeStyle = "#26292d"; g.lineWidth = 4;
+  for (const side of [-1, 1]) {
+    g.beginPath();
+    g.moveTo(side * 20, -28); g.lineTo(side * 48, -8);
+    g.stroke();
+    g.beginPath();
+    g.moveTo(side * 48, -28); g.lineTo(side * 20, -8);
+    g.stroke();
+  }
+}
+
+// --- Bugatty Bolide: крыло-Х и четыре трубы квадратом ---
+function drawBolide(g) {
+  carBase(g);
+  // Синее крыло-навес с надписью и Х-стойки под ним
+  g.strokeStyle = "#2f639a"; g.lineWidth = 6;
+  g.beginPath(); g.moveTo(-60, -80); g.lineTo(-30, -108); g.stroke();
+  g.beginPath(); g.moveTo(60, -80); g.lineTo(30, -108); g.stroke();
+  roundRect(g, -78, -118, 156, 12, 5, "#3f83c4");
+  g.fillStyle = "#eceef0"; g.font = "bold 6px Verdana"; g.textAlign = "center";
+  g.fillText("B U G A T T Y", 0, -109.5);
+  roundRect(g, -84, -122, 8, 20, 2.5, "#2f639a");
+  roundRect(g,  76, -122, 8, 20, 2.5, "#2f639a");
+  // Тёмная капсула кокпита
+  roundRect(g, -38, -100, 76, 36, 15, "#1a1c1f");
+  // Широченный низкий кузов: синие плечи, чёрная середина
+  roundRect(g, -88, -70, 176, 64, 12, "#3f83c4");
+  g.fillStyle = "rgba(255,255,255,0.18)"; g.fillRect(-80, -69, 160, 3);
+  roundRect(g, -56, -64, 112, 46, 10, "#17191c");
+  // ЧЕТЫРЕ трубы КВАДРАТОМ по центру (фишка фото!)
+  for (const [dx, dy] of [[-9, -9], [9, -9], [-9, 9], [9, 9]]) {
+    circle(g, dx, -44 + dy, 7, "#0b0d0f");
+    g.strokeStyle = "#8f959c"; g.lineWidth = 2;
+    g.beginPath(); g.arc(dx, -44 + dy, 5, 0, Math.PI * 2); g.stroke();
+  }
+  // Вертикальные красные полосы света по краям
+  for (const side of [-1, 1]) {
+    roundRect(g, side * 66 - 3, -64, 6, 34, 3, "#3d0a0a");
+    roundRect(g, side * 66 - 1.5, -61, 3, 28, 1.5, "#ff2d2d");
+  }
+  plate(g, -22, 28);
+  // Гигантский диффузор с рёбрами
+  roundRect(g, -86, -12, 172, 8, 4, "#101214");
+  g.fillStyle = "#1e2124";
+  for (const x of [-62, -34, 34, 62]) g.fillRect(x - 2, -14, 4, 10);
+}
+
 // Трезубец Mazerety — фирменный значок из трёх зубцов
 function trident(g, y, color) {
   g.fillStyle = color;
@@ -8891,6 +9078,8 @@ const CAR_DRAWERS = {
   jesko: drawJesko, regera: drawRegera, niva: drawNiva, chaika: drawChaika,
   chaikacan: drawChaikaCan,
   p930: drawP930, turbos: drawTurboS, gt3rs: drawGT3RS, p918: drawP918,
+  r34: drawR34, chiron: drawChiron, tourbillon: drawTourbillon,
+  bolide: drawBolide,
 };
 
 // Огненный след: два пылающих следа за колёсами, три слоя пламени
