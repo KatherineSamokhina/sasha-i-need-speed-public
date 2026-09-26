@@ -1747,9 +1747,22 @@ function buildChaseTrack() {
         o2: (k + 1) * 0.42,
       };
     }
+    // ЗОНА РАЗВИЛКИ — 4 ПОЛОСЫ (заказ Саши): 2 левых ведут в одну
+    // сторону, 2 правых в другую, посередине двойная линия
+    for (let k = Math.max(0, forkSeg - 18);
+         k <= Math.min(segments.length - 1, forkSeg + 12); k++)
+      segments[k].lanes = 4;
   }
   trackLength = segments.length * SEG_LEN;
   buildTrackMap();
+}
+
+// Перезапуск погони С СОХРАНЕНИЕМ роли (фикс Саши: «снова гонка»
+// сбрасывала вора в копа, а R вообще ломала выдачу полиции)
+function chaseRestart() {
+  const r = chaseRole;
+  endChase();
+  goChase(r);
 }
 
 function goChase(role = "cop", trafficN = null) {
@@ -2127,7 +2140,7 @@ wireButton("btn-race", () => { if (goRaceMode()) { inRaces = false; show("races"
 wireButton("btn-drag", () => { inRaces = false; show("races", false); goDragMode(); });
 wireButton("btn-ta",   () => { if (goTimeAttack()) { inRaces = false; show("races", false); } });
 wireButton("btn-finish-again", () => {
-  if (chaseMode) { endChase(); goChase(); }   // новая погоня!
+  if (chaseMode) { chaseRestart(); }   // новая погоня — та же роль!
   else restartRace();
 });
 wireButton("btn-finish-menu", goMenu);
@@ -2137,12 +2150,12 @@ wireButton("btn-track", () => {
   updateTrackButton();
 });
 wireButton("btn-restart", () => {
-  if (chaseMode) { endChase(); goChase(); }
+  if (chaseMode) { chaseRestart(); }
   else restartRace();
 });
 wireButton("btn-crash-menu", goMenu);
 wireButton("btn-pause-restart", () => {
-  if (chaseMode) { endChase(); goChase(); }
+  if (chaseMode) { chaseRestart(); }
   else restartRace();
 });
 wireButton("btn-pause-menu", goMenu);
@@ -3547,8 +3560,13 @@ addEventListener("keydown", (e) => {
     }
   }
 
-  // R — снова заезд (в заезде, на паузе или после аварии)
-  if (e.code === "KeyR" && !e.repeat && started) restartRace();
+  // R — снова заезд (в заезде, на паузе или после аварии).
+  // В ПОГОНЕ — полный перезапуск с сохранением роли: раньше R
+  // «не давала полицию» (фикс Саши)
+  if (e.code === "KeyR" && !e.repeat && started) {
+    if (chaseMode) chaseRestart();
+    else restartRace();
+  }
 
   // Звук можно создавать только после нажатия клавиши — правило браузера,
   // чтобы сайты не могли гудеть сами по себе
@@ -4331,10 +4349,11 @@ function renderSegment(seg) {
             p2.x + o2 + p2.w, p2.y, p2.x + o2 - p2.w, p2.y, c.road);
     // И разметка — чтобы ветка выглядела ПРОДОЛЖЕНИЕМ трассы!
     if (c.lane) {
+      const L = seg.lanes || LANES;
       const l1 = p1.w / 32, l2 = p2.w / 32;
-      const lw1 = p1.w * 2 / LANES, lw2 = p2.w * 2 / LANES;
+      const lw1 = p1.w * 2 / L, lw2 = p2.w * 2 / L;
       let lx1 = p1.x + o1 - p1.w + lw1, lx2 = p2.x + o2 - p2.w + lw2;
-      for (let lane = 1; lane < LANES; lane++) {
+      for (let lane = 1; lane < L; lane++) {
         polygon(lx1 - l1 / 2, p1.y, lx1 + l1 / 2, p1.y,
                 lx2 + l2 / 2, p2.y, lx2 - l2 / 2, p2.y, c.lane);
         lx1 += lw1; lx2 += lw2;
@@ -4342,13 +4361,20 @@ function renderSegment(seg) {
     }
   }
 
-  // Прерывистая разметка (только на "светлых" полосах — так она мигает)
+  // Прерывистая разметка (только на "светлых" полосах — так она мигает).
+  // У сегмента может быть СВОЁ число полос (seg.lanes): у развилок 4 —
+  // 2 левых в одну сторону, 2 правых в другую (заказ Саши)!
   if (c.lane) {
+    const L = seg.lanes || LANES;
     const l1 = p1.w / 32, l2 = p2.w / 32;
-    const lw1 = p1.w * 2 / LANES, lw2 = p2.w * 2 / LANES;
+    const lw1 = p1.w * 2 / L, lw2 = p2.w * 2 / L;
     let lx1 = p1.x - p1.w + lw1, lx2 = p2.x - p2.w + lw2;
-    for (let lane = 1; lane < LANES; lane++) {
+    for (let lane = 1; lane < L; lane++) {
+      // Средняя линия четырёхполоски — ДВОЙНАЯ (граница направлений)
+      const mid = L === 4 && lane === 2;
       polygon(lx1 - l1 / 2, p1.y, lx1 + l1 / 2, p1.y, lx2 + l2 / 2, p2.y, lx2 - l2 / 2, p2.y, c.lane);
+      if (mid)
+        polygon(lx1 + l1, p1.y, lx1 + l1 * 2, p1.y, lx2 + l2 * 2, p2.y, lx2 + l2, p2.y, c.lane);
       lx1 += lw1; lx2 += lw2;
     }
   }
