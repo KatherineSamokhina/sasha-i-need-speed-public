@@ -8473,68 +8473,77 @@ function drawRegera(g) {
   for (const x of [-58, -36, 36, 58]) g.fillRect(x - 2, -14, 4, 7);
 }
 
-// --- ВАЗ Нива: вездеход-легенда (по фото Саши) ---
+// --- ВАЗ Нива: вездеход-легенда (вторая попытка — точнее по фото) ---
 function drawNiva(g) {
   carBase(g, -28, 34);
-  // Высокая квадратная корма с большим стеклом
-  roundRect(g, -60, -118, 120, 42, 7, "#7a6a58");
-  roundRect(g, -52, -112, 104, 28, 5, "#1a2026");
-  g.fillStyle = "rgba(255,255,255,0.10)"; g.fillRect(-44, -107, 42, 18);
-  roundRect(g, -68, -80, 136, 74, 7, "#7a6a58");
-  g.fillStyle = "rgba(255,255,255,0.16)"; g.fillRect(-60, -79, 120, 3);
-  // Вертикальные фонари: стоп + белый ход + янтарь
+  // Вся корма — одна высокая плита-калитка
+  roundRect(g, -66, -120, 132, 114, 8, "#7a6a58");
+  g.fillStyle = "rgba(255,255,255,0.16)"; g.fillRect(-58, -119, 116, 3);
+  // Стекло ПОЧТИ ВО ВСЮ ширину калитки (как на фото!)
+  roundRect(g, -58, -112, 116, 40, 6, "#1a2026");
+  g.fillStyle = "rgba(255,255,255,0.10)"; g.fillRect(-50, -107, 48, 28);
+  // Узкие вертикальные фонари у САМЫХ краёв
   for (const side of [-1, 1]) {
-    roundRect(g, side * 56 - 7, -74, 14, 28, 3, "#3d1512");
-    roundRect(g, side * 56 - 5, -71, 10, 8, 2, "#d43535");
-    roundRect(g, side * 56 - 5, -62, 10, 6, 2, "#e8e9eb");
-    roundRect(g, side * 56 - 5, -55, 10, 6, 2, "#e8b021");
+    roundRect(g, side * 60 - 6, -66, 12, 36, 3, "#3d1512");
+    roundRect(g, side * 60 - 4, -63, 8, 12, 2, "#d43535");
+    roundRect(g, side * 60 - 4, -50, 8, 8, 2, "#e8e9eb");
+    roundRect(g, side * 60 - 4, -41, 8, 9, 2, "#e8b021");
   }
-  plate(g, -66, 40);
-  g.fillStyle = "#5f5244"; g.font = "bold 5px Verdana"; g.textAlign = "center";
-  g.fillText("НИВА", 0, -34);
-  // Чёрный бампер с уголками
-  roundRect(g, -64, -18, 128, 9, 3, "#26292d");
-  roundRect(g, -70, -20, 10, 13, 3, "#26292d");
-  roundRect(g,  60, -20, 10, 13, 3, "#26292d");
+  // Номер по центру калитки, шильдик слева снизу
+  plate(g, -62, 40);
+  g.fillStyle = "#c9d0d7"; g.font = "bold 4.5px Verdana"; g.textAlign = "center";
+  g.fillText("НИВА", -42, -34);
+  roundRect(g, -14, -70, 28, 3.5, 1.5, "#5f5244");   // ручка калитки
+  // Чёрный пластиковый бампер во всю ширину
+  roundRect(g, -70, -22, 140, 12, 4, "#26292d");
 }
 
-// --- ГАЗ-13 Чайка: плавники, хром и кнопочный автомат ---
+// --- ГАЗ-13 Чайка: хромовые лесенки на плавниках (вторая попытка) ---
 function drawChaika(g) {
   carBase(g);
-  roundRect(g, -52, -92, 104, 30, 11, "#17191c");
-  roundRect(g, -46, -88, 92, 22, 8, "#1a2026");
-  g.fillStyle = "rgba(255,255,255,0.10)"; g.fillRect(-38, -84, 34, 14);
-  // Длинный чёрный кузов
-  roundRect(g, -84, -64, 168, 58, 10, "#17191c");
-  g.fillStyle = "rgba(255,255,255,0.14)"; g.fillRect(-76, -63, 152, 3);
-  // Плавнички по краям с ПОЛОСАТЫМИ вертикальными фонарями
+  // Округлая крыша и широкое стекло в хромовой окантовке
+  roundRect(g, -56, -98, 112, 36, 13, "#17191c");
+  roundRect(g, -50, -94, 100, 26, 9, "#c9d0d7");
+  roundRect(g, -48, -92, 96, 22, 8, "#1a2026");
+  g.fillStyle = "rgba(255,255,255,0.10)"; g.fillRect(-40, -88, 36, 14);
+  // Высокий чёрный кузов
+  roundRect(g, -86, -66, 172, 60, 12, "#17191c");
+  g.fillStyle = "rgba(255,255,255,0.14)"; g.fillRect(-78, -65, 156, 3);
+  // Плавники повыше и ХРОМОВЫЕ ЛЕСЕНКИ-фонари на них (фишка фото!)
   for (const side of [-1, 1]) {
     g.fillStyle = "#17191c";
     g.beginPath();
-    g.moveTo(side * 84, -58); g.lineTo(side * 84, -80);
-    g.lineTo(side * 60, -60);
+    g.moveTo(side * 86, -60); g.lineTo(side * 86, -88);
+    g.lineTo(side * 60, -64);
     g.closePath(); g.fill();
-    roundRect(g, side * 70 - 6, -66, 12, 28, 3, "#3d0a0a");
-    g.fillStyle = "#d43535";
-    for (const y of [-63, -56, -49]) g.fillRect(side * 70 - 4, y, 8, 5);
+    // Высокий хромовый корпус фонаря
+    roundRect(g, side * 76 - 7, -86, 14, 44, 3, "#aab0b6");
+    // Красные сегменты с хромовыми рёбрами между ними
+    g.fillStyle = "#c22020";
+    for (const y of [-83, -73, -63, -53]) g.fillRect(side * 76 - 5, y, 10, 8);
   }
-  // Хромовая птица-галочка и красный значок по центру
-  g.strokeStyle = "#c9d0d7"; g.lineWidth = 2.5;
+  // Широченное хромовое V через ВЕСЬ багажник с медальоном
+  g.strokeStyle = "#c9d0d7"; g.lineWidth = 3;
   g.beginPath();
-  g.moveTo(-26, -56); g.lineTo(0, -50); g.lineTo(26, -56);
+  g.moveTo(-64, -54); g.lineTo(0, -46); g.lineTo(64, -54);
   g.stroke();
-  circle(g, 0, -50, 4.5, "#c9d0d7"); circle(g, 0, -50, 2.8, "#c22020");
-  // Роспись «Чайка» (как на фото)
-  g.fillStyle = "#c9d0d7"; g.font = "italic bold 6px Georgia"; g.textAlign = "center";
-  g.fillText("Чайка", 48, -36);
-  // Хромовый бампер с ПУЛЯМИ-поворотниками и номером
-  roundRect(g, -82, -28, 164, 13, 5, "#c2c8ce");
-  circle(g, -58, -31, 5, "#8f5c10"); circle(g, -58, -31, 3, "#e8b021");
-  circle(g,  58, -31, 5, "#8f5c10"); circle(g,  58, -31, 3, "#e8b021");
-  plate(g, -27, 32);
-  // Две хромовые трубы из-под бампера
-  roundRect(g, -50, -13, 12, 5, 2.5, "#aab0b6");
-  roundRect(g,  38, -13, 12, 5, 2.5, "#aab0b6");
+  g.lineWidth = 1.5;
+  g.beginPath();
+  g.moveTo(-64, -57); g.lineTo(0, -49); g.lineTo(64, -57);
+  g.stroke();
+  circle(g, 0, -52, 6, "#c9d0d7"); circle(g, 0, -52, 4, "#c22020");
+  // ЧАЙКА — хромовыми буквами вразрядку
+  g.fillStyle = "#c9d0d7"; g.font = "bold 5px Verdana"; g.textAlign = "center";
+  g.fillText("Ч А Й К А", 40, -32);
+  // Массивный хромовый бампер, крупные пули-поворотники, номер
+  roundRect(g, -84, -28, 168, 14, 6, "#c2c8ce");
+  g.fillStyle = "rgba(0,0,0,0.15)"; g.fillRect(-76, -22, 152, 2);
+  circle(g, -62, -32, 6.5, "#8f5c10"); circle(g, -62, -32, 4.5, "#e8b021");
+  circle(g,  62, -32, 6.5, "#8f5c10"); circle(g,  62, -32, 4.5, "#e8b021");
+  plate(g, -26, 32);
+  // Две хромовые трубы сквозь бампер
+  roundRect(g, -56, -12, 14, 5, 2.5, "#aab0b6");
+  roundRect(g,  42, -12, 14, 5, 2.5, "#aab0b6");
 }
 
 // Трезубец Mazerety — фирменный значок из трёх зубцов
