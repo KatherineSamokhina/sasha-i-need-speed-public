@@ -1582,7 +1582,14 @@ function crash(title, text) {
 // Показать/спрятать экран по id
 function show(id, on) {
   document.getElementById(id).classList.toggle("hidden", !on);
+  // Меню-квадрат больше холста игры, и края игры выглядывали
+  // из-за него («видишь сзади?» — Саша). Пока меню открыто,
+  // холст прячем совсем
+  if (id === "menu")
+    document.getElementById("game").style.visibility = on ? "hidden" : "";
 }
+// Игра начинается С МЕНЮ — холст спрятан с самого старта
+document.getElementById("game").style.visibility = "hidden";
 
 function restartRace() {
   crashed = false;
