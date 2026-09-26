@@ -538,6 +538,13 @@ const CARS = [
   { id: "regera", name: "Konisegg Regera", gearbox: "С", topKmh: 340, zeroTo100: 2.8,
     noNpc: true,
     desc: "Овальная труба по центру и мягкая сила: 1500 гибридных лошадей." },
+  // ---- Советская пара из списка 28 (фото Саши) ----
+  { id: "niva", name: "ВАЗ Нива", gearbox: "М", topKmh: 142, zeroTo100: 17,
+    offroadSoft: true,
+    desc: "Вездеход-легенда: куда Нива залезет, туда джипы боятся." },
+  { id: "chaika", name: "ГАЗ-13 Чайка", gearbox: "А",
+    topKmh: 160, zeroTo100: 20,
+    desc: "Чёрный лимузин с плавниками и КНОПОЧНЫМ автоматом — правда!" },
   // ---- Гиперкары (восторг Саши: «СКОРОСТЬ ГЕМЕРЫ!!!») ----
   {
     id: "gemera", name: "Konisegg Gemera", gearbox: "А",
@@ -662,7 +669,7 @@ const BRAKE_100_0 = {
   modelx: 2.7, alpha5: 2.5, astra: 2.9, insignia: 2.8, daytona: 2.6,
   patriot: 3.9, hunter: 4.1, eldorado: 4.3, ct5v: 2.3, p9x8: 1.6,
   evoque: 3.0, vogue: 3.4, grand: 2.9, p205: 3.1,
-  jesko: 1.5, regera: 1.7,
+  jesko: 1.5, regera: 1.7, niva: 3.8, chaika: 4.6,
 };
 
 // Досчитываем игровые характеристики из реальных цифр.
@@ -710,7 +717,7 @@ const CAR_PRICES = {
   modelx: 2800, alpha5: 3000, astra: 650, insignia: 900, daytona: 3200,
   patriot: 700, hunter: 550, eldorado: 1200, ct5v: 2900, p9x8: 7800,
   evoque: 1600, vogue: 1300, grand: 2600, p205: 900,
-  jesko: 9500, regera: 8400,
+  jesko: 9500, regera: 8400, niva: 500, chaika: 800,
   pejo308: 1300, volga3110: 320, volga24: 300, volga21: 380,
   sportage: 850, k5: 950, sonata: 900, tucson: 800, i30: 600,
   zis: -1,   // −1 = не продаётся, только код «вечная ностальгия»
@@ -2424,7 +2431,7 @@ const CAR_CATEGORY = {
   astra: "city", insignia: "city", daytona: "sport", patriot: "suv",
   hunter: "suv", eldorado: "lux", ct5v: "sport", p9x8: "hyper",
   evoque: "suv", vogue: "suv", grand: "suv", p205: "city",
-  jesko: "hyper", regera: "hyper",
+  jesko: "hyper", regera: "hyper", niva: "ussr", chaika: "ussr",
 };
 // Марка каждой машины — для вкладки «По марке» (заказ Саши)
 const CAR_BRAND = {
@@ -2437,7 +2444,7 @@ const CAR_BRAND = {
   kuga: "Fjord", fordgt: "Fjord",
   disco: "Sand Hover", hilux: "Tayoda", rav4: "Tayoda",
   kopeyka: "ВАЗ", semerka: "ВАЗ", chetverka: "ВАЗ",
-  volga21: "Волга", volga24: "Волга", volga3110: "Волга",
+  volga21: "ГАЗ", volga24: "ГАЗ", volga3110: "ГАЗ",
   buhanka: "УАЗ", raf: "РАФ", zis: "ЗИС", f1: "Нет марки",
   challenger: "Dodgee", charger14: "Dodgee", charger69: "Dodgee",
   durango: "Dodgee",
@@ -2470,6 +2477,7 @@ const CAR_BRAND = {
   ct5v: "Kadillark", p9x8: "Pejo",
   evoque: "Sand Hover", vogue: "Sand Hover", grand: "Sand Hover",
   p205: "Pejo", jesko: "Konisegg", regera: "Konisegg",
+  niva: "ВАЗ", chaika: "ГАЗ",   // Чайка — в ГАЗы (заказ Саши)!
 };
 let garageCat = 0;      // номер выбранной категории в CATEGORIES
 let garageBrand = null; // выбранная марка (null = фильтруем по типу)
@@ -2830,6 +2838,8 @@ const PAINT_SLOTS = {
   p205: ["#f0ede4", "#d6d2c6"],
   jesko: ["#e4e7ea", "#c8ccd2"],
   regera: ["#aebfd1", "#93a6bb"],
+  niva: ["#7a6a58", "#5f5244"],
+  chaika: ["#17191c", "#101214"],
   merc190: ["#1a1c20", "#131519"],
   amggt53: ["#5a5e63", "#4d5156"],
   maybach: ["#ece9e2", "#dcd9d2"],
@@ -2888,7 +2898,7 @@ const RIM_X = { aveo: 66, picanto: 56, corsa: 59, focus: 73, delorean: 75,
   utopia: 80, zondar: 82, uaero: 78, model3: 70, modelx: 68, alpha5: 74,
   astra: 62, insignia: 70, daytona: 72, patriot: 64, hunter: 64,
   eldorado: 74, ct5v: 74, p9x8: 82, evoque: 66, vogue: 66, grand: 68,
-  p205: 60, jesko: 80, regera: 80 };
+  p205: 60, jesko: 80, regera: 80, niva: 60, chaika: 72 };
 
 // ---------- ИГРОВАЯ ВАЛЮТА 🪙 ----------
 // Зарабатывается в гонках (по месту на финише), тратится на железо.
@@ -3035,6 +3045,8 @@ const MOD_FIT = {
   p205: { spoilerY: -106, stripeTop: -58 },
   jesko: { noSpoiler: true, stripeTop: -70 },   // крыло-гигант с завода!
   regera: { noSpoiler: true, stripeTop: -70 },
+  niva: { spoilerY: -122, stripeTop: -66 },
+  chaika: { stripeTop: -60 },
   eldorado: { stripeTop: -60 },
   alpha5: { noSpoiler: true, stripeTop: -60 },  // жалюзи и хвост-клин
   yaris: { spoilerY: -104, stripeTop: -58 },
@@ -8461,6 +8473,70 @@ function drawRegera(g) {
   for (const x of [-58, -36, 36, 58]) g.fillRect(x - 2, -14, 4, 7);
 }
 
+// --- ВАЗ Нива: вездеход-легенда (по фото Саши) ---
+function drawNiva(g) {
+  carBase(g, -28, 34);
+  // Высокая квадратная корма с большим стеклом
+  roundRect(g, -60, -118, 120, 42, 7, "#7a6a58");
+  roundRect(g, -52, -112, 104, 28, 5, "#1a2026");
+  g.fillStyle = "rgba(255,255,255,0.10)"; g.fillRect(-44, -107, 42, 18);
+  roundRect(g, -68, -80, 136, 74, 7, "#7a6a58");
+  g.fillStyle = "rgba(255,255,255,0.16)"; g.fillRect(-60, -79, 120, 3);
+  // Вертикальные фонари: стоп + белый ход + янтарь
+  for (const side of [-1, 1]) {
+    roundRect(g, side * 56 - 7, -74, 14, 28, 3, "#3d1512");
+    roundRect(g, side * 56 - 5, -71, 10, 8, 2, "#d43535");
+    roundRect(g, side * 56 - 5, -62, 10, 6, 2, "#e8e9eb");
+    roundRect(g, side * 56 - 5, -55, 10, 6, 2, "#e8b021");
+  }
+  plate(g, -66, 40);
+  g.fillStyle = "#5f5244"; g.font = "bold 5px Verdana"; g.textAlign = "center";
+  g.fillText("НИВА", 0, -34);
+  // Чёрный бампер с уголками
+  roundRect(g, -64, -18, 128, 9, 3, "#26292d");
+  roundRect(g, -70, -20, 10, 13, 3, "#26292d");
+  roundRect(g,  60, -20, 10, 13, 3, "#26292d");
+}
+
+// --- ГАЗ-13 Чайка: плавники, хром и кнопочный автомат ---
+function drawChaika(g) {
+  carBase(g);
+  roundRect(g, -52, -92, 104, 30, 11, "#17191c");
+  roundRect(g, -46, -88, 92, 22, 8, "#1a2026");
+  g.fillStyle = "rgba(255,255,255,0.10)"; g.fillRect(-38, -84, 34, 14);
+  // Длинный чёрный кузов
+  roundRect(g, -84, -64, 168, 58, 10, "#17191c");
+  g.fillStyle = "rgba(255,255,255,0.14)"; g.fillRect(-76, -63, 152, 3);
+  // Плавнички по краям с ПОЛОСАТЫМИ вертикальными фонарями
+  for (const side of [-1, 1]) {
+    g.fillStyle = "#17191c";
+    g.beginPath();
+    g.moveTo(side * 84, -58); g.lineTo(side * 84, -80);
+    g.lineTo(side * 60, -60);
+    g.closePath(); g.fill();
+    roundRect(g, side * 70 - 6, -66, 12, 28, 3, "#3d0a0a");
+    g.fillStyle = "#d43535";
+    for (const y of [-63, -56, -49]) g.fillRect(side * 70 - 4, y, 8, 5);
+  }
+  // Хромовая птица-галочка и красный значок по центру
+  g.strokeStyle = "#c9d0d7"; g.lineWidth = 2.5;
+  g.beginPath();
+  g.moveTo(-26, -56); g.lineTo(0, -50); g.lineTo(26, -56);
+  g.stroke();
+  circle(g, 0, -50, 4.5, "#c9d0d7"); circle(g, 0, -50, 2.8, "#c22020");
+  // Роспись «Чайка» (как на фото)
+  g.fillStyle = "#c9d0d7"; g.font = "italic bold 6px Georgia"; g.textAlign = "center";
+  g.fillText("Чайка", 48, -36);
+  // Хромовый бампер с ПУЛЯМИ-поворотниками и номером
+  roundRect(g, -82, -28, 164, 13, 5, "#c2c8ce");
+  circle(g, -58, -31, 5, "#8f5c10"); circle(g, -58, -31, 3, "#e8b021");
+  circle(g,  58, -31, 5, "#8f5c10"); circle(g,  58, -31, 3, "#e8b021");
+  plate(g, -27, 32);
+  // Две хромовые трубы из-под бампера
+  roundRect(g, -50, -13, 12, 5, 2.5, "#aab0b6");
+  roundRect(g,  38, -13, 12, 5, 2.5, "#aab0b6");
+}
+
 // Трезубец Mazerety — фирменный значок из трёх зубцов
 function trident(g, y, color) {
   g.fillStyle = color;
@@ -8584,7 +8660,7 @@ const CAR_DRAWERS = {
   patriot: drawPatriot, hunter: drawHunter, eldorado: drawEldorado,
   ct5v: drawCT5V, p9x8: drawP9X8,
   evoque: drawEvoque, vogue: drawVogue, grand: drawGrand, p205: drawP205,
-  jesko: drawJesko, regera: drawRegera,
+  jesko: drawJesko, regera: drawRegera, niva: drawNiva, chaika: drawChaika,
 };
 
 // Огненный след: два пылающих следа за колёсами, три слоя пламени
