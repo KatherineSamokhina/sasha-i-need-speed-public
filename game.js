@@ -4119,7 +4119,7 @@ function update(dt) {
     for (const t of traffic) {
       const relZ = ((t.z % trackLength) - position + trackLength) % trackLength;
       if (relZ < 240 && Math.abs(t.x - playerX) < 0.33) {
-        crash("🚨 GAME OVER",
+        crash("🚨 ИГРА ОКОНЧЕНА",
               "Врезался в мирную машину — погоня провалена!");
         break;
       }
