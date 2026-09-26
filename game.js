@@ -531,6 +531,13 @@ const CARS = [
     desc: "Новый король вездеходов: золотистый, гладкий, как галька." },
   { id: "p205", name: "Pejo 205 GTI", gearbox: "М", topKmh: 200, zeroTo100: 7.8,
     desc: "Злой белый малыш из ралли: красная полоска и жёлтый номер." },
+  // ---- Konisegg-пара (коробки — заказ Саши: «М у Джеско и С у 2») ----
+  { id: "jesko", name: "Konisegg Jesko", gearbox: "М", topKmh: 359, zeroTo100: 2.5,
+    noNpc: true,
+    desc: "1600 сил и гигантское крыло: НОВЫЙ король скорости в гараже!" },
+  { id: "regera", name: "Konisegg Regera", gearbox: "С", topKmh: 340, zeroTo100: 2.8,
+    noNpc: true,
+    desc: "Овальная труба по центру и мягкая сила: 1500 гибридных лошадей." },
   // ---- Гиперкары (восторг Саши: «СКОРОСТЬ ГЕМЕРЫ!!!») ----
   {
     id: "gemera", name: "Konisegg Gemera", gearbox: "А",
@@ -655,6 +662,7 @@ const BRAKE_100_0 = {
   modelx: 2.7, alpha5: 2.5, astra: 2.9, insignia: 2.8, daytona: 2.6,
   patriot: 3.9, hunter: 4.1, eldorado: 4.3, ct5v: 2.3, p9x8: 1.6,
   evoque: 3.0, vogue: 3.4, grand: 2.9, p205: 3.1,
+  jesko: 1.5, regera: 1.7,
 };
 
 // Досчитываем игровые характеристики из реальных цифр.
@@ -702,6 +710,7 @@ const CAR_PRICES = {
   modelx: 2800, alpha5: 3000, astra: 650, insignia: 900, daytona: 3200,
   patriot: 700, hunter: 550, eldorado: 1200, ct5v: 2900, p9x8: 7800,
   evoque: 1600, vogue: 1300, grand: 2600, p205: 900,
+  jesko: 9500, regera: 8400,
   pejo308: 1300, volga3110: 320, volga24: 300, volga21: 380,
   sportage: 850, k5: 950, sonata: 900, tucson: 800, i30: 600,
   zis: -1,   // −1 = не продаётся, только код «вечная ностальгия»
@@ -2415,6 +2424,7 @@ const CAR_CATEGORY = {
   astra: "city", insignia: "city", daytona: "sport", patriot: "suv",
   hunter: "suv", eldorado: "lux", ct5v: "sport", p9x8: "hyper",
   evoque: "suv", vogue: "suv", grand: "suv", p205: "city",
+  jesko: "hyper", regera: "hyper",
 };
 // Марка каждой машины — для вкладки «По марке» (заказ Саши)
 const CAR_BRAND = {
@@ -2459,7 +2469,7 @@ const CAR_BRAND = {
   patriot: "УАЗ", hunter: "УАЗ", eldorado: "Kadillark",
   ct5v: "Kadillark", p9x8: "Pejo",
   evoque: "Sand Hover", vogue: "Sand Hover", grand: "Sand Hover",
-  p205: "Pejo",
+  p205: "Pejo", jesko: "Konisegg", regera: "Konisegg",
 };
 let garageCat = 0;      // номер выбранной категории в CATEGORIES
 let garageBrand = null; // выбранная марка (null = фильтруем по типу)
@@ -2818,6 +2828,8 @@ const PAINT_SLOTS = {
   vogue: ["#c6cad0", "#acb1b8"],
   grand: ["#c2a281", "#a68864"],
   p205: ["#f0ede4", "#d6d2c6"],
+  jesko: ["#e4e7ea", "#c8ccd2"],
+  regera: ["#aebfd1", "#93a6bb"],
   merc190: ["#1a1c20", "#131519"],
   amggt53: ["#5a5e63", "#4d5156"],
   maybach: ["#ece9e2", "#dcd9d2"],
@@ -2876,7 +2888,7 @@ const RIM_X = { aveo: 66, picanto: 56, corsa: 59, focus: 73, delorean: 75,
   utopia: 80, zondar: 82, uaero: 78, model3: 70, modelx: 68, alpha5: 74,
   astra: 62, insignia: 70, daytona: 72, patriot: 64, hunter: 64,
   eldorado: 74, ct5v: 74, p9x8: 82, evoque: 66, vogue: 66, grand: 68,
-  p205: 60 };
+  p205: 60, jesko: 80, regera: 80 };
 
 // ---------- ИГРОВАЯ ВАЛЮТА 🪙 ----------
 // Зарабатывается в гонках (по месту на финише), тратится на железо.
@@ -3021,6 +3033,8 @@ const MOD_FIT = {
   vogue: { spoilerY: -128, stripeTop: -68 },
   grand: { spoilerY: -126, stripeTop: -66 },
   p205: { spoilerY: -106, stripeTop: -58 },
+  jesko: { noSpoiler: true, stripeTop: -70 },   // крыло-гигант с завода!
+  regera: { noSpoiler: true, stripeTop: -70 },
   eldorado: { stripeTop: -60 },
   alpha5: { noSpoiler: true, stripeTop: -60 },  // жалюзи и хвост-клин
   yaris: { spoilerY: -104, stripeTop: -58 },
@@ -8353,6 +8367,85 @@ function drawP205(g) {
   roundRect(g, -26, -10, 9, 3.5, 1.5, "#7c8288");
 }
 
+// --- Konisegg Jesko: гигантское крыло, зелёные акценты, 359 км/ч ---
+function drawJesko(g) {
+  carBase(g);
+  // КРЫЛО-ГИГАНТ на двух скошенных пилонах. Пилоны — до кузова
+  // (закон Ф-1/Супры/Зонды: ни пикселя воздуха!)
+  g.fillStyle = "#15171a";
+  for (const side of [-1, 1]) {
+    g.beginPath();
+    g.moveTo(side * 34, -118); g.lineTo(side * 46, -118);
+    g.lineTo(side * 60, -62); g.lineTo(side * 48, -62);
+    g.closePath(); g.fill();
+  }
+  roundRect(g, -84, -126, 168, 10, 3, "#111316");
+  g.fillStyle = "rgba(255,255,255,0.12)"; g.fillRect(-76, -125, 152, 2.5);
+  roundRect(g, -88, -130, 9, 18, 2, "#15171a");
+  roundRect(g,  79, -130, 9, 18, 2, "#15171a");
+  // Кабина-капля
+  roundRect(g, -42, -96, 84, 30, 14, "#1a2026");
+  g.fillStyle = "rgba(255,255,255,0.10)"; g.fillRect(-34, -91, 32, 20);
+  // Белый кузов с мускулистыми плечами
+  roundRect(g, -86, -66, 172, 60, 14, "#e4e7ea");
+  g.fillStyle = "rgba(255,255,255,0.40)"; g.fillRect(-78, -65, 156, 3);
+  // Тонкие красные фонари-дуги
+  for (const side of [-1, 1]) {
+    g.strokeStyle = "#2a0808"; g.lineWidth = 6;
+    g.beginPath();
+    g.moveTo(side * 74, -40); g.quadraticCurveTo(side * 72, -56, side * 48, -56);
+    g.stroke();
+    g.strokeStyle = "#e82121"; g.lineWidth = 2.5;
+    g.beginPath();
+    g.moveTo(side * 73, -41); g.quadraticCurveTo(side * 70, -54, side * 49, -54);
+    g.stroke();
+  }
+  // Чёрная плашка с именем (как на фото)
+  roundRect(g, -26, -50, 52, 10, 2, "#141618");
+  g.fillStyle = "#e4e7ea"; g.font = "bold 5px Verdana"; g.textAlign = "center";
+  g.fillText("Konisegg", 0, -42.5);
+  plate(g, -30, 32);
+  // Диффузор с ЗЕЛЁНЫМИ рёбрами
+  roundRect(g, -84, -16, 168, 10, 4, "#101214");
+  g.fillStyle = "#57d977";
+  for (const x of [-62, -34, 34, 62]) g.fillRect(x - 2, -14, 4, 7);
+}
+
+// --- Konisegg Regera: овальная труба по центру ---
+function drawRegera(g) {
+  carBase(g);
+  // Плечи-волны и кабина
+  roundRect(g, -44, -94, 88, 30, 15, "#1a2026");
+  g.fillStyle = "rgba(255,255,255,0.10)"; g.fillRect(-36, -89, 34, 20);
+  roundRect(g, -86, -64, 172, 58, 16, "#aebfd1");
+  g.fillStyle = "rgba(255,255,255,0.30)"; g.fillRect(-78, -63, 156, 3);
+  // Чёрная панель посередине кормы с росписью Regera
+  roundRect(g, -60, -56, 120, 20, 8, "#17191c");
+  g.fillStyle = "#dbe2ea"; g.font = "italic bold 7px Georgia"; g.textAlign = "center";
+  g.fillText("Regera", 0, -42);
+  g.font = "bold 4px Verdana";
+  g.fillText("Konisegg", 0, -51);
+  // Фонари-дуги, обнимающие верхние углы
+  for (const side of [-1, 1]) {
+    g.strokeStyle = "#2a0808"; g.lineWidth = 6;
+    g.beginPath();
+    g.moveTo(side * 80, -40); g.quadraticCurveTo(side * 76, -58, side * 50, -58);
+    g.stroke();
+    g.strokeStyle = "#e82121"; g.lineWidth = 2.5;
+    g.beginPath();
+    g.moveTo(side * 79, -41); g.quadraticCurveTo(side * 74, -56, side * 51, -56);
+    g.stroke();
+  }
+  plate(g, -35, 32);
+  // ОГРОМНАЯ овальная труба по центру (фишка Регеры!) и диффузор
+  roundRect(g, -82, -16, 164, 10, 4, "#101214");
+  g.strokeStyle = "#c9d0d7"; g.lineWidth = 3;
+  g.beginPath(); g.ellipse(0, -14, 14, 8, 0, 0, Math.PI * 2); g.stroke();
+  circle(g, -5, -14, 3.5, "#4a4f54"); circle(g, 5, -14, 3.5, "#4a4f54");
+  g.fillStyle = "#1e2124";
+  for (const x of [-58, -36, 36, 58]) g.fillRect(x - 2, -14, 4, 7);
+}
+
 // Трезубец Mazerety — фирменный значок из трёх зубцов
 function trident(g, y, color) {
   g.fillStyle = color;
@@ -8476,6 +8569,7 @@ const CAR_DRAWERS = {
   patriot: drawPatriot, hunter: drawHunter, eldorado: drawEldorado,
   ct5v: drawCT5V, p9x8: drawP9X8,
   evoque: drawEvoque, vogue: drawVogue, grand: drawGrand, p205: drawP205,
+  jesko: drawJesko, regera: drawRegera,
 };
 
 // Огненный след: два пылающих следа за колёсами, три слоя пламени
