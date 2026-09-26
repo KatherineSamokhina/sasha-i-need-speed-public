@@ -1448,6 +1448,12 @@ function setupRace() {
   // 5% — на 10 БЫСТРЕЕ. Хитрая математика: шанс, что все трое
   // беатся = 0.95³ ≈ 85% — ровно «85% победа», как Саша посчитал!
   const myKmh = tunedMaxSpeed() / KMH;
+  // И РАЗГОН тоже от игрока (правка Саши «разгон врагов огромный»):
+  // раньше враг разгонялся как ЕГО модель — гиперкары вылетали из
+  // поворотов как из пушки, и шансы на Гиперкольце ломались.
+  // Теперь: 85% — разгоняются ХУЖЕ тебя (70–95% твоей тяги),
+  // 15% — чуть лучше (105–115%, «но не сильно»).
+  const myAccel = car.accel * (1 + 0.08 * getTun(car.id).engine);
   for (let i = 0; i < count; i++) {
     const oc = pool.splice(Math.floor(Math.random() * pool.length), 1)[0];
     const roll = Math.random() * 100;
@@ -1458,6 +1464,9 @@ function setupRace() {
     else if (roll < 95) deltaKmh = 0;
     else deltaKmh = 10;
     const capSpeed = KMH * Math.max(30, myKmh + deltaKmh);
+    const capAccel = myAccel * (Math.random() < 0.85
+      ? 0.70 + Math.random() * 0.25
+      : 1.05 + Math.random() * 0.10);
     opponents.push({
       car: oc,
       canvas: prerenderCar(oc.id),
@@ -1466,6 +1475,7 @@ function setupRace() {
       x: raceKind === "drag" ? -0.45 : (i % 2 === 0 ? -0.45 : 0.45),
       speed: 0,
       capSpeed,   // скорость по таблице Саши — модель не важна!
+      capAccel,   // и разгон тоже от игрока, не от модели
       skill: 0.78 + Math.random() * 0.17,   // талант пилота: 78–95%
     });
   }
@@ -1500,9 +1510,9 @@ function updateOpponents(dt) {
     const target = cap * curveSlow;
     if (o.speed < target) {
       const p = o.speed / cap;
-      // Медленной модели даём разгон под её ЦЕЛЕВУЮ скорость,
-      // иначе Буханка разгонялась бы до 300 целый круг
-      const acc = Math.max(o.car.accel, o.capSpeed ? cap * 0.25 : 0);
+      // Разгон — из таблицы Саши (capAccel), а не от модели.
+      // У погони его нет — полиция разгоняется по-своему.
+      const acc = o.capAccel || o.car.accel;
       o.speed += acc * (1 - p * p) * dt;
     } else {
       // тормозим к цели (у ЗИСа-соперника тормозов тоже нет — только мотор!)
