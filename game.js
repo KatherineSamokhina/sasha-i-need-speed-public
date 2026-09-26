@@ -1242,6 +1242,25 @@ function buildHighwayTrack() {
 // Гражданские машины едут по своим полосам со своей скоростью —
 // лавируй между ними, как в старых аркадах!
 let traffic = [];
+let chaseTrafficN = 4;   // мирных машин в погоне (город 9, заезды 4)
+
+// Трафик для ПОГОНИ (заказ Саши): мирные машины на дороге.
+// В городской погоне их больше, в заездной — меньше. Врезался —
+// GAME OVER! Спауним подальше от старта, чтобы не влететь сразу.
+function setupChaseTraffic(n) {
+  traffic = [];
+  const pool = CARS.filter((c) => !c.noNpc && c.id !== "police");
+  for (let i = 0; i < n; i++) {
+    const c = pool[Math.floor(Math.random() * pool.length)];
+    traffic.push({
+      car: c,
+      canvas: prerenderCar(c.id),
+      z: SEG_LEN * 40 + Math.random() * (trackLength - SEG_LEN * 50),
+      x: [-0.6, 0, 0.6][Math.floor(Math.random() * 3)],
+      speed: KMH * (50 + Math.random() * 40),   // неспешные 50–90
+    });
+  }
+}
 
 function setupTraffic() {
   traffic = [];
@@ -1547,12 +1566,16 @@ const CAR_HALF_W = 0.15;
 const ARCH_PILLAR_X = 1.16;
 const ARCH_PILLAR_W = 0.08;
 
-function crash() {
+function crash(title, text) {
   crashed = true;
   engineOn = false;        // мотор глохнет от удара — заводи заново!
   engineStarting = false;
   speed = 0;               // мгновенная остановка
   makeSparks();            // сноп искр перед машиной
+  // Свой заголовок — для особых аварий (GAME OVER в погоне!)
+  document.getElementById("crash-title").textContent = title || "💥 АВАРИЯ!";
+  document.getElementById("crash-text").textContent =
+    text || "Столкновение! Мотор заглох.";
   document.getElementById("crash").classList.remove("hidden");
 }
 
@@ -1729,8 +1752,9 @@ function buildChaseTrack() {
   buildTrackMap();
 }
 
-function goChase(role = "cop") {
+function goChase(role = "cop", trafficN = null) {
   chaseRole = role;
+  if (trafficN !== null) chaseTrafficN = trafficN;
   buildChaseTrack();
   raceMode = false;
   taMode = false;
@@ -1767,6 +1791,9 @@ function goChase(role = "cop") {
                until: performance.now() + 3000 };
   }
   playerLap = 1;   // абсолютная дистанция погони считается по кругам
+  // Мирный трафик на дороге (заказ Саши: в городе больше, в заездах
+  // меньше; restartRace его стёр — спауним ПОСЛЕ)
+  setupChaseTraffic(chaseTrafficN);
   // СТАРТ С ХОДА: 60 км/ч (спецификация Саши)
   engineOn = true;
   engineStarting = false;
@@ -1954,14 +1981,14 @@ wireButton("btn-city-back", closeCity);
 wireButton("poi-hw", goHighway);
 wireButton("poi-race", () => { if (goRaceMode()) { inCity = false; show("city", false); } });
 wireButton("poi-drag", () => { inCity = false; show("city", false); goDragMode(); });
-wireButton("poi-chase", () => { goChase("cop"); });   // в городе — служба
+wireButton("poi-chase", () => { goChase("cop", 9); });  // город: трафик ГУЩЕ
 // В ЗАЕЗДАХ (правило Саши, уточнено): роль решает ВЫБРАННАЯ машина!
 // Сел на полицию — ты полиция. Пришёл на любой другой (хоть на
 // ДМС!) — ты ВОР. Купить полицию нужно, чтобы её выбрать.
 wireButton("btn-chase", () => {
   inRaces = false;
   show("races", false);
-  goChase(car.id === "police" ? "cop" : "thief");
+  goChase(car.id === "police" ? "cop" : "thief", 4);  // заезды: пореже
 });
 wireButton("poi-ta",   () => { if (goTimeAttack()) { inCity = false; show("city", false); } });
 wireButton("poi-fuel", () => {
@@ -4047,8 +4074,23 @@ function update(dt) {
   // ---------- Трафик на шоссе: просто едет рядом ----------
   // Решение Саши: в городе СТОЛКНОВЕНИЙ НЕТ ВООБЩЕ — езда спокойная,
   // сквозь трафик можно проезжать. Аварии остаются только в заездах!
-  if (raceKind === "highway" && traffic.length)
+  if ((raceKind === "highway" || chaseMode) && traffic.length)
     updateTraffic(dt);
+
+  // ТРАФИК В ПОГОНЕ (заказ Саши): врезался в мирную машину —
+  // 🚨 GAME OVER! Даже таран не оправдание: мирных давить нельзя.
+  // (В городе-шоссе столкновений нет — там своё правило Саши.)
+  if (chaseMode && !chaseOver && !crashed && traffic.length
+      && speed > KMH * 5) {
+    for (const t of traffic) {
+      const relZ = ((t.z % trackLength) - position + trackLength) % trackLength;
+      if (relZ < 240 && Math.abs(t.x - playerX) < 0.33) {
+        crash("🚨 GAME OVER",
+              "Врезался в мирную машину — погоня провалена!");
+        break;
+      }
+    }
+  }
 
   // ---------- Животные: бегают, стоят и попадают под ЗЫС ----------
   if (animals.length) {
