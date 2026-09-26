@@ -2998,15 +2998,15 @@ const RIM_X = { aveo: 66, picanto: 56, corsa: 59, focus: 73, delorean: 75,
   m2: 76, m4: 76, b750: 72, i7: 72, vantage: 76, dbx: 68, rapide: 73,
   quattroporte: 72, ghibli: 71, gt3200: 72, levante: 68, corolla: 68,
   chr: 66, chrgr: 66, corona: 66, crown: 71, supra: 78, gsupra: 77,
-  yaris: 60, prius: 66,
-  indycar: 84, f3: 82, rafmed: 62, raf2909: 62, zis110: 68, zis5: 64,
+  yaris: 54, prius: 66,
+  indycar: 84, f3: 82, rafmed: 56, raf2909: 56, zis110: 68, zis5: 64,
   utopia: 80, zondar: 82, uaero: 78, model3: 70, modelx: 68, alpha5: 74,
-  astra: 62, insignia: 70, daytona: 72, patriot: 64, hunter: 64,
-  eldorado: 74, ct5v: 74, p9x8: 82, evoque: 66, vogue: 66, grand: 68,
-  p205: 60, jesko: 80, regera: 80, niva: 60, chaika: 72,
+  astra: 58, insignia: 70, daytona: 72, patriot: 64, hunter: 64,
+  eldorado: 74, ct5v: 74, p9x8: 82, evoque: 66, vogue: 58, grand: 68,
+  p205: 52, jesko: 80, regera: 80, niva: 50, chaika: 72,
   chaikacan: 72, p930: 74, turbos: 78, gt3rs: 79, p918: 79,
   r34: 77, chiron: 82, tourbillon: 82, bolide: 84,
-  gtr: 78, z350: 74, xtrail: 66, qashqai: 65, juke: 64 };
+  gtr: 78, z350: 74, xtrail: 56, qashqai: 54, juke: 51 };
 
 // ---------- ИГРОВАЯ ВАЛЮТА 🪙 ----------
 // Зарабатывается в гонках (по месту на финише), тратится на железо.
@@ -5779,11 +5779,13 @@ function drawChetverka(g) {
 
 // ==================== АМЕРИКАНСКИЙ АВТОСАЛОН ====================
 // 17 машин по фото Саши. Общая заготовка колёс и тени:
-function carBase(g, wheelY = -28, wheelH = 34) {
+function carBase(g, wheelY = -28, wheelH = 34, wheelX = 80) {
+  // wheelX — внешний край колеи: у узких машин колёса задвигаются
+  // ВНУТРЬ кузова (правка Саши «колёса не в кузове, ставь внутрь»)
   g.fillStyle = "rgba(0,0,0,0.38)";
-  g.beginPath(); g.ellipse(0, 8, 94, 12, 0, 0, Math.PI * 2); g.fill();
-  roundRect(g, -80, wheelY, 30, wheelH, 7, "#121212");
-  roundRect(g,  50, wheelY, 30, wheelH, 7, "#121212");
+  g.beginPath(); g.ellipse(0, 8, wheelX + 14, 12, 0, 0, Math.PI * 2); g.fill();
+  roundRect(g, -wheelX, wheelY, 30, wheelH, 7, "#121212");
+  roundRect(g,  wheelX - 30, wheelY, 30, wheelH, 7, "#121212");
 }
 function plate(g, y, w = 44) {
   roundRect(g, -w / 2, y, w, 12, 2, "#f0f0f0");
@@ -7791,7 +7793,7 @@ function drawGSupra(g) {
 
 // --- Tayoda Yaris: юркий городской воробей ---
 function drawYaris(g) {
-  carBase(g, -26, 32);
+  carBase(g, -26, 32, 69);
   // Высокий хэтчбек: большое стекло почти во всю корму
   roundRect(g, -46, -100, 92, 40, 11, "#e8e9eb");
   roundRect(g, -40, -96, 80, 32, 8, "#1a2026");
@@ -7916,7 +7918,7 @@ function drawF3car(g) {
 
 // --- РАФ-22031: скорая помощь, уступи дорогу! ---
 function drawRafMed(g) {
-  carBase(g, -26, 32);
+  carBase(g, -26, 32, 71);
   // Высокий белый фургон
   roundRect(g, -72, -122, 144, 116, 9, "#eef0f2");
   g.fillStyle = "rgba(255,255,255,0.45)"; g.fillRect(-64, -121, 128, 3);
@@ -7940,7 +7942,7 @@ function drawRafMed(g) {
 
 // --- РАФ-2909: олимпийский ЭЛЕКТРО-пикап с тентом (1980!) ---
 function drawRaf2909(g) {
-  carBase(g, -26, 32);
+  carBase(g, -26, 32, 71);
   // Тёмный кузов с белой полосой (как на чёрно-белом фото)
   roundRect(g, -72, -74, 144, 68, 8, "#8a3b2e");
   roundRect(g, -72, -86, 144, 14, 4, "#eef0f2");   // белый пояс
@@ -8194,7 +8196,7 @@ function drawAlpha5(g) {
 
 // --- Opal Astra: серебристый хэтчбек с молнией ---
 function drawAstra(g) {
-  carBase(g, -26, 32);
+  carBase(g, -26, 32, 73);
   roundRect(g, -50, -100, 100, 40, 11, "#c6cad0");
   roundRect(g, -44, -96, 88, 30, 8, "#1a2026");
   g.fillStyle = "rgba(255,255,255,0.12)"; g.fillRect(-36, -91, 32, 20);
@@ -8425,7 +8427,7 @@ function drawEvoque(g) {
 
 // --- Sand Hover Vogue 2003: квадратный аристократ ---
 function drawVogue(g) {
-  carBase(g, -28, 36);
+  carBase(g, -28, 36, 73);
   // Огромное почти вертикальное стекло
   roundRect(g, -66, -128, 132, 52, 7, "#c6cad0");
   roundRect(g, -58, -122, 116, 40, 5, "#1a2026");
@@ -8473,7 +8475,7 @@ function drawGrand(g) {
 
 // --- Pejo 205 GTI: злой белый малыш из ралли ---
 function drawP205(g) {
-  carBase(g, -26, 32);
+  carBase(g, -26, 32, 67);
   // Высокая корма хэтчбека с большим стеклом
   roundRect(g, -58, -104, 116, 44, 9, "#f0ede4");
   roundRect(g, -50, -99, 100, 32, 7, "#1a2026");
@@ -8597,7 +8599,7 @@ function drawRegera(g) {
 
 // --- ВАЗ Нива: вездеход-легенда (вторая попытка — точнее по фото) ---
 function drawNiva(g) {
-  carBase(g, -28, 34);
+  carBase(g, -28, 34, 65);
   // Вся корма — одна высокая плита-калитка
   roundRect(g, -66, -120, 132, 114, 8, "#7a6a58");
   g.fillStyle = "rgba(255,255,255,0.16)"; g.fillRect(-58, -119, 116, 3);
@@ -8942,7 +8944,7 @@ function drawZ350(g) {
 
 // --- Nisan X-Trail: красный семейный вездеход ---
 function drawXTrail(g) {
-  carBase(g, -28, 34);
+  carBase(g, -28, 34, 71);
   roundRect(g, -62, -118, 124, 42, 9, "#b3202a");
   roundRect(g, -54, -112, 108, 28, 6, "#1a2026");
   g.fillStyle = "rgba(255,255,255,0.10)"; g.fillRect(-46, -107, 44, 18);
@@ -8964,7 +8966,7 @@ function drawXTrail(g) {
 
 // --- Nisan Qashqai: кроссовер с антенной-удочкой ---
 function drawQashqai(g) {
-  carBase(g, -28, 34);
+  carBase(g, -28, 34, 69);
   // Антенна-удочка на крыше!
   g.strokeStyle = "#33363b"; g.lineWidth = 2;
   g.beginPath(); g.moveTo(4, -114); g.lineTo(14, -138); g.stroke();
@@ -8988,7 +8990,7 @@ function drawQashqai(g) {
 
 // --- Nisan Juke Nismo: лягушонок-спортсмен ---
 function drawJuke(g) {
-  carBase(g, -26, 32);
+  carBase(g, -26, 32, 66);
   // Козырёк на крыше
   roundRect(g, -50, -110, 100, 8, 4, "#f0ede9");
   roundRect(g, -52, -104, 104, 34, 9, "#eef0f2");
