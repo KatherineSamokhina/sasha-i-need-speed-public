@@ -1423,19 +1423,22 @@ function setupRace() {
   if (raceKind === "circuit" && currentTrack === 6)
     pool = CARS.filter((c) => c.id !== car.id && CAR_CATEGORY[c.id] === "hyper");
   const count = Math.min(raceKind === "drag" ? 1 : OPP_COUNT, pool.length);
+  // ТОЧНАЯ ТАБЛИЦА СКОРОСТЕЙ (заказ Саши, сменила правило «15%»):
+  // каждому врагу выпадает скорость ОТ ТВОЕЙ: 30% — на 5 км/ч
+  // медленнее, 35% — на 6, 10% — на 20, 20% — ровно твоя,
+  // 5% — на 10 БЫСТРЕЕ. Хитрая математика: шанс, что все трое
+  // беатся = 0.95³ ≈ 85% — ровно «85% победа», как Саша посчитал!
+  const myKmh = tunedMaxSpeed() / KMH;
   for (let i = 0; i < count; i++) {
-    // БАЛАНС (правило Саши): соперники НЕ БЫСТРЕЕ машины игрока.
-    // Но с шансом 15% на место всё же выпадает быстрая — интрига!
-    const slower = pool.filter((c) => c.topKmh <= car.topKmh);
-    const faster = pool.filter((c) => c.topKmh > car.topKmh);
-    const pickFrom =
-      (Math.random() < 0.15 && faster.length) ? faster
-      : slower.length ? slower
-      // медленных не осталось (ты на Буханке!) — берём 5 самых
-      // медленных из оставшихся, а не кого попало
-      : pool.slice().sort((a, b) => a.topKmh - b.topKmh).slice(0, 5);
-    const oc = pool.splice(pool.indexOf(
-      pickFrom[Math.floor(Math.random() * pickFrom.length)]), 1)[0];
+    const oc = pool.splice(Math.floor(Math.random() * pool.length), 1)[0];
+    const roll = Math.random() * 100;
+    let deltaKmh;
+    if (roll < 30) deltaKmh = -5;
+    else if (roll < 65) deltaKmh = -6;
+    else if (roll < 75) deltaKmh = -20;
+    else if (roll < 95) deltaKmh = 0;
+    else deltaKmh = 10;
+    const capSpeed = KMH * Math.max(30, myKmh + deltaKmh);
     opponents.push({
       car: oc,
       canvas: prerenderCar(oc.id),
@@ -1443,6 +1446,7 @@ function setupRace() {
       z: raceKind === "drag" ? 10 : 600 + i * 450,
       x: raceKind === "drag" ? -0.45 : (i % 2 === 0 ? -0.45 : 0.45),
       speed: 0,
+      capSpeed,   // скорость по таблице Саши — модель не важна!
       skill: 0.78 + Math.random() * 0.17,   // талант пилота: 78–95%
     });
   }
@@ -1469,10 +1473,18 @@ function updateOpponents(dt) {
     }
     const seg = findSegment(o.z % trackLength);
     const curveSlow = 1 - Math.min(0.45, Math.abs(seg.curve) * 0.07);
-    const target = o.car.maxSpeed * o.skill * curveSlow;
+    // Скорость врага на прямой — из ТАБЛИЦЫ Саши (capSpeed), а не из
+    // модели: даже Буханка помчит вровень, если ей так выпало! Талант
+    // (skill) остался только в поворотах. У погони capSpeed нет —
+    // полиция ездит по своим правилам.
+    const cap = o.capSpeed || o.car.maxSpeed * o.skill;
+    const target = cap * curveSlow;
     if (o.speed < target) {
-      const p = o.speed / o.car.maxSpeed;
-      o.speed += o.car.accel * (1 - p * p) * dt;
+      const p = o.speed / cap;
+      // Медленной модели даём разгон под её ЦЕЛЕВУЮ скорость,
+      // иначе Буханка разгонялась бы до 300 целый круг
+      const acc = Math.max(o.car.accel, o.capSpeed ? cap * 0.25 : 0);
+      o.speed += acc * (1 - p * p) * dt;
     } else {
       // тормозим к цели (у ЗИСа-соперника тормозов тоже нет — только мотор!)
       o.speed += (o.car.noBrakes ? -KMH * 10 : o.car.brakeDecel * 0.5) * dt;
