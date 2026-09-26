@@ -8686,9 +8686,9 @@ function drawTurboS(g) {
 // --- Porshe 911 GT3 RS: крыло-гигант на лебединых шеях СВЕРХУ ---
 function drawGT3RS(g) {
   carBase(g);
-  // Лезвие крыла ШИРЕ кузова
-  roundRect(g, -88, -120, 176, 10, 3, "#141618");
-  g.fillStyle = "rgba(255,255,255,0.12)"; g.fillRect(-80, -119, 160, 2.5);
+  // Лезвие крыла — ВНУТРИ ширины кузова (правка Саши)
+  roundRect(g, -78, -120, 156, 10, 3, "#141618");
+  g.fillStyle = "rgba(255,255,255,0.12)"; g.fillRect(-70, -119, 140, 2.5);
   // ЛЕБЕДИНЫЕ шеи: крепятся к ВЕРХУ лезвия и спускаются на кузов
   g.fillStyle = "#26292d";
   for (const side of [-1, 1]) {
@@ -8697,8 +8697,8 @@ function drawGT3RS(g) {
     g.lineTo(side * 41, -58); g.lineTo(side * 30, -58);
     g.closePath(); g.fill();
   }
-  roundRect(g, -94, -127, 9, 20, 2.5, "#26292d");
-  roundRect(g,  85, -127, 9, 20, 2.5, "#26292d");
+  roundRect(g, -83, -127, 9, 20, 2.5, "#26292d");
+  roundRect(g,  74, -127, 9, 20, 2.5, "#26292d");
   roundRect(g, -46, -94, 92, 30, 13, "#1a2026");
   g.fillStyle = "rgba(255,255,255,0.10)"; g.fillRect(-38, -89, 34, 20);
   // Серебристый кузов
@@ -8722,17 +8722,23 @@ function drawGT3RS(g) {
   circle(g,  8, -15, 4.5, "#26292d"); circle(g,  8, -15, 3, "#63666e");
 }
 
-// --- Porshe 918 Spyder: трубы ВВЕРХ за кабиной! ---
+// --- Porshe 918 Spyder: трубы ВВЕРХ прямо в моторной палубе ---
 function drawP918(g) {
   carBase(g);
-  // Ножки труб (стекло прикроет их снизу)
-  roundRect(g, -21, -102, 10, 14, 3, "#63666e");
-  roundRect(g,  11, -102, 10, 14, 3, "#63666e");
-  // Сопла, смотрящие в небо
-  circle(g, -16, -104, 6.5, "#8f959c"); circle(g, -16, -104, 4, "#26292d");
-  circle(g,  16, -104, 6.5, "#8f959c"); circle(g,  16, -104, 4, "#26292d");
-  roundRect(g, -46, -92, 92, 30, 14, "#1a2026");
-  g.fillStyle = "rgba(255,255,255,0.10)"; g.fillRect(-38, -87, 34, 20);
+  // Белые боковины-контрфорсы и ЧЁРНАЯ моторная палуба —
+  // заднего стекла у 918 НЕТ (правка Саши)!
+  roundRect(g, -46, -94, 92, 32, 12, "#eceef0");
+  roundRect(g, -36, -90, 72, 26, 8, "#141618");
+  // Два КРУПНЫХ хромовых сопла прямо В палубе, смотрят в небо
+  for (const side of [-1, 1]) {
+    g.fillStyle = "#8f959c";
+    g.beginPath(); g.ellipse(side * 18, -82, 9, 6.5, 0, 0, Math.PI * 2); g.fill();
+    g.fillStyle = "#1a1c1f";
+    g.beginPath(); g.ellipse(side * 18, -82, 6, 4, 0, 0, Math.PI * 2); g.fill();
+  }
+  // Сетка радиатора между соплами
+  g.fillStyle = "#33363b";
+  for (let y = -88, i = 0; i < 4; y += 4, i++) g.fillRect(-6, y, 12, 2);
   // Белый кузов
   roundRect(g, -85, -62, 170, 56, 15, "#eceef0");
   g.fillStyle = "rgba(255,255,255,0.45)"; g.fillRect(-77, -61, 154, 3);
@@ -8749,9 +8755,6 @@ function drawP918(g) {
     g.moveTo(side * 75, -37); g.quadraticCurveTo(side * 72, -52, side * 49, -52);
     g.stroke();
   }
-  // Сетка радиатора между трубами и надпись
-  g.fillStyle = "#33363b";
-  for (let y = -58; y <= -46; y += 4) g.fillRect(-12, y, 24, 2);
   g.fillStyle = "#63666e"; g.font = "italic bold 4.5px Georgia"; g.textAlign = "center";
   g.fillText("918 Spyder", 0, -40);
   plate(g, -36, 32);
