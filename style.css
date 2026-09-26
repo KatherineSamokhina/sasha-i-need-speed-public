@@ -72,12 +72,12 @@ body {
   margin-top: 4px;
 }
 
-/* Главное меню — один столбец (правка Саши) */
+/* Главное меню — ДВА столбца (правка Саши) */
 .menu-grid {
   display: grid;
-  grid-template-columns: 340px;
-  grid-gap: 10px;   /* старое имя — для старых WebView */
-  gap: 10px;
+  grid-template-columns: 300px 300px;
+  grid-gap: 10px 14px;   /* старое имя — для старых WebView */
+  gap: 10px 14px;
   margin-top: 6px;
 }
 
@@ -315,6 +315,36 @@ body.touch-device .menu-grid button { font-size: 14px; padding: 11px 4px; }
 #menu { gap: 8px; }
 #menu h1 { font-size: 44px; }
 #menu .menu-grid button { padding: 10px 8px; }
+
+/* КВАДРАТ МЕНЮ почти на весь экран (заказ Саши) — но с полями,
+   чтобы любимая красная ПОДСВЕТКА оставалась видна вокруг */
+#menu {
+  position: fixed;
+  inset: 3.5vh 3.5vw;
+  border-radius: 18px;
+  background: rgba(9, 9, 17, 0.97);
+  box-shadow: 0 0 60px rgba(255, 40, 40, 0.3);
+  overflow: hidden;
+  z-index: 5;
+}
+
+/* ---- ОБУЧЕНИЕ (заказ Саши: «напиши всё про игру») ---- */
+#tutorial { justify-content: flex-start; padding: 16px 0 14px; }
+#tutorial-body {
+  text-align: left;
+  width: min(88%, 680px);
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  font-size: 14px;
+  line-height: 1.55;
+  color: #d8dce6;
+  padding: 0 16px;
+}
+#tutorial-body h3 { color: #ffd23f; margin: 12px 0 4px; font-size: 16px; }
+#tutorial-body b { color: #ffffff; }
+#tutorial-body .k2 { color: #9be0ff; font-weight: bold; }
+#tutorial-body p { margin: 4px 0; }
 
 /* ---- Город: карта с точками-кнопками ---- */
 #city { background: #0a0a12; gap: 8px; }

@@ -2324,6 +2324,21 @@ function closeSettings() {
 wireButton("btn-settings", openSettings);
 wireButton("btn-back", closeSettings);
 
+// ---------- ОБУЧЕНИЕ (заказ Саши: «напиши всё про игру») ----------
+let inTutorial = false;
+function openTutorial() {
+  inTutorial = true;
+  show("menu", false);
+  show("tutorial", true);
+}
+function closeTutorial() {
+  inTutorial = false;
+  show("tutorial", false);
+  show("menu", true);
+}
+wireButton("btn-tutorial", openTutorial);
+wireButton("btn-tutorial-back", closeTutorial);
+
 // Сброс прогресса (решение Саши) — с защитой от случайного клика:
 // первый клик спрашивает, второй (в течение 3 секунд) — сбрасывает.
 // Деньги → 100, тюнинг стирается, машина — снова Авео.
@@ -3468,6 +3483,7 @@ addEventListener("keydown", (e) => {
     soundVolume = Math.min(1, +(soundVolume + 0.1).toFixed(1));
   if (e.code === "Escape" && !e.repeat) {
     if (inSettings) closeSettings();     // Esc в настройках — назад в меню
+    else if (inTutorial) closeTutorial();// Esc в обучении — назад в меню
     else if (inTuning) closeTuning();    // Esc в тюнинге — назад в гараж
     else if (inGarage) closeGarage();    // Esc в гараже — назад в меню
     else if (inRaces) closeRaces();      // Esc в заездах — назад в меню
