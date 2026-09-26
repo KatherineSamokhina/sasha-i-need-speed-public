@@ -548,6 +548,20 @@ const CARS = [
   { id: "chaikacan", name: "ГАЗ-13 Чайка Канада", gearbox: "А",
     topKmh: 165, zeroTo100: 18,
     desc: "Кастом ИЗ КАНАДЫ: универсал с запаской в хромовом кольце!" },
+  // ---- Porshe ×4 — выбор Саши по фото! ----
+  { id: "p930", name: "Porshe 911 Turbo 1975", gearbox: "М",
+    topKmh: 260, zeroTo100: 5.2,
+    desc: "Легенда с «хвостом кита» и красной лентой во всю корму." },
+  { id: "turbos", name: "Porshe 911 Turbo S", gearbox: "А",
+    topKmh: 318, zeroTo100: 3.1,
+    desc: "Серебристый король 911-х: двухэтажный выдвижной спойлер." },
+  { id: "gt3rs", name: "Porshe 911 GT3 RS", gearbox: "А",
+    topKmh: 296, zeroTo100: 3.2,
+    desc: "Гоночный зверь: крыло-гигант на лебединых шеях СВЕРХУ." },
+  { id: "p918", name: "Porshe 918 Spyder", gearbox: "А",
+    topKmh: 345, zeroTo100: 2.6,
+    noNpc: true,
+    desc: "Гибрид-гиперкар: выхлопные трубы торчат ВВЕРХ за кабиной!" },
   // ---- Гиперкары (восторг Саши: «СКОРОСТЬ ГЕМЕРЫ!!!») ----
   {
     id: "gemera", name: "Konisegg Gemera", gearbox: "А",
@@ -673,6 +687,7 @@ const BRAKE_100_0 = {
   patriot: 3.9, hunter: 4.1, eldorado: 4.3, ct5v: 2.3, p9x8: 1.6,
   evoque: 3.0, vogue: 3.4, grand: 2.9, p205: 3.1,
   jesko: 1.5, regera: 1.7, niva: 3.8, chaika: 4.6, chaikacan: 4.5,
+  p930: 2.8, turbos: 2.0, gt3rs: 1.9, p918: 1.8,
 };
 
 // Досчитываем игровые характеристики из реальных цифр.
@@ -721,6 +736,7 @@ const CAR_PRICES = {
   patriot: 700, hunter: 550, eldorado: 1200, ct5v: 2900, p9x8: 7800,
   evoque: 1600, vogue: 1300, grand: 2600, p205: 900,
   jesko: 9500, regera: 8400, niva: 500, chaika: 800, chaikacan: 1000,
+  p930: 2500, turbos: 4500, gt3rs: 4200, p918: 8700,
   pejo308: 1300, volga3110: 320, volga24: 300, volga21: 380,
   sportage: 850, k5: 950, sonata: 900, tucson: 800, i30: 600,
   zis: -1,   // −1 = не продаётся, только код «вечная ностальгия»
@@ -2436,6 +2452,7 @@ const CAR_CATEGORY = {
   evoque: "suv", vogue: "suv", grand: "suv", p205: "city",
   jesko: "hyper", regera: "hyper", niva: "ussr", chaika: "ussr",
   chaikacan: "ussr",
+  p930: "sport", turbos: "sport", gt3rs: "sport", p918: "hyper",
 };
 // Марка каждой машины — для вкладки «По марке» (заказ Саши)
 const CAR_BRAND = {
@@ -2483,6 +2500,7 @@ const CAR_BRAND = {
   p205: "Pejo", jesko: "Konisegg", regera: "Konisegg",
   niva: "ВАЗ", chaika: "ГАЗ",   // Чайка — в ГАЗы (заказ Саши)!
   chaikacan: "ГАЗ",
+  p930: "Porshe", turbos: "Porshe", gt3rs: "Porshe", p918: "Porshe",
 };
 let garageCat = 0;      // номер выбранной категории в CATEGORIES
 let garageBrand = null; // выбранная марка (null = фильтруем по типу)
@@ -2846,6 +2864,10 @@ const PAINT_SLOTS = {
   niva: ["#7a6a58", "#5f5244"],
   chaika: ["#17191c", "#101214"],
   chaikacan: ["#17191c", "#101214"],
+  p930: ["#c7d2c6", "#adb8ac"],
+  turbos: ["#c9cdd2", "#aeb3ba"],
+  gt3rs: ["#bfc4ca", "#a5abb2"],
+  p918: ["#eceef0", "#d2d5d9"],
   merc190: ["#1a1c20", "#131519"],
   amggt53: ["#5a5e63", "#4d5156"],
   maybach: ["#ece9e2", "#dcd9d2"],
@@ -2905,7 +2927,7 @@ const RIM_X = { aveo: 66, picanto: 56, corsa: 59, focus: 73, delorean: 75,
   astra: 62, insignia: 70, daytona: 72, patriot: 64, hunter: 64,
   eldorado: 74, ct5v: 74, p9x8: 82, evoque: 66, vogue: 66, grand: 68,
   p205: 60, jesko: 80, regera: 80, niva: 60, chaika: 72,
-  chaikacan: 72 };
+  chaikacan: 72, p930: 74, turbos: 78, gt3rs: 79, p918: 79 };
 
 // ---------- ИГРОВАЯ ВАЛЮТА 🪙 ----------
 // Зарабатывается в гонках (по месту на финише), тратится на железо.
@@ -3055,6 +3077,10 @@ const MOD_FIT = {
   niva: { spoilerY: -122, stripeTop: -66 },
   chaika: { stripeTop: -60 },
   chaikacan: { spoilerY: -126, stripeTop: -64 },
+  p930: { noSpoiler: true, stripeTop: -60 },   // «хвост кита» с завода!
+  turbos: { noSpoiler: true, stripeTop: -58 }, // выдвижной свой
+  gt3rs: { noSpoiler: true, stripeTop: -60 },
+  p918: { noSpoiler: true, stripeTop: -58 },
   eldorado: { stripeTop: -60 },
   alpha5: { noSpoiler: true, stripeTop: -60 },  // жалюзи и хвост-клин
   yaris: { spoilerY: -104, stripeTop: -58 },
@@ -8598,6 +8624,143 @@ function drawChaikaCan(g) {
   plate(g, -26, 36);
 }
 
+// ---------- Porshe ×4: выбор Саши по фото ----------
+
+// --- Porshe 911 Turbo 1975: «хвост кита», мятное серебро ---
+function drawP930(g) {
+  carBase(g);
+  roundRect(g, -48, -96, 96, 32, 14, "#1a2026");
+  g.fillStyle = "rgba(255,255,255,0.10)"; g.fillRect(-40, -91, 36, 22);
+  // ХВОСТ КИТА: широкая полка с чёрной резиновой окантовкой
+  roundRect(g, -68, -74, 136, 11, 5, "#15171a");
+  roundRect(g, -62, -71.5, 124, 6, 3, "#c7d2c6");
+  roundRect(g, -84, -64, 168, 58, 16, "#c7d2c6");
+  g.fillStyle = "rgba(255,255,255,0.30)"; g.fillRect(-76, -63, 152, 3);
+  // Красная лента во всю корму с тёмными буквами (как на фото)
+  roundRect(g, -72, -54, 144, 13, 5, "#5c1015");
+  roundRect(g, -70, -51, 140, 8, 3, "#c22020");
+  g.fillStyle = "#3d0a0a"; g.font = "bold 5px Verdana"; g.textAlign = "center";
+  g.fillText("P O R S H E", 0, -45);
+  // Янтарные уголки на концах ленты
+  roundRect(g, -70, -53, 14, 10, 3, "#e8b021");
+  roundRect(g,  56, -53, 14, 10, 3, "#e8b021");
+  plate(g, -36, 34);
+  // Чёрные клыки-бамперетки и одна труба слева (как на фото!)
+  roundRect(g, -78, -24, 156, 10, 4, "#aab4a9");
+  roundRect(g, -50, -26, 12, 14, 3, "#17191c");
+  roundRect(g,  38, -26, 12, 14, 3, "#17191c");
+  circle(g, -58, -11, 4.5, "#17191c"); circle(g, -58, -11, 2.5, "#3d4247");
+}
+
+// --- Porshe 911 Turbo S: двухэтажный выдвижной спойлер ---
+function drawTurboS(g) {
+  carBase(g);
+  roundRect(g, -50, -94, 100, 32, 14, "#1a2026");
+  g.fillStyle = "rgba(255,255,255,0.10)"; g.fillRect(-42, -89, 38, 22);
+  // ДВА этажа выдвижного спойлера
+  roundRect(g, -56, -72, 112, 5, 2.5, "#aeb3ba");
+  roundRect(g, -50, -66, 100, 4, 2, "#8f959c");
+  roundRect(g, -85, -62, 170, 56, 15, "#c9cdd2");
+  g.fillStyle = "rgba(255,255,255,0.30)"; g.fillRect(-77, -61, 154, 3);
+  // Тонкие фонари-дуги + полоска между ними
+  roundRect(g, -60, -52, 120, 2.5, 1, "#5c1015");
+  for (const side of [-1, 1]) {
+    g.strokeStyle = "#2a0808"; g.lineWidth = 6;
+    g.beginPath();
+    g.moveTo(side * 76, -42); g.quadraticCurveTo(side * 72, -54, side * 48, -53);
+    g.stroke();
+    g.strokeStyle = "#e82121"; g.lineWidth = 2.5;
+    g.beginPath();
+    g.moveTo(side * 75, -43); g.quadraticCurveTo(side * 70, -52, side * 49, -51);
+    g.stroke();
+  }
+  g.fillStyle = "#63666e"; g.font = "bold 4.5px Verdana"; g.textAlign = "center";
+  g.fillText("P O R S H E", 0, -44);
+  plate(g, -38, 34);
+  // Чёрный низ и два ШИРОКИХ прямоугольных сопла
+  roundRect(g, -80, -24, 160, 14, 5, "#17191c");
+  roundRect(g, -56, -19, 26, 7, 3, "#63666e");
+  roundRect(g,  30, -19, 26, 7, 3, "#63666e");
+}
+
+// --- Porshe 911 GT3 RS: крыло-гигант на лебединых шеях СВЕРХУ ---
+function drawGT3RS(g) {
+  carBase(g);
+  // Лезвие крыла ШИРЕ кузова
+  roundRect(g, -88, -120, 176, 10, 3, "#141618");
+  g.fillStyle = "rgba(255,255,255,0.12)"; g.fillRect(-80, -119, 160, 2.5);
+  // ЛЕБЕДИНЫЕ шеи: крепятся к ВЕРХУ лезвия и спускаются на кузов
+  g.fillStyle = "#26292d";
+  for (const side of [-1, 1]) {
+    g.beginPath();
+    g.moveTo(side * 24, -123); g.lineTo(side * 31, -123);
+    g.lineTo(side * 41, -58); g.lineTo(side * 30, -58);
+    g.closePath(); g.fill();
+  }
+  roundRect(g, -94, -127, 9, 20, 2.5, "#26292d");
+  roundRect(g,  85, -127, 9, 20, 2.5, "#26292d");
+  roundRect(g, -46, -94, 92, 30, 13, "#1a2026");
+  g.fillStyle = "rgba(255,255,255,0.10)"; g.fillRect(-38, -89, 34, 20);
+  // Серебристый кузов
+  roundRect(g, -85, -62, 170, 56, 13, "#bfc4ca");
+  g.fillStyle = "rgba(255,255,255,0.25)"; g.fillRect(-77, -61, 154, 3);
+  // Полоса света + вертикальные воздухозаборники по углам
+  roundRect(g, -70, -54, 140, 5, 2.5, "#2a0808");
+  roundRect(g, -68, -53, 136, 3, 1.5, "#e82121");
+  for (const side of [-1, 1]) {
+    roundRect(g, side * 78 - 4, -48, 8, 20, 3, "#17191c");
+    roundRect(g, side * 78 - 2, -45, 4, 14, 2, "#c22020");
+  }
+  g.fillStyle = "#33363b"; g.font = "bold 5px Verdana"; g.textAlign = "center";
+  g.fillText("GT3 RS", 0, -42);
+  plate(g, -36, 32);
+  // Огромный диффузор, ДВЕ круглые трубы по центру (как на фото)
+  roundRect(g, -82, -22, 164, 14, 5, "#101214");
+  g.fillStyle = "#1e2124";
+  for (const x of [-58, -32, 32, 58]) g.fillRect(x - 2, -20, 4, 10);
+  circle(g, -8, -15, 4.5, "#26292d"); circle(g, -8, -15, 3, "#63666e");
+  circle(g,  8, -15, 4.5, "#26292d"); circle(g,  8, -15, 3, "#63666e");
+}
+
+// --- Porshe 918 Spyder: трубы ВВЕРХ за кабиной! ---
+function drawP918(g) {
+  carBase(g);
+  // Ножки труб (стекло прикроет их снизу)
+  roundRect(g, -21, -102, 10, 14, 3, "#63666e");
+  roundRect(g,  11, -102, 10, 14, 3, "#63666e");
+  // Сопла, смотрящие в небо
+  circle(g, -16, -104, 6.5, "#8f959c"); circle(g, -16, -104, 4, "#26292d");
+  circle(g,  16, -104, 6.5, "#8f959c"); circle(g,  16, -104, 4, "#26292d");
+  roundRect(g, -46, -92, 92, 30, 14, "#1a2026");
+  g.fillStyle = "rgba(255,255,255,0.10)"; g.fillRect(-38, -87, 34, 20);
+  // Белый кузов
+  roundRect(g, -85, -62, 170, 56, 15, "#eceef0");
+  g.fillStyle = "rgba(255,255,255,0.45)"; g.fillRect(-77, -61, 154, 3);
+  // Красная полоска на кромке крыла-хвоста (как на фото)
+  roundRect(g, -46, -64, 92, 3, 1.5, "#c22020");
+  // Фонари-крючки, обнимающие углы
+  for (const side of [-1, 1]) {
+    g.strokeStyle = "#2a0808"; g.lineWidth = 7;
+    g.beginPath();
+    g.moveTo(side * 76, -36); g.quadraticCurveTo(side * 74, -54, side * 48, -54);
+    g.stroke();
+    g.strokeStyle = "#ff2d2d"; g.lineWidth = 3;
+    g.beginPath();
+    g.moveTo(side * 75, -37); g.quadraticCurveTo(side * 72, -52, side * 49, -52);
+    g.stroke();
+  }
+  // Сетка радиатора между трубами и надпись
+  g.fillStyle = "#33363b";
+  for (let y = -58; y <= -46; y += 4) g.fillRect(-12, y, 24, 2);
+  g.fillStyle = "#63666e"; g.font = "italic bold 4.5px Georgia"; g.textAlign = "center";
+  g.fillText("918 Spyder", 0, -40);
+  plate(g, -36, 32);
+  // Чёрный диффузор (труб внизу НЕТ — они наверху!)
+  roundRect(g, -80, -20, 160, 12, 5, "#101214");
+  g.fillStyle = "#1e2124";
+  for (const x of [-56, -28, 0, 28, 56]) g.fillRect(x - 2, -18, 4, 9);
+}
+
 // Трезубец Mazerety — фирменный значок из трёх зубцов
 function trident(g, y, color) {
   g.fillStyle = color;
@@ -8723,6 +8886,7 @@ const CAR_DRAWERS = {
   evoque: drawEvoque, vogue: drawVogue, grand: drawGrand, p205: drawP205,
   jesko: drawJesko, regera: drawRegera, niva: drawNiva, chaika: drawChaika,
   chaikacan: drawChaikaCan,
+  p930: drawP930, turbos: drawTurboS, gt3rs: drawGT3RS, p918: drawP918,
 };
 
 // Огненный след: два пылающих следа за колёсами, три слоя пламени
