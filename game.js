@@ -566,6 +566,24 @@ const CARS = [
   { id: "r34", name: "Nisan Skyline R34", gearbox: "М",
     topKmh: 250, zeroTo100: 4.9,
     desc: "Легенда JDM: четыре круглых фонаря и крыло-полка." },
+  { id: "gtr", name: "Nisan GT-R R35", gearbox: "А",
+    topKmh: 315, zeroTo100: 2.8,
+    desc: "«Годзилла»: внук Скайлайна с теми же четырьмя кругами." },
+  { id: "z350", name: "Nisan 350Z", gearbox: "М",
+    topKmh: 250, zeroTo100: 5.5,
+    desc: "Оранжевое зетто: хвост-утёнок и буква Z на корме." },
+  { id: "xtrail", name: "Nisan X-Trail", gearbox: "А",
+    topKmh: 190, zeroTo100: 9.5,
+    offroadSoft: true,
+    desc: "Красный семейный вездеход с хромовой бровью." },
+  { id: "qashqai", name: "Nisan Qashqai", gearbox: "А",
+    topKmh: 180, zeroTo100: 10.5,
+    offroadSoft: true,
+    desc: "Белый городской кроссовер с антенной-удочкой." },
+  { id: "juke", name: "Nisan Juke Nismo", gearbox: "А",
+    topKmh: 215, zeroTo100: 7.0,
+    offroadSoft: true,
+    desc: "Лягушонок-спортсмен: фонари-бумеранги высоко на боках." },
   { id: "chiron", name: "Bugatty Chiron", gearbox: "А",
     topKmh: 358, zeroTo100: 2.4,
     noNpc: true,
@@ -705,6 +723,7 @@ const BRAKE_100_0 = {
   jesko: 1.5, regera: 1.7, niva: 3.8, chaika: 4.6, chaikacan: 4.5,
   p930: 2.8, turbos: 2.0, gt3rs: 1.9, p918: 1.8,
   r34: 2.4, chiron: 1.7, tourbillon: 1.6, bolide: 1.4,
+  gtr: 2.1, z350: 2.6, xtrail: 3.0, qashqai: 3.1, juke: 2.8,
 };
 
 // Досчитываем игровые характеристики из реальных цифр.
@@ -756,6 +775,7 @@ const CAR_PRICES = {
   jesko: 9500, regera: 8400, niva: 500, chaika: 800, chaikacan: 1000,
   p930: 2500, turbos: 4500, gt3rs: 4200, p918: 8700,
   r34: 2400, chiron: 9800, tourbillon: 10500, bolide: 9900,
+  gtr: 3600, z350: 1800, xtrail: 950, qashqai: 700, juke: 850,
   pejo308: 1300, volga3110: 320, volga24: 300, volga21: 380,
   sportage: 850, k5: 950, sonata: 900, tucson: 800, i30: 600,
   zis: -1,   // −1 = не продаётся, только код «вечная ностальгия»
@@ -2495,6 +2515,8 @@ const CAR_CATEGORY = {
   chaikacan: "ussr",
   p930: "sport", turbos: "sport", gt3rs: "sport", p918: "hyper",
   r34: "sport", chiron: "hyper", tourbillon: "hyper", bolide: "hyper",
+  gtr: "sport", z350: "sport", xtrail: "suv", qashqai: "suv",
+  juke: "suv",
 };
 // Марка каждой машины — для вкладки «По марке» (заказ Саши)
 const CAR_BRAND = {
@@ -2545,6 +2567,8 @@ const CAR_BRAND = {
   p930: "Porshe", turbos: "Porshe", gt3rs: "Porshe", p918: "Porshe",
   r34: "Nisan", chiron: "Bugatty", tourbillon: "Bugatty",
   bolide: "Bugatty",
+  gtr: "Nisan", z350: "Nisan", xtrail: "Nisan", qashqai: "Nisan",
+  juke: "Nisan",
 };
 let garageCat = 0;      // номер выбранной категории в CATEGORIES
 let garageBrand = null; // выбранная марка (null = фильтруем по типу)
@@ -2916,6 +2940,11 @@ const PAINT_SLOTS = {
   chiron: ["#9fb8d4", "#7f9cbd"],
   tourbillon: ["#1d2024", "#141619"],
   bolide: ["#3f83c4", "#2f639a"],
+  gtr: ["#17191c", "#101214"],
+  z350: ["#d97a1e", "#b35f12"],
+  xtrail: ["#b3202a", "#8c161e"],
+  qashqai: ["#f0f1f3", "#d6d8dc"],
+  juke: ["#eef0f2", "#d4d7db"],
   merc190: ["#1a1c20", "#131519"],
   amggt53: ["#5a5e63", "#4d5156"],
   maybach: ["#ece9e2", "#dcd9d2"],
@@ -2976,7 +3005,8 @@ const RIM_X = { aveo: 66, picanto: 56, corsa: 59, focus: 73, delorean: 75,
   eldorado: 74, ct5v: 74, p9x8: 82, evoque: 66, vogue: 66, grand: 68,
   p205: 60, jesko: 80, regera: 80, niva: 60, chaika: 72,
   chaikacan: 72, p930: 74, turbos: 78, gt3rs: 79, p918: 79,
-  r34: 77, chiron: 82, tourbillon: 82, bolide: 84 };
+  r34: 77, chiron: 82, tourbillon: 82, bolide: 84,
+  gtr: 78, z350: 74, xtrail: 66, qashqai: 65, juke: 64 };
 
 // ---------- ИГРОВАЯ ВАЛЮТА 🪙 ----------
 // Зарабатывается в гонках (по месту на финише), тратится на железо.
@@ -3134,6 +3164,11 @@ const MOD_FIT = {
   chiron: { noSpoiler: true, stripeTop: -64 },
   tourbillon: { noSpoiler: true, stripeTop: -64 },
   bolide: { noSpoiler: true, stripeTop: -66 },
+  gtr: { noSpoiler: true, stripeTop: -60 },   // губа с завода
+  z350: { noSpoiler: true, stripeTop: -58 },  // утиный хвост свой
+  xtrail: { spoilerY: -118, stripeTop: -64 },
+  qashqai: { spoilerY: -116, stripeTop: -62 },
+  juke: { noSpoiler: true, stripeTop: -60 },  // козырёк на крыше свой
   eldorado: { stripeTop: -60 },
   alpha5: { noSpoiler: true, stripeTop: -60 },  // жалюзи и хвост-клин
   yaris: { spoilerY: -104, stripeTop: -58 },
@@ -8848,6 +8883,140 @@ function drawR34(g) {
   circle(g, -52, -13, 6.5, "#8f959c"); circle(g, -52, -13, 4, "#33363b");
 }
 
+// --- Nisan GT-R R35: «Годзилла» с четырьмя кругами ---
+function drawGTR(g) {
+  carBase(g);
+  roundRect(g, -50, -96, 100, 32, 12, "#1a2026");
+  g.fillStyle = "rgba(255,255,255,0.08)"; g.fillRect(-42, -91, 38, 22);
+  // Губа-спойлер на багажнике
+  roundRect(g, -54, -66, 108, 5, 2.5, "#0b0d0f");
+  roundRect(g, -86, -64, 172, 58, 10, "#17191c");
+  g.fillStyle = "rgba(255,255,255,0.10)"; g.fillRect(-78, -63, 156, 3);
+  // Четыре круглых фонаря (семейная черта Скайлайнов!)
+  for (const side of [-1, 1]) {
+    for (const dx of [-12, 12]) {
+      circle(g, side * 54 + dx, -48, 9.5, "#2a0d0d");
+      circle(g, side * 54 + dx, -48, 6.5, "#e82121");
+      circle(g, side * 54 + dx, -48, 3, "#7a1216");
+    }
+  }
+  // Значок и красный шильдик GT-R
+  circle(g, 0, -52, 6, "#8f959c"); circle(g, 0, -52, 4, "#33363b");
+  g.fillStyle = "#e82121"; g.font = "bold 5px Verdana"; g.textAlign = "center";
+  g.fillText("GT-R", 68, -38);
+  plate(g, -40, 40);
+  // Серебристый диффузор и ЧЕТЫРЕ трубы парами по углам
+  roundRect(g, -82, -24, 164, 14, 5, "#3d4247");
+  for (const x of [-66, -50, 50, 66]) {
+    circle(g, x, -17, 5.5, "#141618"); circle(g, x, -17, 3.5, "#33363b");
+  }
+}
+
+// --- Nisan 350Z: оранжевое зетто ---
+function drawZ350(g) {
+  carBase(g);
+  roundRect(g, -48, -94, 96, 32, 15, "#1a2026");
+  g.fillStyle = "rgba(255,255,255,0.10)"; g.fillRect(-40, -89, 36, 22);
+  // Утиный хвост
+  roundRect(g, -50, -64, 100, 4, 2, "#b35f12");
+  roundRect(g, -84, -62, 168, 56, 15, "#d97a1e");
+  g.fillStyle = "rgba(255,255,255,0.20)"; g.fillRect(-76, -61, 152, 3);
+  // Буква Z в кружке на багажнике
+  circle(g, 0, -52, 6.5, "#8f959c"); circle(g, 0, -52, 4.8, "#33363b");
+  g.fillStyle = "#c9d0d7"; g.font = "bold 6px Verdana"; g.textAlign = "center";
+  g.fillText("Z", 0, -49.5);
+  // Широкая ниша номера и тонкие фонарики по её углам
+  roundRect(g, -46, -44, 92, 18, 4, "#c46a15");
+  for (const side of [-1, 1]) {
+    roundRect(g, side * 62 - 12, -42, 24, 7, 3, "#3d1512");
+    roundRect(g, side * 62 - 9, -40.5, 18, 4, 2, "#d43535");
+  }
+  plate(g, -42, 36);
+  g.fillStyle = "#8f959c"; g.font = "bold 4.5px Verdana"; g.textAlign = "center";
+  g.fillText("350Z", -60, -56);
+  // Низ и две трубы по центру
+  roundRect(g, -78, -20, 156, 11, 5, "#33363b");
+  circle(g, -14, -13, 4.5, "#141618"); circle(g, -14, -13, 3, "#63666e");
+  circle(g,  14, -13, 4.5, "#141618"); circle(g,  14, -13, 3, "#63666e");
+}
+
+// --- Nisan X-Trail: красный семейный вездеход ---
+function drawXTrail(g) {
+  carBase(g, -28, 34);
+  roundRect(g, -62, -118, 124, 42, 9, "#b3202a");
+  roundRect(g, -54, -112, 108, 28, 6, "#1a2026");
+  g.fillStyle = "rgba(255,255,255,0.10)"; g.fillRect(-46, -107, 44, 18);
+  roundRect(g, -72, -78, 144, 72, 9, "#b3202a");
+  g.fillStyle = "rgba(255,255,255,0.16)"; g.fillRect(-64, -77, 128, 3);
+  // ХРОМОВАЯ бровь через калитку со значком
+  roundRect(g, -50, -70, 100, 5, 2.5, "#c9d0d7");
+  circle(g, 0, -67, 7, "#c9d0d7"); circle(g, 0, -67, 5, "#8f959c");
+  // Блочные фонари по краям
+  for (const side of [-1, 1]) {
+    roundRect(g, side * 60 - 11, -74, 22, 20, 5, "#3d1512");
+    roundRect(g, side * 60 - 8, -70, 16, 12, 3, "#d43535");
+  }
+  plate(g, -58, 40);
+  // Серая юбка с серебристой защитой
+  roundRect(g, -68, -28, 136, 16, 6, "#3d4247");
+  roundRect(g, -40, -22, 80, 8, 4, "#aab0b6");
+}
+
+// --- Nisan Qashqai: кроссовер с антенной-удочкой ---
+function drawQashqai(g) {
+  carBase(g, -28, 34);
+  // Антенна-удочка на крыше!
+  g.strokeStyle = "#33363b"; g.lineWidth = 2;
+  g.beginPath(); g.moveTo(4, -114); g.lineTo(14, -138); g.stroke();
+  roundRect(g, -60, -116, 120, 42, 9, "#f0f1f3");
+  roundRect(g, -52, -110, 104, 28, 6, "#1a2026");
+  g.fillStyle = "rgba(255,255,255,0.12)"; g.fillRect(-44, -105, 42, 18);
+  roundRect(g, -70, -76, 140, 70, 9, "#f0f1f3");
+  g.fillStyle = "rgba(255,255,255,0.40)"; g.fillRect(-62, -75, 124, 3);
+  // Фонари-капли, обнимающие углы
+  for (const side of [-1, 1]) {
+    roundRect(g, side * 58 - 10, -74, 20, 24, 6, "#3d1512");
+    roundRect(g, side * 58 - 7, -70, 14, 16, 4, "#d43535");
+  }
+  g.fillStyle = "#8f959c"; g.font = "bold 4px Verdana"; g.textAlign = "center";
+  g.fillText("QASHQAI", -42, -38);
+  plate(g, -56, 40);
+  circle(g, 0, -68, 6.5, "#c9d0d7"); circle(g, 0, -68, 4.5, "#8f959c");
+  // Тёмный бампер
+  roundRect(g, -66, -26, 132, 14, 5, "#33363b");
+}
+
+// --- Nisan Juke Nismo: лягушонок-спортсмен ---
+function drawJuke(g) {
+  carBase(g, -26, 32);
+  // Козырёк на крыше
+  roundRect(g, -50, -110, 100, 8, 4, "#f0ede9");
+  roundRect(g, -52, -104, 104, 34, 9, "#eef0f2");
+  roundRect(g, -44, -100, 88, 24, 6, "#1a2026");
+  g.fillStyle = "rgba(255,255,255,0.12)"; g.fillRect(-36, -95, 34, 14);
+  roundRect(g, -66, -72, 132, 66, 10, "#eef0f2");
+  g.fillStyle = "rgba(255,255,255,0.35)"; g.fillRect(-58, -71, 116, 3);
+  // Фонари-БУМЕРАНГИ высоко на боках (фишка Жука!)
+  for (const side of [-1, 1]) {
+    g.strokeStyle = "#3d1512"; g.lineWidth = 6;
+    g.beginPath();
+    g.moveTo(side * 56, -46); g.quadraticCurveTo(side * 62, -72, side * 42, -80);
+    g.stroke();
+    g.strokeStyle = "#d43535"; g.lineWidth = 3;
+    g.beginPath();
+    g.moveTo(side * 55, -47); g.quadraticCurveTo(side * 59, -70, side * 42, -77);
+    g.stroke();
+  }
+  circle(g, 0, -60, 6, "#c9d0d7"); circle(g, 0, -60, 4, "#8f959c");
+  g.fillStyle = "#8f959c"; g.font = "bold 4px Verdana"; g.textAlign = "center";
+  g.fillText("JUKE", -44, -36);
+  plate(g, -50, 36);
+  // Тёмный низ с красной ниткой Nismo и труба по центру
+  roundRect(g, -62, -24, 124, 13, 5, "#33363b");
+  roundRect(g, -56, -12.5, 112, 2, 1, "#d1202a");
+  circle(g, 8, -17, 4.5, "#141618"); circle(g, 8, -17, 3, "#63666e");
+}
+
 // --- Bugatty Chiron: подкова, плавник и лента света ---
 function drawChiron(g) {
   carBase(g);
@@ -9083,6 +9252,8 @@ const CAR_DRAWERS = {
   p930: drawP930, turbos: drawTurboS, gt3rs: drawGT3RS, p918: drawP918,
   r34: drawR34, chiron: drawChiron, tourbillon: drawTourbillon,
   bolide: drawBolide,
+  gtr: drawGTR, z350: drawZ350, xtrail: drawXTrail,
+  qashqai: drawQashqai, juke: drawJuke,
 };
 
 // Огненный след: два пылающих следа за колёсами, три слоя пламени
