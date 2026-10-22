@@ -92,7 +92,7 @@ const EN = {
   "· На механике тормози понижением передачи — гоночный приём!": "· On a manual, brake by shifting down — a racing trick!",
   "· Трава замедляет всех, кроме вездеходов и брони.": "· Grass slows everyone down except 4x4s and armour.",
   "· ЗИС-115 расшвыривает соперников тараном, но у него НЕТ тормозов.": "· The ZIS-115 rams rivals aside, but it has NO brakes.",
-  "· Король скорости — Konisegg Agera RS: 447 км/ч, мировой рекорд!": "· The speed king is the Konisegg Agera RS: 447 km/h, a world record!",
+  "· Король скорости — Kolesegg Agera RS: 447 км/ч, мировой рекорд!": "· The speed king is the Kolesegg Agera RS: 447 km/h, a world record!",
   "⬅ Назад": "⬅ Back",
 
   // ---------- Мультиплеер ----------

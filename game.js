@@ -532,11 +532,11 @@ const CARS = [
     desc: "Новый король вездеходов: золотистый, гладкий, как галька." },
   { id: "p205", name: "Pejo 205 GTI", gearbox: "М", topKmh: 200, zeroTo100: 7.8,
     desc: "Злой белый малыш из ралли: красная полоска и жёлтый номер." },
-  // ---- Konisegg-пара (коробки — заказ Саши: «М у Джеско и С у 2») ----
-  { id: "jesko", name: "Konisegg Jesko", gearbox: "М", topKmh: 359, zeroTo100: 2.5,
+  // ---- Kolesegg-пара (коробки — заказ Саши: «М у Джеско и С у 2») ----
+  { id: "jesko", name: "Kolesegg Jesko", gearbox: "М", topKmh: 359, zeroTo100: 2.5,
     noNpc: true,
     desc: "1600 сил и гигантское крыло: НОВЫЙ король скорости в гараже!" },
-  { id: "regera", name: "Konisegg Regera", gearbox: "С", topKmh: 340, zeroTo100: 2.8,
+  { id: "regera", name: "Kolesegg Regera", gearbox: "С", topKmh: 340, zeroTo100: 2.8,
     noNpc: true,
     desc: "Овальная труба по центру и мягкая сила: 1500 гибридных лошадей." },
   // ---- Советская пара из списка 28 (фото Саши) ----
@@ -599,7 +599,7 @@ const CARS = [
     desc: "Трековый монстр: крыло-Х и четыре трубы квадратом." },
   // ---- Гиперкары (восторг Саши: «СКОРОСТЬ ГЕМЕРЫ!!!») ----
   {
-    id: "gemera", name: "Konisegg Gemera", gearbox: "А",
+    id: "gemera", name: "Kolesegg Gemera", gearbox: "А",
     topKmh: 344,      // ограничение Саши: «у гемеры ограничь 344»
     zeroTo100: 1.9,   // 1700 гибридных лошадей!
     noNpc: true,      // соперникам гиперкары не выдаются — нечестно!
@@ -663,7 +663,7 @@ const CARS = [
     desc: "Белая капля-ракета: плавники, лента огня и электроника на 320.",
   },
   {
-    id: "agera", name: "Konisegg Agera RS", gearbox: "А",
+    id: "agera", name: "Kolesegg Agera RS", gearbox: "А",
     topKmh: 447,      // МИРОВОЙ РЕКОРД (Невада, 2017)! Король скорости
     zeroTo100: 2.9,   // — решение Саши. Движок проверен: держит!
     noNpc: true,
@@ -2641,10 +2641,10 @@ const CAR_BRAND = {
   mkz: "Linkorn",
   merc190: "Merzedes", amggt53: "Merzedes", maybach: "Merzedes",
   gle: "Merzedes",
-  pejo308: "Pejo", gemera: "Konisegg", wayra: "Paganny", tuatara: "ZSC",
+  pejo308: "Pejo", gemera: "Kolesegg", wayra: "Paganny", tuatara: "ZSC",
   astro: "Opal", cobra: "Shelbee", defendor: "Sand Hover",
   pejo206: "Pejo", raf977: "РАФ", uaz469: "УАЗ", zis101: "ЗИС",
-  f2: "Нет марки", agera: "Konisegg", zonta: "Paganny", aero: "ZSC",
+  f2: "Нет марки", agera: "Kolesegg", zonta: "Paganny", aero: "ZSC",
   m3e30: "BNW", m5: "BNW", timemachine: "TMC", police: "Dodgee",
   cybercraft: "Tesly", models: "Tesly",
   db5: "Astin Martun", dbs: "Astin Martun",
@@ -2663,7 +2663,7 @@ const CAR_BRAND = {
   patriot: "УАЗ", hunter: "УАЗ", eldorado: "Kadillark",
   ct5v: "Kadillark", p9x8: "Pejo",
   evoque: "Sand Hover", vogue: "Sand Hover", grand: "Sand Hover",
-  p205: "Pejo", jesko: "Konisegg", regera: "Konisegg",
+  p205: "Pejo", jesko: "Kolesegg", regera: "Kolesegg",
   niva: "ВАЗ", chaika: "ГАЗ",   // Чайка — в ГАЗы (заказ Саши)!
   chaikacan: "ГАЗ",
   p930: "Porshe", turbos: "Porshe", gt3rs: "Porshe", p918: "Porshe",
@@ -8920,7 +8920,7 @@ function drawP205(g) {
   roundRect(g, -26, -10, 9, 3.5, 1.5, "#7c8288");
 }
 
-// --- Konisegg Jesko: белые плечи, чёрная корма, крыло-бумеранг ---
+// --- Kolesegg Jesko: белые плечи, чёрная корма, крыло-бумеранг ---
 function drawJesko(g) {
   carBase(g);
   // БЕЛАЯ моторная панель вместо стекла (у Джеско сзади НЕТ окна!)
@@ -8968,10 +8968,10 @@ function drawJesko(g) {
     roundRect(g, side * 79 - 2.5, -52, 5, 15, 2.5, "#2a0808");
     roundRect(g, side * 79 - 1.5, -50.5, 3, 12, 1.5, "#e82121");
   }
-  // Белая плашка «Konisegg» на чёрной панели
+  // Белая плашка «Kolesegg» на чёрной панели
   roundRect(g, -25, -51, 50, 9, 2, "#e4e7ea");
   g.fillStyle = "#17191c"; g.font = "bold 5px Verdana"; g.textAlign = "center";
-  g.fillText("Konisegg", 0, -44);
+  g.fillText("Kolesegg", 0, -44);
   plate(g, -37, 30);
   // Диффузор с ЗЕЛЁНЫМИ рёбрами
   roundRect(g, -84, -18, 168, 12, 4, "#101214");
@@ -8979,7 +8979,7 @@ function drawJesko(g) {
   for (const x of [-64, -36, 36, 64]) g.fillRect(x - 2, -16, 4, 8);
 }
 
-// --- Konisegg Regera: овальная труба по центру ---
+// --- Kolesegg Regera: овальная труба по центру ---
 function drawRegera(g) {
   carBase(g);
   // Плечи-волны и кабина
@@ -8992,7 +8992,7 @@ function drawRegera(g) {
   g.fillStyle = "#dbe2ea"; g.font = "italic bold 7px Georgia"; g.textAlign = "center";
   g.fillText("Regera", 0, -42);
   g.font = "bold 4px Verdana";
-  g.fillText("Konisegg", 0, -51);
+  g.fillText("Kolesegg", 0, -51);
   // Фонари-дуги, обнимающие верхние углы
   for (const side of [-1, 1]) {
     g.strokeStyle = "#2a0808"; g.lineWidth = 6;
