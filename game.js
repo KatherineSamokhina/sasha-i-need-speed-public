@@ -599,7 +599,7 @@ const CARS = [
     desc: "Трековый монстр: крыло-Х и четыре трубы квадратом." },
   // ---- Гиперкары (восторг Саши: «СКОРОСТЬ ГЕМЕРЫ!!!») ----
   {
-    id: "gemera", name: "Kolesegg Gemegga", gearbox: "А",
+    id: "gemera", name: "Kolesegg Omlegga", gearbox: "А",
     topKmh: 344,      // ограничение Саши: «у гемеры ограничь 344»
     zeroTo100: 1.9,   // 1700 гибридных лошадей!
     noNpc: true,      // соперникам гиперкары не выдаются — нечестно!
@@ -607,7 +607,7 @@ const CARS = [
   },
   {
     id: "wayra", name: "Paganny Wayra BC", gearbox: "М",
-    topKmh: 335,      // правка Саши: Пагани медленнее Гемегги
+    topKmh: 335,      // правка Саши: Пагани медленнее Омлегги
     zeroTo100: 2.8,
     noNpc: true,      // соперникам гиперкары не выдаются — нечестно!
     desc: "Роскошь: карбон, крыло-этажерка и четыре трубы букетом.",
@@ -6608,7 +6608,7 @@ function drawGemera(g) {
   roundRect(g,  52, -52, 34, 24, 10, "#0e1012");
   // Подпись Gemera на центральной панели
   g.fillStyle = "#c9d0d7"; g.font = "italic bold 8px Verdana";
-  g.fillText("Gemegga", 0, -42);
+  g.fillText("Omlegga", 0, -42);
   plate(g, -36, 36);
   // Диффузор с плавниками
   roundRect(g, -70, -20, 140, 12, 4, "#101214");
