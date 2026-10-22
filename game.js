@@ -3433,19 +3433,25 @@ function modMap(id) {
     }
   }
 
-  // ГДЕ КРЫЛО. Ищем заднее стекло (#1a2026 и его блик):
-  //  — хэтчбэки, универсалы и вездеходы: козырёк целиком НАД стеклом;
-  //  — седаны и купе: сразу ПОД стеклом, на крышке багажника — если
-  //    багажник есть (у Делориана жалюзи до самых фонарей)
+  // ГДЕ КРЫЛО (правка Саши по фото Ниссана с огромным крылом):
+  //  — хэтчбэки, универсалы и вездеходы: ВСЯ моделька приподнята,
+  //    ножки стоят на крыше, крыло над ней;
+  //  — седаны и купе: высокие стойки на крышке багажника, крыло
+  //    поднято и висит ПЕРЕД стеклом.
+  // Стекло — тёмный синеватый цвет, который не краска (у Авио оно
+  // светлее обычного #1a2026 — раньше его не находили)
   const fit = MOD_FIT[id] || {};
   let sy = fit.spoilerY ?? -72;
+  let legDown = null;
   {
     const isGlass = (x, y) => {
       const p = at(x, y);
-      if (!p || p[3] < 250) return false;
-      const near = (r, g2, b, tol) => Math.abs(p[0] - r) <= tol
-        && Math.abs(p[1] - g2) <= tol && Math.abs(p[2] - b) <= tol;
-      return near(26, 32, 38, 6) || near(54, 59, 64, 8);
+      if (!p || p[3] < 250 || isPaint(x, y)) return false;
+      return p[2] - p[0] >= 8 && p[2] >= p[1] - 2 && Math.max(p[0], p[1], p[2]) < 110;
+    };
+    const topOf = (x) => {            // первая «твёрдая» точка сверху
+      for (let y = -170; y <= -10; y++) { const p = at(x, y); if (p && p[3] > 60) return y; }
+      return null;
     };
     let gTop = null, gBot = null;
     for (const gx of [-31, 0, 31])
@@ -3456,19 +3462,28 @@ function modMap(id) {
         }
     if (gTop !== null) {
       const above = HATCH.has(id) || CAR_CATEGORY[id] === "suv";
-      if (above) sy = gTop - 9;
-      else if (gBot + 2 <= -60) sy = gBot + 2;
+      const LEG = above ? 12 : 22;
+      let base = null;
+      if (above) {
+        // ножки встают на самую высокую точку крыши под ними
+        const tops = [topOf(-31.5), topOf(31.5)].filter((v) => v !== null);
+        if (tops.length) base = Math.min(...tops);
+      } else if (gBot + 2 <= -60) {
+        base = gBot + 1;               // крышка багажника сразу под стеклом
+      }
+      if (base !== null) { sy = base - 6 - LEG; legDown = LEG; }
     }
   }
-  // Ножки: от крыла вниз до первого пикселя машины (не в воздух!)
-  let legDown = 2;
-  for (const lx of [-31.5, 31.5]) {
-    for (let y = sy + 7; y <= sy + 90; y++) {
-      const p = at(lx, y);
-      if (p && p[3] > 60) { legDown = Math.max(legDown, y - (sy + 6) + 1); break; }
+  // Запасной вариант: ножки от крыла вниз до первого пикселя машины
+  if (legDown === null) {
+    legDown = 2;
+    for (const lx of [-31.5, 31.5]) {
+      for (let y = sy + 7; y <= sy + 90; y++) {
+        const p = at(lx, y);
+        if (p && p[3] > 60) { legDown = Math.max(legDown, y - (sy + 6) + 1); break; }
+      }
     }
-  }
-  return (MOD_MAP[id] = { stripes, num, legDown, spoilerY: sy });
+  }  return (MOD_MAP[id] = { stripes, num, legDown, spoilerY: sy });
 }
 
 function drawMods(g, id, t) {
@@ -3521,6 +3536,9 @@ function drawMods(g, id, t) {
     g.fillRect(-34, sy + 6, 5, mm.legDown);
     g.fillRect( 29, sy + 6, 5, mm.legDown);
     roundRect(g, -58, sy, 116, 7, 3, "#101214");
+    // Боковые пластины на концах крыла — как у Ниссана на фото Саши
+    roundRect(g, -61, sy - 5, 5, 15, 2, "#101214");
+    roundRect(g,  56, sy - 5, 5, 15, 2, "#101214");
   }
   if (body && t.rims) {
     // Старые диски вернулись («старые лучше» — Саша): место по
