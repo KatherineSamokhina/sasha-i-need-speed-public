@@ -23,6 +23,9 @@ const canvas = document.getElementById("game");
 const ctx = canvas.getContext("2d");
 const W = canvas.width;   // 960
 const H = canvas.height;  // 540
+// Плотность холста: 1 — обычная, 2 — для больших экранов (fitCanvas
+// внизу файла). Объявлена ЗДЕСЬ: setTouchMode зовёт fitCanvas при загрузке
+let canvasScale = 1;
 
 // ---------- Настройки "камеры" и дороги ----------
 const ROAD_WIDTH  = 2100;   // половина ширины дороги (в мировых единицах)
@@ -1647,12 +1650,19 @@ function restartRace() {
 
 // Пускает ли текущая карта нашу машину? (спецификация Саши:
 // «неправильная машина — оно скажет и не запустит»)
+// Сами правила — отдельно: их спрашивает и мультиплеер, про ЛЮБУЮ
+// трассу и ЛЮБУЮ машину (свою или друга)
+function carFitsTrack(t, c) {
+  if (!c) return true;   // машину друга ещё не знаем — не мешаем
+  if (t === 3 && (c.id === "fford" || c.id === "f1")) return false;  // пустыня
+  if (t === 4 && !c.offroadSoft && !c.ram) return false;             // офроуд
+  return true;
+}
 function trackBanReason() {
-  if (currentTrack === 3 && (car.id === "fford" || car.id === "f1"))
+  if (carFitsTrack(currentTrack, car)) return null;
+  if (currentTrack === 3)
     return "🏜 В пустыне болиды не работают: песок в моторе! Возьми другую машину.";
-  if (currentTrack === 4 && !car.offroadSoft && !car.ram)
-    return "⛰ Офроуд — только внедорожники и броня! Ищи в гараже вездеходы.";
-  return null;
+  return "⛰ Офроуд — только внедорожники и броня! Ищи в гараже вездеходы.";
 }
 
 // Показать отказ там, где его увидит игрок
@@ -1726,6 +1736,7 @@ function goMenu() {
   raceMode = false;
   taMode = false;
   endChase();       // если уходили из погони — вернуть свою машину
+  mpHideOffer();    // плашка «друг сменил трассу» над меню не нужна
   opponents = [];
   saveFuel();       // бензин запоминается между поездками
   ensureCircuit();
@@ -2059,6 +2070,69 @@ let peer = null;
 let conn = null;
 let mpRemote = null;    // машина друга: { z, x, carId, canvas }
 let mpTimer = null;
+let mpFriendCarId = null;   // на чём едет друг (из «hello» и из «s»)
+
+// КАРТА В МУЛЬТИПЛЕЕРЕ любая — но если чья-то машина к ней не
+// подходит (болид в пустыню, седан на офроуд), игра сама ЛИСТАЕТ
+// дальше, пока не найдёт трассу, где можно ехать ОБОИМ (заказ Саши)
+function mpFriendCar() {
+  const id = mpRemote ? mpRemote.carId : mpFriendCarId;
+  return CARS.find((c) => c.id === id);
+}
+function mpPickTrack(from) {
+  for (let i = 0; i < TRACK_NAMES.length; i++) {
+    const t = (from + i) % TRACK_NAMES.length;
+    if (carFitsTrack(t, car) && carFitsTrack(t, mpFriendCar())) return t;
+  }
+  return 0;   // Зелёное кольцо пускает всех
+}
+// Друг на той же трассе, что и мы? (иначе его машину не рисуем)
+const mpHere = () => !!mpRemote &&
+  (mpRemote.track === undefined || mpRemote.track === currentTrack);
+
+// ПРЕДЛОЖЕНИЕ ДРУГУ (заказ Саши: «а то у тебя Поля, а друг в
+// Офроуде»): сменил трассу — друг видит плашку «Поехали / Остаюсь»
+// и решает сам. Если его машине туда нельзя — игра так и скажет
+let mpOfferTrack = -1;
+function mpShowOffer(t) {
+  const box = document.getElementById("mp-offer");
+  const fits = carFitsTrack(t, car);
+  document.getElementById("mp-offer-text").textContent = fits
+    ? `🗺 Друг поехал: ${TRACK_NAMES[t]}. Едешь за ним?`
+    : `🗺 Друг поехал: ${TRACK_NAMES[t]} — но твоей машине туда нельзя!`;
+  document.getElementById("btn-offer-yes").classList.toggle("hidden", !fits);
+  mpOfferTrack = fits ? t : -1;
+  box.classList.remove("hidden");
+  clearTimeout(mpShowOffer.timer);   // само спрячется через 10 секунд
+  mpShowOffer.timer = setTimeout(mpHideOffer, 10000);
+}
+function mpHideOffer() {
+  document.getElementById("mp-offer").classList.add("hidden");
+  mpOfferTrack = -1;
+}
+wireButton("btn-offer-yes", () => {
+  if (mpOfferTrack >= 0) mpUseTrack(mpOfferTrack, false);
+  mpHideOffer();
+});
+wireButton("btn-offer-no", mpHideOffer);
+
+// Перейти на трассу t; tell — сообщить другу, чтобы он перешёл тоже;
+// wanted — какую трассу хотели (если её пролистнули — скажем почему)
+function mpUseTrack(t, tell, wanted = currentTrack) {
+  if (t !== currentTrack) {
+    buildTrack(t);
+    updateTrackButton();
+    restartRace();
+  }
+  // Пролистнули трассу — честно говорим, ЧЬЯ машина туда не годится
+  if (wanted !== t && !carFitsTrack(wanted, car))
+    lapMsg = { text: `🗺 ${TRACK_NAMES[wanted]}: твоей машине нельзя — едем дальше: ${TRACK_NAMES[t]}!`,
+               until: performance.now() + 3500 };
+  else if (wanted !== t && !carFitsTrack(wanted, mpFriendCar()))
+    lapMsg = { text: `🗺 ${TRACK_NAMES[wanted]}: машине друга нельзя — едем дальше: ${TRACK_NAMES[t]}!`,
+               until: performance.now() + 3500 };
+  if (tell && conn && conn.open) conn.send({ t: "track", track: t });
+}
 
 function mpStatus(t) {
   document.getElementById("mp-status").textContent = t;
@@ -2105,13 +2179,21 @@ function mpJoin() {
 function mpSetup(isHost) {
   conn.on("open", () => {
     mpStatus("✅ Подключено! Выезжаем вместе…");
-    if (isHost) conn.send({ t: "hello", track: currentTrack });
     unlockAchv("friend");   // достижение «Друг на связи»
     mpStartDrive();
+    // Хозяин выбирает трассу (подходящую ЕГО машине) и говорит гостю,
+    // на чём едет — гость проверит свою машину и, если надо, полистает.
+    // ПОСЛЕ выезда: иначе restartRace стёр бы подсказку про трассу
+    if (isHost) {
+      mpUseTrack(mpPickTrack(currentTrack), false);
+      conn.send({ t: "hello", track: currentTrack, car: car.id });
+    }
   });
   conn.on("data", onMpData);
   conn.on("close", () => {
     mpRemote = null;
+    mpFriendCarId = null;
+    mpHideOffer();
     if (mpTimer) clearInterval(mpTimer);
     mpStatus("Друг отключился.");
   });
@@ -2119,14 +2201,21 @@ function mpSetup(isHost) {
 
 function onMpData(d) {
   if (!d || typeof d !== "object") return;   // чужие данные — только данные!
+  const okTrack = (t) => typeof t === "number" && t >= 0 && t < TRACK_NAMES.length;
   if (d.t === "hello") {
-    // Гость получает трассу хозяина, чтобы ехать по одной дороге
-    if (typeof d.track === "number" && d.track !== currentTrack
-        && d.track >= 0 && d.track < TRACK_NAMES.length) {
-      currentTrack = d.track;
-      buildTrack(d.track);
-      updateTrackButton();
+    // Гость получает трассу и машину хозяина. Не подходит кому-то из
+    // нас — листаем до общей трассы и говорим хозяину, куда едем
+    if (typeof d.car === "string") mpFriendCarId = d.car;
+    if (okTrack(d.track)) {
+      const t = mpPickTrack(d.track);
+      mpUseTrack(t, t !== d.track, d.track);
     }
+  } else if (d.t === "track") {
+    // На старте гость перелистнул трассу — его машина не подходила
+    if (okTrack(d.track)) mpUseTrack(d.track, false);
+  } else if (d.t === "offer") {
+    // Друг сменил трассу кнопкой T — предлагаем поехать за ним
+    if (okTrack(d.track) && d.track !== currentTrack) mpShowOffer(d.track);
   } else if (d.t === "s") {
     if (!mpRemote || mpRemote.carId !== d.carId) {
       const known = CAR_DRAWERS[d.carId] ? d.carId : "aveo";
@@ -2134,6 +2223,7 @@ function onMpData(d) {
     }
     if (typeof d.z === "number") mpRemote.z = d.z;
     if (typeof d.x === "number") mpRemote.x = clamp(d.x, -3, 3);
+    if (okTrack(d.track)) mpRemote.track = d.track;
   }
 }
 
@@ -2154,7 +2244,7 @@ function mpStartDrive() {
   if (mpTimer) clearInterval(mpTimer);
   mpTimer = setInterval(() => {
     if (conn && conn.open)
-      conn.send({ t: "s", z: position, x: playerX, carId: car.id });
+      conn.send({ t: "s", z: position, x: playerX, carId: car.id, track: currentTrack });
   }, 100);
 }
 
@@ -2170,21 +2260,22 @@ wireButton("btn-races-back", closeRaces);
 wireButton("btn-race", () => { if (goRaceMode()) { inRaces = false; show("races", false); } });
 wireButton("btn-drag", () => { inRaces = false; show("races", false); goDragMode(); });
 wireButton("btn-ta",   () => { if (goTimeAttack()) { inRaces = false; show("races", false); } });
-wireButton("btn-finish-again", () => {
+// После финиша и аварии — ПЕРЕРЫВ: тут Яндекс может показать рекламу
+// (yaBreak внизу файла), а потом кнопка делает своё дело
+const againAction = () => {
   if (chaseMode) { chaseRestart(); }   // новая погоня — та же роль!
   else restartRace();
-});
-wireButton("btn-finish-menu", goMenu);
+};
+wireButton("btn-finish-again", () => yaBreak(againAction));
+wireButton("btn-finish-menu", () => yaBreak(goMenu));
 wireButton("btn-track", () => {
   buildTrack((currentTrack + 1) % TRACK_NAMES.length);
   restartRace();
   updateTrackButton();
 });
-wireButton("btn-restart", () => {
-  if (chaseMode) { chaseRestart(); }
-  else restartRace();
-});
-wireButton("btn-crash-menu", goMenu);
+wireButton("btn-restart", () => yaBreak(againAction));
+wireButton("btn-crash-menu", () => yaBreak(goMenu));
+wireButton("btn-pause-resume", togglePause);   // ▶ — снять паузу (на телефоне Esc нет!)
 wireButton("btn-pause-restart", () => {
   if (chaseMode) { chaseRestart(); }
   else restartRace();
@@ -3859,9 +3950,18 @@ addEventListener("keydown", (e) => {
 
     // T — сменить трассу (только на кольце, драг-полоса одна)
     if (e.code === "KeyT" && !e.repeat && raceKind === "circuit") {
-      buildTrack((currentTrack + 1) % TRACK_NAMES.length);
-      restartRace();
-      updateTrackButton();
+      if (conn && conn.open) {
+        // в мультиплеере — следующая трасса, где можно ехать обоим
+        // (чужие пролистываем и говорим, чьей машине нельзя), а другу
+        // уходит ПРЕДЛОЖЕНИЕ поехать за нами — решает он сам
+        const next = (currentTrack + 1) % TRACK_NAMES.length;
+        mpUseTrack(mpPickTrack(next), false, next);
+        conn.send({ t: "offer", track: currentTrack });
+      } else {
+        buildTrack((currentTrack + 1) % TRACK_NAMES.length);
+        restartRace();
+        updateTrackButton();
+      }
     }
 
     // Ключ зажигания: заводит мотор, а если работает — глушит.
@@ -3880,7 +3980,9 @@ addEventListener("keydown", (e) => {
   // В ПОГОНЕ — полный перезапуск с сохранением роли: раньше R
   // «не давала полицию» (фикс Саши)
   if (e.code === "KeyR" && !e.repeat && started) {
-    if (chaseMode) chaseRestart();
+    // после финиша/аварии R — тоже перерыв (может быть реклама)
+    if (raceOver || crashed) yaBreak(againAction);
+    else if (chaseMode) chaseRestart();
     else restartRace();
   }
 
@@ -3931,6 +4033,7 @@ function setTouchMode(on) {
   // На телефонах игра ВСЕГДА горизонтальная (решение Саши): если
   // телефон держат вертикально — CSS повернёт игру на 90°!
   document.body.classList.toggle("touch-device", on);
+  fitCanvas();   // на телефоне холст обычной плотности, на компе — чёткий
 }
 setTouchMode(isTouchDevice);
 window.addEventListener("touchstart", () => {
@@ -4871,7 +4974,7 @@ function renderSprites(baseSeg) {
     if (aniByN[n]) for (const a of aniByN[n]) drawAnimal(a, seg);
     if (oppByN[n]) for (const o of oppByN[n]) drawOpponent(o, seg);
     if (ghostDraw && ghostDraw.n === n) drawGhostCar(seg, ghostDraw);
-    if (mpRemote) {
+    if (mpHere()) {   // друг на ДРУГОЙ трассе — его машину не рисуем
       const relZ = ((mpRemote.z % trackLength) - position + trackLength) % trackLength;
       if (Math.floor(relZ / SEG_LEN) === n) drawFriend(seg, relZ);
     }
@@ -9851,7 +9954,7 @@ function renderHUD() {
     };
     // Соперники — тёмные точки, друг — зелёная, мы — красная с обводкой
     for (const o of opponents) dotAt(o.z, 3, "#20242e");
-    if (mpRemote) dotAt(mpRemote.z, 3.5, "#57d977");
+    if (mpHere()) dotAt(mpRemote.z, 3.5, "#57d977");
     dotAt(position, 4.5, "#ff3131");
     ctx.strokeStyle = "#ffffff";
     ctx.lineWidth = 1.5;
@@ -10094,7 +10197,11 @@ function frame(time) {
   update(dt);
   updateSparks(dt);      // искры живут по своим законам даже в стоп-кадре
   updateEngineSound();
+  yaTick();              // правила Яндекса: «игра идёт?» и тишина в фоне
 
+  // Рисуем в «логических» 960×540, а холст может быть вдвое плотнее
+  // (чёткость на больших экранах) — лупа setTransform пересчитает
+  ctx.setTransform(canvasScale, 0, 0, canvasScale, 0, 0);
   ctx.clearRect(0, 0, W, H);
   renderBackground();
   renderRoad();
@@ -10105,6 +10212,128 @@ function frame(time) {
 
   requestAnimationFrame(frame);
 }
+
+// =====================================================================
+//  ЯНДЕКС ИГРЫ: правила площадки (модерация проверяет каждое!)
+//  ysdk даёт index.html, когда познакомится с Яндексом. Дома (сайт,
+//  телефон) Яндекса нет — и все эти функции просто ничего не делают.
+// =====================================================================
+
+const YA = {
+  sdk: null,
+  gameplay: false,    // сказали Яндексу «игрок едет»?
+  ad: false,          // прямо сейчас идёт реклама
+  sdkPause: false,    // Яндекс попросил паузу (его окно поверх игры)
+  focused: document.hasFocus(),
+  hushed: false,      // это МЫ выключили звук (значит, нам и включать)
+};
+
+// index.html зовёт это, когда YaGames.init() готов
+function yaReady(ysdk) {
+  YA.sdk = ysdk;
+  // п. 2.14: язык берём у ЯНДЕКСА (а не у браузера). Если игрок сам
+  // выбрал язык в Настройках — уважаем его выбор
+  try {
+    const lang = ysdk.environment.i18n.lang;
+    const ruLike = ["ru", "be", "kk", "uk", "uz"];   // СНГ — по-русски
+    if (lang && !localStorage.getItem("ins1-lang"))
+      setLang(ruLike.includes(lang) ? "ru" : "en", false);
+  } catch {}
+  // п. 1.19.4: Яндекс просит паузу (например, показывает своё окно)
+  try {
+    ysdk.on("game_api_pause", () => { YA.sdkPause = true; yaAutoPause(); yaSound(); });
+    ysdk.on("game_api_resume", () => { YA.sdkPause = false; yaSound(); });
+  } catch {}
+}
+
+// Заезд идёт прямо сейчас? (не меню, не пауза, не авария, не финиш)
+const yaDriving = () => started && !paused && !crashed && !raceOver;
+
+// Поставить паузу за игрока — когда он ушёл со вкладки или пришла реклама
+function yaAutoPause() {
+  if (yaDriving()) togglePause();
+}
+
+// п. 1.3 и 4.7: свернул вкладку, ушёл в другое окно, идёт реклама —
+// мотор молчит. AudioContext.suspend() — «пауза» для всего звука сразу
+function yaSound() {
+  if (!engine) return;
+  const quiet = document.hidden || !YA.focused || YA.ad || YA.sdkPause;
+  if (quiet && engine.ac.state === "running") {
+    engine.ac.suspend().catch(() => {});
+    YA.hushed = true;
+  } else if (!quiet && YA.hushed) {
+    engine.ac.resume().catch(() => {});
+    YA.hushed = false;
+  }
+}
+
+// Каждый кадр: п. 1.19.3 — сообщаем Яндексу, едет игрок или нет
+// (GameplayAPI.start — поехали, stop — меню, пауза, финиш, реклама)
+function yaTick() {
+  yaSound();   // кнопки игры сами «будят» звук — а в фоне он нельзя!
+  const on = yaDriving() && !YA.ad && !document.hidden;
+  if (on === YA.gameplay) return;
+  YA.gameplay = on;
+  const api = YA.sdk && YA.sdk.features && YA.sdk.features.GameplayAPI;
+  try { if (api) on ? api.start() : api.stop(); } catch {}
+}
+
+document.addEventListener("visibilitychange", () => {
+  if (document.hidden) yaAutoPause();
+  yaSound();
+  yaTick();   // кадры в фоне не рисуются — сообщаем Яндексу сразу
+});
+addEventListener("blur", () => { YA.focused = false; yaAutoPause(); yaSound(); });
+addEventListener("focus", () => { YA.focused = true; yaSound(); });
+// Игрок жмёт или касается — значит, окно точно в фокусе (некоторые
+// телефоны забывают прислать «focus», и игра осталась бы без звука)
+for (const ev of ["pointerdown", "keydown", "touchstart"])
+  addEventListener(ev, () => { YA.focused = true; }, { passive: true, capture: true });
+
+// РЕКЛАМА (п. 1.12 — без неё Яндекс не публикует): только в ПЕРЕРЫВЕ,
+// когда игрок сам нажал кнопку после финиша или аварии. Как часто
+// показывать — решает Яндекс (слишком часто — он сам пропустит).
+// Что бы ни случилось с рекламой, action выполнится РОВНО один раз
+function yaBreak(action) {
+  if (!YA.sdk || !YA.sdk.adv) { action(); return; }
+  let done = false;
+  const finish = () => {
+    if (done) return;
+    done = true;
+    YA.ad = false;
+    yaSound();
+    action();
+  };
+  YA.ad = true;
+  yaSound();
+  try {
+    YA.sdk.adv.showFullscreenAdv({ callbacks: {
+      onClose: finish, onError: finish, onOffline: finish } });
+  } catch { finish(); }
+}
+
+// п. 1.6.1.8 и 1.6.2.7: долгое нажатие и правая кнопка мыши не
+// открывают меню браузера (в полях ввода кода — можно, там вставка)
+document.addEventListener("contextmenu", (e) => {
+  if (!(e.target && e.target.tagName === "INPUT")) e.preventDefault();
+});
+
+// п. 1.6.2.1: поле игры — до краёв окна. На больших экранах холст
+// делаем вдвое плотнее, чтобы картинка не была мыльной (на телефонах
+// не трогаем — им тяжело рисовать вчетверо больше точек)
+function fitCanvas() {
+  const cssW = canvas.getBoundingClientRect().width || W;
+  // Лупа для пауз, финиша и плашки друга: поле выросло — растут и они
+  document.body.style.setProperty("--wrap-zoom", Math.min(2, Math.max(1, cssW / W)).toFixed(3));
+  const k = isTouchDevice ? 1 : Math.min(2, Math.max(1, Math.ceil(cssW * (devicePixelRatio || 1) / W - 0.15)));
+  if (k === canvasScale) return;
+  canvasScale = k;
+  canvas.width = W * k;    // смена размера стирает холст — в следующем
+  canvas.height = H * k;   // кадре он нарисуется заново
+}
+fitCanvas();
+addEventListener("resize", fitCanvas);
 
 // Поехали!
 buildTrack(0);

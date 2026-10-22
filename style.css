@@ -2,6 +2,10 @@
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
+/* Яндекс Игры (п. 1.10.2): у страницы НЕТ полос прокрутки — всё
+   помещается в окно (внутри экранов-квадратов прокрутка своя) */
+html, body { overflow: hidden; }
+
 body {
   background: #101018;
   display: flex;
@@ -9,15 +13,22 @@ body {
   justify-content: center;
   min-height: 100vh;
   font-family: "Segoe UI", Verdana, sans-serif;
+  /* п. 1.6.1.8 и 1.6.2.7: долгое нажатие и протяжка мышью не
+     выделяют текст и не вызывают меню «копировать» */
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
 }
+/* …кроме полей ввода: туда печатают и вставляют коды */
+input { user-select: text; -webkit-user-select: text; }
 
 #wrap {
   position: relative;           /* чтобы стартовый экран лёг ПОВЕРХ холста */
-  /* Жертвуем масштабом ради ЦЕЛОГО экрана (решение Саши):
-     игра 16:9, поэтому ширина ограничена ещё и высотой экрана
-     (170vh ≈ 96vh × 16⁄9) — на низких экранах телефонов игра
-     уменьшится, но будет видна ВСЯ, с полями по краям */
-  width: min(96vw, 960px, 170vh);
+  /* Игра 16:9 — во ВСЁ окно (Яндекс, п. 1.6.2.1: поле до краёв):
+     ширина — всё окно, но не больше, чем позволяет высота
+     (177.78vh = 100vh × 16⁄9). Раньше было не больше 960px —
+     на большом экране игра ютилась посередине */
+  width: min(100vw, 177.78vh);
 }
 
 #game {
@@ -175,6 +186,44 @@ html, body {
 .achv-row .ic { font-size: 24px; }
 .achv-row b { display: block; font-size: 14px; color: #fff; }
 .achv-row span { font-size: 12px; color: #9aa3b5; }
+/* Плашка мультиплеера «друг сменил трассу — едешь за ним?»: висит
+   над дорогой, игру НЕ останавливает — жми кнопку прямо на ходу */
+#mp-offer {
+  position: absolute;
+  top: 12%;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  max-width: 94%;
+  background: rgba(10, 12, 24, 0.9);
+  border: 2px solid #57d977;
+  color: #fff;
+  padding: 8px 12px;
+  border-radius: 12px;
+  font: bold 15px "Segoe UI", Verdana, sans-serif;
+  z-index: 98;
+}
+#mp-offer.hidden, #mp-offer .hidden { display: none; }
+/* Поле игры теперь во всё окно — пауза, финиш, авария и плашка
+   друга растут вместе с ним (лупу --wrap-zoom считает fitCanvas) */
+body:not(.touch-device) #pause > *, body:not(.touch-device) #finish > *,
+body:not(.touch-device) #crash > *, body:not(.touch-device) #mp-offer {
+  zoom: var(--wrap-zoom, 1);
+}
+#mp-offer button {
+  font: bold 14px "Segoe UI", Verdana, sans-serif;
+  padding: 6px 12px;
+  border: none;
+  border-radius: 8px;
+  color: #fff;
+  background: #1f8f4d;
+  cursor: pointer;
+  white-space: nowrap;
+}
+#mp-offer #btn-offer-no { background: #46586e; }
+
 #achv-toast {
   position: fixed;
   top: 14px;

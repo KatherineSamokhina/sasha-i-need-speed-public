@@ -104,6 +104,12 @@ const EN = {
   "❌ Нет интернета — мультиплеер недоступен.": "❌ No internet — multiplayer is unavailable.",
   "Создаём игру…": "Creating a game…",
   "Код игры: {0} — продиктуй другу и жди!": "Game code: {0} — tell it to your friend and wait!",
+  "🗺 {0}: твоей машине нельзя — едем дальше: {1}!": "🗺 {0}: your car can't go there — driving to {1}!",
+  "🗺 {0}: машине друга нельзя — едем дальше: {1}!": "🗺 {0}: your friend's car can't go there — driving to {1}!",
+  "🗺 Друг поехал: {0}. Едешь за ним?": "🗺 Your friend went to: {0}. Follow?",
+  "🗺 Друг поехал: {0} — но твоей машине туда нельзя!": "🗺 Your friend went to: {0} — but your car can't go there!",
+  "✅ Поехали": "✅ Let's go",
+  "✖ Остаюсь": "✖ Stay",
   "❌ Ошибка: ": "❌ Error: ",
   "Сначала введи код друга!": "Enter your friend's code first!",
   "Подключаемся…": "Connecting…",
@@ -274,6 +280,7 @@ const EN = {
   "ПАУЗА": "PAUSE",
   "Esc — продолжить гонку": "Esc — continue the race",
   "🔁 Снова заезд": "🔁 Race again",
+  "▶ Продолжить": "▶ Continue",
   "🏠 Главное меню": "🏠 Main menu",
   "🏁 ФИНИШ!": "🏁 FINISH!",
   "🔁 Ещё гонку!": "🔁 Another race!",
@@ -649,10 +656,12 @@ function applyLang() {
   if (en) en.classList.toggle("lang-on", LANG === "en");
   if (ru) ru.classList.toggle("lang-on", LANG === "ru");
 }
-function setLang(l) {
+// remember = false — язык выбрал Яндекс, а не игрок: не запоминаем,
+// чтобы на yandex.com в следующий раз снова спросить у Яндекса
+function setLang(l, remember = true) {
   LANG = l;
   CACHE.clear();
-  try { localStorage.setItem("ins1-lang", l); } catch {}
+  if (remember) try { localStorage.setItem("ins1-lang", l); } catch {}
   applyLang();
 }
 document.addEventListener("DOMContentLoaded", () => {
