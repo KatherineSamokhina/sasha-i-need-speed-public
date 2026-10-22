@@ -3443,6 +3443,7 @@ function modMap(id) {
   const fit = MOD_FIT[id] || {};
   let sy = fit.spoilerY ?? -72;
   let legDown = null;
+  let visorY = null;
   {
     const isGlass = (x, y) => {
       const p = at(x, y);
@@ -3465,9 +3466,9 @@ function modMap(id) {
       const LEG = above ? 12 : 22;
       let base = null;
       if (above) {
-        // ножки встают на самую высокую точку крыши под ними
-        const tops = [topOf(-31.5), topOf(31.5)].filter((v) => v !== null);
-        if (tops.length) base = Math.min(...tops);
+        // КОЗЫРЁК как у Polo с фото Саши: на краю крыши, нижний край
+        // ровно по верху стекла — на стекло не заходит
+        visorY = gTop;
       } else if (gBot + 2 <= -60) {
         base = gBot + 1;               // крышка багажника сразу под стеклом
       }
@@ -3483,7 +3484,7 @@ function modMap(id) {
         if (p && p[3] > 60) { legDown = Math.max(legDown, y - (sy + 6) + 1); break; }
       }
     }
-  }  return (MOD_MAP[id] = { stripes, num, legDown, spoilerY: sy });
+  }  return (MOD_MAP[id] = { stripes, num, legDown, spoilerY: sy, visorY });
 }
 
 function drawMods(g, id, t) {
@@ -3529,7 +3530,20 @@ function drawMods(g, id, t) {
     g.fillText("8", 0, 6);
     g.restore();
   }
-  if (body && t.spoiler && !hasFactoryWing(id) && !NO_SPOILER.has(id)) {
+  if (body && t.spoiler && !hasFactoryWing(id) && !NO_SPOILER.has(id)
+      && mm.visorY !== null) {
+    // Хэтчбэки, универсалы, вездеходы — КОЗЫРЁК на краю крыши (Polo):
+    // трапеция шире стекла, нижний край ровно по верху стекла,
+    // по центру — тонкий стоп-сигнал
+    const vy = mm.visorY;
+    g.fillStyle = "#15171a";
+    g.beginPath();
+    g.moveTo(-50, vy - 10); g.lineTo(50, vy - 10);
+    g.lineTo(62, vy); g.lineTo(-62, vy);
+    g.closePath(); g.fill();
+    g.fillStyle = "rgba(255,255,255,0.14)"; g.fillRect(-46, vy - 9, 92, 2);
+    roundRect(g, -14, vy - 4, 28, 2.5, 1, "#e82121");
+  } else if (body && t.spoiler && !hasFactoryWing(id) && !NO_SPOILER.has(id)) {
     const sy = mm.spoilerY;
     g.fillStyle = "#101214";
     // Ножки — до самой машины, не в воздух (закон Ф-1!)
