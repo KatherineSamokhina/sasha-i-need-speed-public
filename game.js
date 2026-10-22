@@ -2466,7 +2466,7 @@ function refreshCodeStatus() {
   // только после ввода — не ввёл, её нет!)
   const sa = document.getElementById("code-status-admin");
   if (adminCode) {
-    sa.innerHTML = "🛡 Код «админский код секрет» активен — все машины (кроме ЗИСа и Машины Времени!) и <i>бесконечные деньги</i>";
+    sa.innerHTML = "🛡 Код «админский код секрет» активен — все машины (кроме ЗИС-115 и Машины Времени!) и <i>бесконечные деньги</i>";
     sa.classList.remove("hidden");
   } else {
     sa.classList.add("hidden");
@@ -3176,7 +3176,7 @@ function paintedContext(g, map) {
 // Нарисовать машину СО ВСЕМ тюнингом: неон → кузов (в цвете) → винил/детали
 function drawCarTuned(g, id, t) {
   // Без внешнего тюнинга (DMC) — всегда заводской вид
-  if (NO_EXTERIOR.has(id)) t = null;
+  if (noExterior(id)) t = null;
   if (t && NEON_COLORS[t.neon]) {
     const nc = NEON_COLORS[t.neon];
     g.save();
@@ -3289,28 +3289,36 @@ const MOD_FIT = {
   aero: { spoilerY: -84, stripeTop: -72 },
 };
 
-// ПРАВИЛА ТЮНИНГА (Саша, по альбому):
-// — военным и тяжёлым ничего не надевают на КОРПУС (винилы и спойлер)
-const NO_BODY_TUNING = new Set(["zis", "zis5", "uaz469"]);
+// ПРАВИЛА ТЮНИНГА (Саша, по листам «3 машины на лист»):
 // — у кого спойлер уже стоит с завода, надевной не надевают
 const FACTORY_SPOILER = new Set(["focus", "corsa", "camaroNew", "darkhorse",
   "rav4", "charger14", "merc190", "amggt53", "tucson", "astro", "m3e30",
   "m5", "models", "dbs", "m4", "vantage", "gsupra"]);
 const hasFactoryWing = (id) =>
   FACTORY_SPOILER.has(id) || !!(MOD_FIT[id] && MOD_FIT[id].noSpoiler);
+// — спойлер не продаётся: минивэны и пикапы, плюс машины по списку Саши
+//   (Pejo 206, Astra, Sportage, C-HR, Levante)
+const NO_SPOILER = new Set(["raf", "raf977", "rafmed", "raf2909", "astro",
+  "hilux", "cybercraft", "pejo206", "astra", "sportage", "chr", "levante"]);
 // — машина времени не берёт НИЧЕГО (ни краску, ни железо)
 const NO_TUNING = new Set(["timemachine"]);
-// — DMC (TimeLorean TMC-12) — без тюнинга СНАРУЖИ: ни краски, ни
-//   винилов, ни деталей. Железо и турбо — можно
-const NO_EXTERIOR = new Set(["delorean"]);
+// — без тюнинга СНАРУЖИ (краска, винилы, детали; железо можно):
+//   все ЗИСы и УАЗы, Делориан и Alpha5, Нива, Corsa, i30 и джипы
+const NO_EXTERIOR = new Set(["delorean", "alpha5", "niva", "corsa", "i30",
+  "xtrail", "disco", "defendor", "vogue", "grand"]);
+const noExterior = (id) => NO_EXTERIOR.has(id)
+  || CAR_BRAND[id] === "ЗИС" || CAR_BRAND[id] === "УАЗ";
+// — хэтчбэки и универсалы: спойлер-козырёк НАД стеклом, а не на нём
+const HATCH = new Set(["aveo", "picanto", "yaris", "pejo308", "p205",
+  "chetverka"]);
 
-// «ОСМОТР МАШИНЫ» (фикс по альбому тюнинга Саши): мерки MOD_FIT не
-// спасали все 138 машин — полосы закрывали номер, кружок с номером
-// налезал на фонари, спойлер висел в воздухе. Теперь тюнинг ОДИН раз
-// рисует машину на скрытом холсте и сам находит:
-//   plate   — где номер «САША» (полосы его обходят),
-//   num     — свободное место на кузове для кружка с номером,
-//   legDown — докуда тянуть ножки спойлера, чтобы он не висел.
+// «ОСМОТР МАШИНЫ»: тюнинг ОДИН раз рисует машину на скрытом холсте и
+// сам находит:
+//   stripes — слой полос только по краске (стёкла, хром, номер, фары —
+//             чистые; на крылья над кузовом полосы не лезут),
+//   num     — свободное место на краске для кружка «8» (или null —
+//             тогда номер этой машине не клеится),
+//   spoilerY, legDown — где крыло и докуда тянуть его ножки.
 const MOD_MAP = {};
 function modMap(id) {
   if (MOD_MAP[id]) return MOD_MAP[id];
@@ -3320,15 +3328,16 @@ function modMap(id) {
   const cx = c.getContext("2d");
   cx.translate(OX, OY);
   let plate = null;
-  // Подглядываем за надписью «САША»: номер нарисован по-разному,
-  // но эта надпись есть у всех
+  // Подглядываем за надписью «САША»: номер нарисован по-разному (и
+  // не всегда по центру), но эта надпись есть у всех
   const spy = new Proxy(cx, {
     get(tg, k) {
       if (k === "fillText") return (txt, x, y, ...rest) => {
         if (txt === "САША" && !plate) {
           const m = tg.getTransform();
           const w = tg.measureText(txt).width + 14;
-          plate = { y: m.b * x + m.d * y + m.f - OY, w };
+          plate = { x: m.a * x + m.c * y + m.e - OX,
+                    y: m.b * x + m.d * y + m.f - OY, w };
         }
         tg.fillText(txt, x, y, ...rest);
       };
@@ -3346,69 +3355,74 @@ function modMap(id) {
     return [px[i], px[i + 1], px[i + 2], px[i + 3]];
   };
 
-  // КРАСКА: пиксели ровно цветов краски из PAINT_SLOTS. Стёкла, хром,
-  // фонари, значки — другого цвета. Номер вырезаем отдельно: у белых
-  // машин он почти того же цвета, что кузов
+  // КРАСКА: цвета из PAINT_SLOTS — и они же под белым бликом (полоска
+  // блеска на кузове тоже краска). Стекло (#1a2026) — никогда не краска,
+  // номер вырезаем отдельно: у белых машин он почти цвета кузова
   const slots = (PAINT_SLOTS[id] || []).map((h) => {
     const n = parseInt(h.slice(1), 16);
     return [n >> 16 & 255, n >> 8 & 255, n & 255];
   });
   const onPlate = (x, y) => plate && y >= plate.y - 10 && y <= plate.y + 4
-    && Math.abs(x) <= plate.w / 2 + 2;
-  // Стекло (#1a2026 и его блик) — НИКОГДА не краска: у тёмных машин
-  // (BNW M3) краска отличается от стекла всего на 2–3 единицы
-  const glassy = (p) => (Math.abs(p[0] - 26) <= 1 && Math.abs(p[1] - 32) <= 1
-    && Math.abs(p[2] - 38) <= 1);
+    && Math.abs(x - plate.x) <= plate.w / 2 + 2;
+  const glassy = (p) => Math.abs(p[0] - 26) <= 1 && Math.abs(p[1] - 32) <= 1
+    && Math.abs(p[2] - 38) <= 1;
+  const paintLike = (p, s) => {
+    if (Math.abs(p[0] - s[0]) <= 2 && Math.abs(p[1] - s[1]) <= 2
+        && Math.abs(p[2] - s[2]) <= 2) return true;
+    // Блик: краска, смешанная с белым на 3–50 %
+    const a = [];
+    for (let k = 0; k < 3; k++) {
+      const room = 255 - s[k];
+      if (room < 20) { if (Math.abs(p[k] - s[k]) > 6) return false; continue; }
+      a.push((p[k] - s[k]) / room);
+    }
+    return a.length > 0 && Math.min(...a) >= 0.03 && Math.max(...a) <= 0.5
+      && Math.max(...a) - Math.min(...a) <= 0.06;
+  };
   const isPaint = (x, y) => {
     const p = at(x, y);
     if (!p || p[3] < 250 || onPlate(x, y) || glassy(p)) return false;
-    return slots.some((s) => Math.abs(p[0] - s[0]) <= 2
-      && Math.abs(p[1] - s[1]) <= 2 && Math.abs(p[2] - s[2]) <= 2);
+    return slots.some((s) => paintLike(p, s));
   };
 
-  // ПОЛОСЫ — только по краске (правило Саши: стёкла, серебристые
-  // детали, номера и фары остаются чистыми). Рисуем их один раз на
-  // свой холстик, пиксель за пикселем. Щёлки до 4 px (блик на краске)
-  // заливаем, чтобы полоса не рвалась
+  // ПОЛОСЫ — только по краске. Идём по столбику СНИЗУ вверх и
+  // останавливаемся на первой «дырке» в воздух: дальше — крыло над
+  // кузовом (у Болида), туда полосы не надо
   const sc = document.createElement("canvas");
   sc.width = c.width; sc.height = c.height;
   const scx = sc.getContext("2d");
   const img = scx.createImageData(c.width, c.height);
   for (const [xa, xb] of [[-19, -8], [7, 18]]) {
     for (let x = xa; x <= xb; x++) {
-      const col = [];
-      for (let y = -170; y <= -8; y++) col.push(isPaint(x, y));
-      for (let i = 0; i < col.length; i++) {
-        if (col[i]) continue;
-        let j = i;
-        while (j < col.length && !col[j]) j++;
-        if (i > 0 && j < col.length && j - i <= 4) for (let k = i; k < j; k++) col[k] = true;
-        i = j;
-      }
-      col.forEach((on, i) => {
-        if (!on) return;
-        const X = x + OX, Y = -170 + i + OY;
-        const o = (Y * c.width + X) * 4;
+      let seenCar = false;
+      for (let y = -8; y >= -170; y--) {
+        const p = at(x, y);
+        const solid = p && p[3] > 10;
+        if (!solid) { if (seenCar) break; continue; }
+        seenCar = true;
+        if (!isPaint(x, y)) continue;
+        const o = ((y + OY) * c.width + x + OX) * 4;
         img.data[o] = 255; img.data[o + 1] = 255; img.data[o + 2] = 255;
         img.data[o + 3] = 217;
-      });
+      }
     }
   }
   scx.putImageData(img, 0, 0);
   const stripes = { canvas: sc, ox: OX, oy: OY };
 
-  // Кружок с номером — только на ЧИСТОЙ краске, ближе к привычному
-  // месту (−44, −42); не влезает большой — пробуем поменьше
-  let num = { x: -44, y: -42, s: 1 };
+  // Кружок «8» — только на ЧИСТОЙ краске, ближе к привычному месту
+  // (−44, −42). Проверяем каждые 2 px и с запасом в 1 px: раньше
+  // проверка «перешагивала» тонкие фары. Нигде не влез — номера нет
+  let num = null;
   if (slots.length) {
     const fits = (x0, y0, r) => {
-      for (let dy = -r; dy <= r; dy += 3)
-        for (let dx = -r; dx <= r; dx += 3)
+      for (let dy = -r; dy <= r; dy += 2)
+        for (let dx = -r; dx <= r; dx += 2)
           if (dx * dx + dy * dy <= r * r && !isPaint(x0 + dx, y0 + dy)) return false;
       return true;
     };
-    for (const s of [1, 0.8, 0.65]) {
-      const r = Math.ceil(15 * s);
+    for (const s of [1, 0.85, 0.7, 0.6, 0.5]) {
+      const r = Math.ceil(13 * s) + 2;
       let best = null, bestD = Infinity;
       for (let y = -120; y <= -14; y += 2)
         for (let x = -84; x <= 84; x += 2) {
@@ -3418,12 +3432,14 @@ function modMap(id) {
       if (best) { num = best; break; }
     }
   }
-  // Где крыло: мерка из MOD_FIT, а если её нет — сразу ПОД задним
-  // стеклом, на крышке багажника (раньше стояло на −72 и у Волг
-  // ложилось на стекло). Стекло — тёмно-синий #1a2026 и его блик
+
+  // ГДЕ КРЫЛО. Ищем заднее стекло (#1a2026 и его блик):
+  //  — хэтчбэки, универсалы и вездеходы: козырёк целиком НАД стеклом;
+  //  — седаны и купе: сразу ПОД стеклом, на крышке багажника — если
+  //    багажник есть (у Делориана жалюзи до самых фонарей)
   const fit = MOD_FIT[id] || {};
   let sy = fit.spoilerY ?? -72;
-  if (fit.spoilerY === undefined) {
+  {
     const isGlass = (x, y) => {
       const p = at(x, y);
       if (!p || p[3] < 250) return false;
@@ -3431,20 +3447,25 @@ function modMap(id) {
         && Math.abs(p[1] - g2) <= tol && Math.abs(p[2] - b) <= tol;
       return near(26, 32, 38, 6) || near(54, 59, 64, 8);
     };
-    let glassBottom = null;
+    let gTop = null, gBot = null;
     for (const gx of [-31, 0, 31])
-      for (let y = -40; y >= -130; y--)
-        if (isGlass(gx, y)) { glassBottom = Math.max(glassBottom ?? y, y); break; }
-    // Только если под стеклом есть багажник: у TimeLorean «стекло»
-    // (жалюзи) доходит до фонарей, и крыло легло бы на них
-    if (glassBottom !== null && glassBottom + 2 <= -60) sy = glassBottom + 2;
+      for (let y = -135; y <= -40; y++)
+        if (isGlass(gx, y)) {
+          gTop = Math.min(gTop ?? y, y);
+          gBot = Math.max(gBot ?? y, y);
+        }
+    if (gTop !== null) {
+      const above = HATCH.has(id) || CAR_CATEGORY[id] === "suv";
+      if (above) sy = gTop - 9;
+      else if (gBot + 2 <= -60) sy = gBot + 2;
+    }
   }
-  // Ножки спойлера: от крыла вниз до первого пикселя машины
-  let legDown = 12;
+  // Ножки: от крыла вниз до первого пикселя машины (не в воздух!)
+  let legDown = 2;
   for (const lx of [-31.5, 31.5]) {
     for (let y = sy + 7; y <= sy + 90; y++) {
       const p = at(lx, y);
-      if (p && p[3] > 60) { legDown = Math.max(legDown, y - (sy + 6) + 2); break; }
+      if (p && p[3] > 60) { legDown = Math.max(legDown, y - (sy + 6) + 1); break; }
     }
   }
   return (MOD_MAP[id] = { stripes, num, legDown, spoilerY: sy });
@@ -3454,8 +3475,8 @@ function drawMods(g, id, t) {
   if (NO_TUNING.has(id)) return;          // машина времени — ничего
   const fit = MOD_FIT[id] || {};
   const mm = modMap(id);
-  // Военным и тяжёлым — ничего на корпус: ни винилов, ни спойлера
-  const body = !NO_BODY_TUNING.has(id);
+  // Без внешнего тюнинга (ЗИСы, УАЗы, джипы…) — ничего снаружи
+  const body = !noExterior(id);
   if (body && t.vinyl === "полосы") {
     // Готовый слой полос «только по краске» из осмотра машины
     const s = mm.stripes;
@@ -3476,8 +3497,8 @@ function drawMods(g, id, t) {
     };
     flame(-36, -25, "#d5121e");
     flame(-28, -19, "#ff8c1a");
-  } else if (body && t.vinyl === "номер") {
-    // Гоночный номер «8» (Саша сменил 7 на 8) — на свободном кузове
+  } else if (body && t.vinyl === "номер" && mm.num) {
+    // Гоночный номер «8» (Саша сменил 7 на 8) — на свободной краске
     const { x, y, s } = mm.num;
     g.save();
     g.translate(x, y);
@@ -3493,7 +3514,7 @@ function drawMods(g, id, t) {
     g.fillText("8", 0, 6);
     g.restore();
   }
-  if (body && t.spoiler && !hasFactoryWing(id)) {
+  if (body && t.spoiler && !hasFactoryWing(id) && !NO_SPOILER.has(id)) {
     const sy = mm.spoilerY;
     g.fillStyle = "#101214";
     // Ножки — до самой машины, не в воздух (закон Ф-1!)
@@ -3501,7 +3522,7 @@ function drawMods(g, id, t) {
     g.fillRect( 29, sy + 6, 5, mm.legDown);
     roundRect(g, -58, sy, 116, 7, 3, "#101214");
   }
-  if (t.rims) {
+  if (body && t.rims) {
     // Старые диски вернулись («старые лучше» — Саша): место по
     // таблице RIM_X, прежний размер. Только у ЗИС-5 они ниже —
     // иначе налезают на фонари
@@ -3556,18 +3577,17 @@ function renderTuning() {
     updateMoneyUI();
     return;
   }
-  const noBody = NO_BODY_TUNING.has(c.id);
-  const noExt = NO_EXTERIOR.has(c.id);
+  const noExt = noExterior(c.id);
 
   // 🎨 Краски (+ кнопка "завод")
   const paints = document.getElementById("paints");
   paints.innerHTML = "";
   if (noExt) {
-    // DMC — только железо: снаружи всё заводское
+    // ЗИСы, УАЗы, джипы, Делориан… — только железо: снаружи заводской
     for (const id of ["paints", "vinyls", "details"]) {
       const box = document.getElementById(id);
       box.innerHTML = "";
-      lockedChip(box, "Делориан — снаружи только заводской");
+      lockedChip(box, "снаружи только заводской");
     }
   }
   if (!noExt) {
@@ -3583,18 +3603,18 @@ function renderTuning() {
   // 🏁 Винилы
   const vin = document.getElementById("vinyls");
   vin.innerHTML = "";
-  if (noBody) {
-    lockedChip(vin, "военным и тяжёлым винилы не клеят");
-  } else {
-    for (const v of VINYLS)
-      vin.appendChild(chip(v, t.vinyl === v, () => { t.vinyl = v; }));
+  // «номер» — только если на краске нашлось место для кружка «8»
+  const hasNum = !!modMap(c.id).num;
+  for (const v of VINYLS) {
+    if (v === "номер" && !hasNum) { lockedChip(vin, "номер: некуда клеить"); continue; }
+    vin.appendChild(chip(v, t.vinyl === v, () => { t.vinyl = v; }));
   }
 
   // 🔩 Детали
   const det = document.getElementById("details");
   det.innerHTML = "";
-  if (noBody) {
-    lockedChip(det, "спойлер: не для военных и тяжёлых");
+  if (NO_SPOILER.has(c.id)) {
+    lockedChip(det, "спойлер этой машине не ставится");
   } else if (hasFactoryWing(c.id)) {
     lockedChip(det, "крыло уже есть!");
   } else {
@@ -8042,10 +8062,11 @@ function drawCorona(g) {
   roundRect(g, -83, -64, 166, 58, 8, "#d5d8dc");
   g.fillStyle = "rgba(255,255,255,0.35)"; g.fillRect(-75, -63, 150, 3);
   // Широкая красная лента фонарей во всю корму (стиль 90-х)
-  roundRect(g, -70, -58, 140, 13, 4, "#8c1620");
-  roundRect(g, -68, -55, 136, 5, 2, "#d43535");
-  g.fillStyle = "rgba(255,255,255,0.25)"; g.fillRect(-66, -49, 132, 2);
-  tayodaBadge(g, -62);
+  roundRect(g, -70, -54, 140, 13, 4, "#8c1620");
+  roundRect(g, -68, -51, 136, 5, 2, "#d43535");
+  g.fillStyle = "rgba(255,255,255,0.25)"; g.fillRect(-66, -45, 132, 2);
+  // Значок — на корпусе, между стеклом и лентой (правка Саши)
+  tayodaBadge(g, -59);
   g.fillStyle = "#63666e"; g.font = "bold 4.5px Verdana"; g.textAlign = "center";
   g.fillText("CORONA PREMIO", -46, -38);
   plate(g, -40);
@@ -8096,7 +8117,7 @@ function drawSupra(g) {
     circle(g, side * 42, -50, 8.5, "#2a0d0d");
     circle(g, side * 42, -50, 5.5, "#d43535");
   }
-  tayodaBadge(g, -62);
+  tayodaBadge(g, -59);   // на корпусе, не на краю стекла
   plate(g, -40, 36);
   // Чёрный низ и толстая труба-«кастрюля» слева
   roundRect(g, -80, -22, 160, 13, 5, "#17191c");
@@ -8178,13 +8199,14 @@ function drawPrius(g) {
 // ---------- ДЕНЬ ДОБИВКИ МАРОК: ещё 20 машин по фото ----------
 
 // Значок Opal: молния в кольце
-function opalBadge(g, y) {
-  g.strokeStyle = "#c9d0d7"; g.lineWidth = 2;
-  g.beginPath(); g.arc(0, y, 8, 0, Math.PI * 2); g.stroke();
+function opalBadge(g, y, r = 8) {
+  const k = r / 8;
+  g.strokeStyle = "#c9d0d7"; g.lineWidth = 2 * k;
+  g.beginPath(); g.arc(0, y, r, 0, Math.PI * 2); g.stroke();
   g.fillStyle = "#c9d0d7";
   g.beginPath();
-  g.moveTo(-6, y - 1.5); g.lineTo(1, y - 1.5); g.lineTo(6, y + 1.5);
-  g.lineTo(-1, y + 1.5);
+  g.moveTo(-6 * k, y - 1.5 * k); g.lineTo(1 * k, y - 1.5 * k); g.lineTo(6 * k, y + 1.5 * k);
+  g.lineTo(-1 * k, y + 1.5 * k);
   g.closePath(); g.fill();
 }
 
@@ -8568,7 +8590,7 @@ function drawInsignia(g) {
     roundRect(g, side * 58 - 24, -60, 48, 11, 5, "#3d1512");
     roundRect(g, side * 58 - 20, -57, 40, 5, 2.5, "#d43535");
   }
-  opalBadge(g, -62);
+  opalBadge(g, -60, 5.5);   // меньше и ниже — на корпусе, не на стекле
   plate(g, -42);
   roundRect(g, -80, -22, 160, 12, 5, "#584e47");
   roundRect(g, -58, -14, 116, 3, 1.5, "#33363b");
@@ -9480,8 +9502,10 @@ function trident(g, y, color) {
 function drawMC12(g) {
   carBase(g);
   // Крыло ВЫШЕ КРЫШИ на двух мощных пилонах
-  roundRect(g, -44, -116, 10, 36, 3, "#15171a");
-  roundRect(g,  34, -116, 10, 36, 3, "#15171a");
+  // Пилоны — СБОКУ от кабины и до самого кузова (правка Саши:
+  // крыло «к корпусу не касается и за стеклом»)
+  roundRect(g, -55, -116, 10, 48, 3, "#15171a");
+  roundRect(g,  45, -116, 10, 48, 3, "#15171a");
   roundRect(g, -80, -126, 160, 11, 4, "#101214");
   g.fillStyle = "rgba(255,255,255,0.12)"; g.fillRect(-72, -125, 144, 3);
   // Кабина-капля со стеклом
@@ -9950,7 +9974,7 @@ function renderHUD() {
         ctx.fillText(`🚀 Стартовый ускоритель: ${left} с — жми газ!`, W / 2, 66);
       } else {
         ctx.fillStyle = "#5abeff";
-        ctx.fillText(`🛡 Щит: ${left} с  (от ЗИСа не спасает!)`, W / 2, 66);
+        ctx.fillText(`🛡 Щит: ${left} с  (от ЗИС-115 не спасает!)`, W / 2, 66);
       }
     }
 
