@@ -320,6 +320,13 @@ body.touch-device .menu-grid button { font-size: 18px; padding: 10px 4px; }
 #menu h1 { font-size: 44px; }
 #menu .menu-grid button { padding: 10px 8px; }
 
+/* НА КОМПЕ кнопки стоят в 2 широких столбца (выбор Саши). А чтобы
+   меню не тонуло в большом квадрате («всё в маленькое окошко
+   впихнул»), всё внутри увеличивает лупа --menu-zoom (её считает
+   fitMenuZoom в game.js). Фон-вагончик не трогаем */
+body:not(.touch-device) #menu > :not(.studio-bg) { zoom: var(--menu-zoom, 1); }
+body:not(.touch-device) #menu .studio-bg svg { width: calc(500px * var(--menu-zoom, 1)); }
+
 /* КВАДРАТ почти на весь экран (заказ Саши) — но с полями, чтобы
    любимая красная ПОДСВЕТКА оставалась видна вокруг. После
    «экран уменьшается при выходе из мэин меню» так выглядят ВСЕ
