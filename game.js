@@ -2481,10 +2481,14 @@ document.getElementById("btn-code").addEventListener("click", (e) => {
   // Коды принимаем ЩЕДРО: порядок слов и мелочи не важны, лишь бы
   // ключевые слова были на месте (фикс по жалобе Саши: он помнил
   // код чуть иначе, а игра требовала слово в слово)
-  const isNostalgia = norm.includes("ностальг");
+  // Коды работают и ПО-АНГЛИЙСКИ (правка Саши): «eternal nostalgia»
+  // и «admin code secret» — те же правила, только английские слова
+  const isNostalgia = norm.includes("ностальг") || norm.includes("nostalg");
   // Слово «код» — обязательное (правка Саши)!
-  const isAdmin = norm.includes("админ") && norm.includes("код")
-    && (norm.includes("секрет") || norm.includes("супер"));
+  const isAdmin = (norm.includes("админ") && norm.includes("код")
+      && (norm.includes("секрет") || norm.includes("супер")))
+    || (norm.includes("admin") && norm.includes("code")
+      && (norm.includes("secret") || norm.includes("super")));
   if (isNostalgia) {
     zisCode = true;
     try { localStorage.setItem("ins1-code", "1"); } catch {}
