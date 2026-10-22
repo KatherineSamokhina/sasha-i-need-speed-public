@@ -469,7 +469,8 @@ const CARS = [
   { id: "prius", name: "Tayoda Prius Prime", gearbox: "А", topKmh: 180, zeroTo100: 10.2,
     desc: "Бирюзовый гибрид: наполовину электричка, но коробка обычная." },
   // ---- ДЕНЬ ДОБИВКИ МАРОК: ещё 20 фото Саши (лимит 100 отменён!) ----
-  { id: "indycar", name: "Болид IndyCar", gearbox: "М", topKmh: 355, zeroTo100: 2.8,
+  // Имя подделано: на «IndyCar» лицензии нет (правка Саши)
+  { id: "indycar", name: "Болид IndiKar", gearbox: "М", topKmh: 355, zeroTo100: 2.8,
     noNpc: true,
     desc: "Американский овальный монстр: на прямой быстрее даже Ф-1!" },
   { id: "f3", name: "Болид Ф-3", gearbox: "М", topKmh: 270, zeroTo100: 3.1,
@@ -3386,10 +3387,10 @@ function modMap(id) {
           y0 = Math.min(y0, y); y1 = Math.max(y1, y);
         }
     if (x1 - x0 >= 8 && y1 - y0 >= 6) {
-      // Диск — в нижней видимой части колеса: так он не залезает на
-      // фонари и бампер, но остаётся крупным
-      const r = Math.min(6.5, (x1 - x0) / 2 - 2);
-      rim = { x: (x0 + x1) / 2, y: Math.max((y0 + y1) / 2, y1 - r - 1), r };
+      // Диск — в ЦЕНТРЕ видимой шины (внизу колеса смотрелось
+      // странно — правка Саши); крупный, но не вылезает за шину
+      const r = Math.max(3.5, Math.min(6.5, (x1 - x0) / 2 - 2, (y1 - y0) / 2 - 1));
+      rim = { x: (x0 + x1) / 2, y: (y0 + y1) / 2, r };
     }
   }
   return (MOD_MAP[id] = { plate, num, legDown, rim });
