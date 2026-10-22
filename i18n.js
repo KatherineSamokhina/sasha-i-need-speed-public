@@ -92,7 +92,7 @@ const EN = {
   "· На механике тормози понижением передачи — гоночный приём!": "· On a manual, brake by shifting down — a racing trick!",
   "· Трава замедляет всех, кроме вездеходов и брони.": "· Grass slows everyone down except 4x4s and armour.",
   "· ЗИС-115 расшвыривает соперников тараном, но у него НЕТ тормозов.": "· The ZIS-115 rams rivals aside, but it has NO brakes.",
-  "· Король скорости — Kolesegg Agera RS: 447 км/ч, мировой рекорд!": "· The speed king is the Kolesegg Agera RS: 447 km/h, a world record!",
+  "· Король скорости — Kolesegg Eggera RS: 447 км/ч, мировой рекорд!": "· The speed king is the Kolesegg Eggera RS: 447 km/h, a world record!",
   "⬅ Назад": "⬅ Back",
 
   // ---------- Мультиплеер ----------
@@ -509,7 +509,7 @@ const EN = {
   "Белый городской кроссовер с антенной-удочкой.": "A white city crossover with a fishing-rod antenna.",
   "Лягушонок-спортсмен: фонари-бумеранги высоко на боках.": "A sporty little frog: boomerang lights high on the sides.",
   "1500 сил: подкова, плавник и лента света во всю корму.": "1500 hp: a horseshoe, a fin and a light strip across the whole back.",
-  "Кольцо света и V16: 360 км/ч — вице-король за Агерой.": "A ring of light and a V16: 360 km/h — vice-king behind the Agera.",
+  "Кольцо света и V16: 360 км/ч — вице-король за Эггерой.": "A ring of light and a V16: 360 km/h — vice-king behind the Eggera.",
   "Трековый монстр: крыло-Х и четыре трубы квадратом.": "A track monster: an X-wing and four pipes in a square.",
   "1700 сил и 0–100 за 1.9 сек. Электроника держит 344 км/ч.": "1700 hp and 0–100 in 1.9 s. Electronics hold it at 344 km/h.",
   "Роскошь: карбон, крыло-этажерка и четыре трубы букетом.": "Luxury: carbon, a stacked wing and a bouquet of four pipes.",

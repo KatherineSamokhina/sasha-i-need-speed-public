@@ -533,10 +533,10 @@ const CARS = [
   { id: "p205", name: "Pejo 205 GTI", gearbox: "М", topKmh: 200, zeroTo100: 7.8,
     desc: "Злой белый малыш из ралли: красная полоска и жёлтый номер." },
   // ---- Kolesegg-пара (коробки — заказ Саши: «М у Джеско и С у 2») ----
-  { id: "jesko", name: "Kolesegg Jesko", gearbox: "М", topKmh: 359, zeroTo100: 2.5,
+  { id: "jesko", name: "Kolesegg Yolko", gearbox: "М", topKmh: 359, zeroTo100: 2.5,
     noNpc: true,
     desc: "1600 сил и гигантское крыло: НОВЫЙ король скорости в гараже!" },
-  { id: "regera", name: "Kolesegg Regera", gearbox: "С", topKmh: 340, zeroTo100: 2.8,
+  { id: "regera", name: "Kolesegg Rolera", gearbox: "С", topKmh: 340, zeroTo100: 2.8,
     noNpc: true,
     desc: "Овальная труба по центру и мягкая сила: 1500 гибридных лошадей." },
   // ---- Советская пара из списка 28 (фото Саши) ----
@@ -592,14 +592,14 @@ const CARS = [
   { id: "tourbillon", name: "Bugatty Tourbillon", gearbox: "А",
     topKmh: 360, zeroTo100: 2.0,
     noNpc: true,
-    desc: "Кольцо света и V16: 360 км/ч — вице-король за Агерой." },
+    desc: "Кольцо света и V16: 360 км/ч — вице-король за Эггерой." },
   { id: "bolide", name: "Bugatty Bolide", gearbox: "М",
     topKmh: 356, zeroTo100: 2.2,
     noNpc: true,
     desc: "Трековый монстр: крыло-Х и четыре трубы квадратом." },
   // ---- Гиперкары (восторг Саши: «СКОРОСТЬ ГЕМЕРЫ!!!») ----
   {
-    id: "gemera", name: "Kolesegg Gemera", gearbox: "А",
+    id: "gemera", name: "Kolesegg Gemegga", gearbox: "А",
     topKmh: 344,      // ограничение Саши: «у гемеры ограничь 344»
     zeroTo100: 1.9,   // 1700 гибридных лошадей!
     noNpc: true,      // соперникам гиперкары не выдаются — нечестно!
@@ -607,7 +607,7 @@ const CARS = [
   },
   {
     id: "wayra", name: "Paganny Wayra BC", gearbox: "М",
-    topKmh: 335,      // правка Саши: Пагани медленнее Гемеры
+    topKmh: 335,      // правка Саши: Пагани медленнее Гемегги
     zeroTo100: 2.8,
     noNpc: true,      // соперникам гиперкары не выдаются — нечестно!
     desc: "Роскошь: карбон, крыло-этажерка и четыре трубы букетом.",
@@ -663,7 +663,7 @@ const CARS = [
     desc: "Белая капля-ракета: плавники, лента огня и электроника на 320.",
   },
   {
-    id: "agera", name: "Kolesegg Agera RS", gearbox: "А",
+    id: "agera", name: "Kolesegg Eggera RS", gearbox: "А",
     topKmh: 447,      // МИРОВОЙ РЕКОРД (Невада, 2017)! Король скорости
     zeroTo100: 2.9,   // — решение Саши. Движок проверен: держит!
     noNpc: true,
@@ -6593,7 +6593,7 @@ function drawGemera(g) {
   // Жёлтый значок на макушке
   roundRect(g, -4, -86, 8, 7, 2, "#e8c11c");
   g.fillStyle = "#8a9096"; g.font = "bold 5px Verdana"; g.textAlign = "center";
-  g.fillText("K O N I S E G", 0, -66);
+  g.fillText("K O L E S E G G", 0, -66);
   // Два овальных «глаза»: красное кольцо, внутри — труба!
   for (const side of [-1, 1]) {
     g.fillStyle = "#15171a";
@@ -6608,7 +6608,7 @@ function drawGemera(g) {
   roundRect(g,  52, -52, 34, 24, 10, "#0e1012");
   // Подпись Gemera на центральной панели
   g.fillStyle = "#c9d0d7"; g.font = "italic bold 8px Verdana";
-  g.fillText("Gemera", 0, -42);
+  g.fillText("Gemegga", 0, -42);
   plate(g, -36, 36);
   // Диффузор с плавниками
   roundRect(g, -70, -20, 140, 12, 4, "#101214");
@@ -8990,7 +8990,7 @@ function drawRegera(g) {
   // Чёрная панель посередине кормы с росписью Regera
   roundRect(g, -60, -56, 120, 20, 8, "#17191c");
   g.fillStyle = "#dbe2ea"; g.font = "italic bold 7px Georgia"; g.textAlign = "center";
-  g.fillText("Regera", 0, -42);
+  g.fillText("Rolera", 0, -42);
   g.font = "bold 4px Verdana";
   g.fillText("Kolesegg", 0, -51);
   // Фонари-дуги, обнимающие верхние углы
