@@ -3367,34 +3367,7 @@ function modMap(id) {
       if (p && p[3] > 60) { legDown = Math.max(legDown, y - (sy + 6) + 2); break; }
     }
   }
-  // Золотые диски — точно на ВИДИМУЮ часть колеса («на фары лезет»:
-  // по таблице RIM_X диски ЗИС-5 сидели на фонарях). Ищем пиксели
-  // шины (почти чёрные, #121212) с каждой стороны
-  let rim = null;
-  {
-    // Шина — строго серая #121212 или #0b0b0b (у болидов): у похожих
-    // тёмных деталей (диффузор #141416) синий канал чуть другой
-    const tire = (x, y) => {
-      const p = at(x, y);
-      return p && p[3] > 250 && p[0] === p[1] && p[1] === p[2]
-        && (p[0] === 18 || p[0] === 11);
-    };
-    let x0 = Infinity, x1 = -Infinity, y0 = Infinity, y1 = -Infinity;
-    for (let y = -70; y <= 10; y++)
-      for (let x = 24; x <= 115; x++)
-        if (tire(x, y)) {
-          x0 = Math.min(x0, x); x1 = Math.max(x1, x);
-          y0 = Math.min(y0, y); y1 = Math.max(y1, y);
-        }
-    if (x1 - x0 >= 8 && y1 - y0 >= 6) {
-      // Диск — в ЦЕНТРЕ видимой шины, а размер — ПО ШИНЕ («ф1 и м5
-      // на колёсах»): на огромном слике болида диск был крошкой,
-      // а у M5 — точкой. Чуть заходит за край шины — так и задумано
-      const r = Math.max(5, Math.min(12, (x1 - x0) / 2 - 3, (y1 - y0) / 2 + 2));
-      rim = { x: (x0 + x1) / 2, y: (y0 + y1) / 2, r };
-    }
-  }
-  return (MOD_MAP[id] = { plate, num, legDown, rim });
+  return (MOD_MAP[id] = { plate, num, legDown });
 }
 
 function drawMods(g, id, t) {
@@ -3456,11 +3429,14 @@ function drawMods(g, id, t) {
     roundRect(g, -58, sy, 116, 7, 3, "#101214");
   }
   if (t.rims) {
-    // Место колеса нашёл «осмотр»; таблица RIM_X — запасной вариант
-    const r = mm.rim || { x: RIM_X[id] || 66, y: -11, r: 6.5 };
+    // Старые диски вернулись («старые лучше» — Саша): место по
+    // таблице RIM_X, прежний размер. Только у ЗИС-5 они ниже —
+    // иначе налезают на фонари
+    const x = RIM_X[id] || 66;
+    const y = id === "zis5" ? -5 : -11;
     for (const s of [-1, 1]) {
-      circle(g, s * r.x, r.y, r.r, "#e8b40c");
-      circle(g, s * r.x, r.y, r.r * 0.46, "#3a2f05");
+      circle(g, s * x, y, 6.5, "#e8b40c");
+      circle(g, s * x, y, 3, "#3a2f05");
     }
   }
 }
