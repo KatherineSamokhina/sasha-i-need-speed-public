@@ -3309,7 +3309,7 @@ const NO_EXTERIOR = new Set(["delorean", "alpha5", "niva", "corsa", "i30",
 const noExterior = (id) => NO_EXTERIOR.has(id)
   || CAR_BRAND[id] === "ЗИС" || CAR_BRAND[id] === "УАЗ";
 // — хэтчбэки и универсалы: спойлер-козырёк НАД стеклом, а не на нём
-const HATCH = new Set(["aveo", "picanto", "yaris", "pejo308", "p205",
+const HATCH = new Set(["picanto", "yaris", "pejo308", "p205",
   "chetverka"]);
 
 // «ОСМОТР МАШИНЫ»: тюнинг ОДИН раз рисует машину на скрытом холсте и
@@ -3469,7 +3469,7 @@ function modMap(id) {
         // КОЗЫРЁК как у Polo с фото Саши: на краю крыши, нижний край
         // ровно по верху стекла — на стекло не заходит
         visorY = gTop;
-      } else if (gBot + 2 <= -60) {
+      } else if (gBot + 2 <= -50) {
         base = gBot + 1;               // крышка багажника сразу под стеклом
       }
       if (base !== null) { sy = base - 6 - LEG; legDown = LEG; }
