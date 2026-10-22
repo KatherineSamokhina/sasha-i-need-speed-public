@@ -346,6 +346,12 @@ body.touch-device .menu-grid button { font-size: 14px; padding: 11px 4px; }
   z-index: 5;
 }
 
+/* ---- Переключатель языка в настройках ---- */
+.lang-row { align-items: center; }
+.lang-label { color: #9be0ff; font-weight: bold; font-size: 15px; }
+.overlay .lang-row button { min-width: 0; padding: 8px 16px; font-size: 15px; }
+.overlay .lang-row button.lang-on { background: #1f8f4d; box-shadow: 0 4px 0 #0b4023; }
+
 /* ---- ОБУЧЕНИЕ (заказ Саши: «напиши всё про игру») ---- */
 #tutorial { justify-content: flex-start; padding: 16px 0 14px; }
 #tutorial-body {
