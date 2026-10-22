@@ -3300,6 +3300,8 @@ const hasFactoryWing = (id) =>
 //   (Pejo 206, Astra, Sportage, C-HR, Levante)
 const NO_SPOILER = new Set(["raf", "raf977", "rafmed", "raf2909", "astro",
   "hilux", "cybercraft", "pejo206", "astra", "sportage", "chr", "levante"]);
+// — номер «8» не клеится (по списку Саши)
+const NO_NUMBER = new Set(["hilux"]);
 // — машина времени не берёт НИЧЕГО (ни краску, ни железо)
 const NO_TUNING = new Set(["timemachine"]);
 // — без тюнинга СНАРУЖИ (краска, винилы, детали; железо можно):
@@ -3364,8 +3366,15 @@ function modMap(id) {
   });
   const onPlate = (x, y) => plate && y >= plate.y - 10 && y <= plate.y + 4
     && Math.abs(x - plate.x) <= plate.w / 2 + 2;
-  const glassy = (p) => Math.abs(p[0] - 26) <= 1 && Math.abs(p[1] - 32) <= 1
-    && Math.abs(p[2] - 38) <= 1;
+  // Стекло и его БЛИК (стекло + белый): у почти чёрных машин (Charjer)
+  // блик на стекле похож на блик на краске — полоса лезла на стекло
+  const glassy = (p) => {
+    if (Math.abs(p[0] - 26) <= 1 && Math.abs(p[1] - 32) <= 1
+        && Math.abs(p[2] - 38) <= 1) return true;
+    const a = [(p[0] - 26) / 229, (p[1] - 32) / 223, (p[2] - 38) / 217];
+    return Math.min(...a) >= 0.03 && Math.max(...a) <= 0.5
+      && Math.max(...a) - Math.min(...a) <= 0.02;
+  };
   const paintLike = (p, s) => {
     if (Math.abs(p[0] - s[0]) <= 2 && Math.abs(p[1] - s[1]) <= 2
         && Math.abs(p[2] - s[2]) <= 2) return true;
@@ -3414,7 +3423,7 @@ function modMap(id) {
   // (−44, −42). Проверяем каждые 2 px и с запасом в 1 px: раньше
   // проверка «перешагивала» тонкие фары. Нигде не влез — номера нет
   let num = null;
-  if (slots.length) {
+  if (slots.length && !NO_NUMBER.has(id)) {
     const fits = (x0, y0, r) => {
       for (let dy = -r; dy <= r; dy += 2)
         for (let dx = -r; dx <= r; dx += 2)
@@ -6660,6 +6669,9 @@ function drawTuatara(g) {
     g.lineTo(side * 20, -100);
     g.closePath(); g.fill();
   }
+  // Кузов ПОД куполом: между стеклом и телом была щель, и сквозь
+  // машину просвечивала трава («дыра в машине» — Саша)
+  roundRect(g, -26, -94, 52, 20, 6, "#f2f3f0");
   // Узкое стекло-купол между плавниками
   roundRect(g, -22, -102, 44, 18, 8, "#1a2026");
   // Обтекаемое белое тело-капля
