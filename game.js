@@ -3205,7 +3205,7 @@ const MOD_FIT = {
   durango: { spoilerY: -120, stripeTop: -64 },
   navigator: { spoilerY: -122, stripeTop: -62 },
   disco: { spoilerY: -120, stripeTop: -58 },
-  hilux: { spoilerY: -108, stripeTop: -56 },
+  hilux: { spoilerY: -116, stripeTop: -56 },   // над КРЫШЕЙ кабины, не на стекле
   rav4: { spoilerY: -124, stripeTop: -62 },
   kuga: { spoilerY: -118, stripeTop: -60 },
   gle: { spoilerY: -108, stripeTop: -58 },
@@ -3280,13 +3280,138 @@ const MOD_FIT = {
   aero: { spoilerY: -84, stripeTop: -72 },
 };
 
+// «ОСМОТР МАШИНЫ» (фикс по альбому тюнинга Саши): мерки MOD_FIT не
+// спасали все 138 машин — полосы закрывали номер, кружок с номером
+// налезал на фонари, спойлер висел в воздухе. Теперь тюнинг ОДИН раз
+// рисует машину на скрытом холсте и сам находит:
+//   plate   — где номер «САША» (полосы его обходят),
+//   num     — свободное место на кузове для кружка с номером,
+//   legDown — докуда тянуть ножки спойлера, чтобы он не висел.
+const MOD_MAP = {};
+function modMap(id) {
+  if (MOD_MAP[id]) return MOD_MAP[id];
+  const OX = 130, OY = 175;            // «земля» машины на скрытом холсте
+  const c = document.createElement("canvas");
+  c.width = 260; c.height = 185;
+  const cx = c.getContext("2d");
+  cx.translate(OX, OY);
+  let plate = null;
+  // Подглядываем за надписью «САША»: номер нарисован по-разному,
+  // но эта надпись есть у всех
+  const spy = new Proxy(cx, {
+    get(tg, k) {
+      if (k === "fillText") return (txt, x, y, ...rest) => {
+        if (txt === "САША" && !plate) {
+          const m = tg.getTransform();
+          const w = tg.measureText(txt).width + 14;
+          plate = { y: m.b * x + m.d * y + m.f - OY, w };
+        }
+        tg.fillText(txt, x, y, ...rest);
+      };
+      const v = tg[k];
+      return typeof v === "function" ? v.bind(tg) : v;
+    },
+    set(tg, k, v) { tg[k] = v; return true; },
+  });
+  CAR_DRAWERS[id](spy);
+  const px = cx.getImageData(0, 0, c.width, c.height).data;
+  const at = (x, y) => {
+    const X = Math.round(x + OX), Y = Math.round(y + OY);
+    if (X < 0 || Y < 0 || X >= c.width || Y >= c.height) return null;
+    const i = (Y * c.width + X) * 4;
+    return [px[i], px[i + 1], px[i + 2], px[i + 3]];
+  };
+
+  // Кружок с номером — только на ЧИСТОМ кузове (цвет краски из
+  // PAINT_SLOTS): фонари, стёкла, значки и номер — не кузов
+  const base = PAINT_SLOTS[id] && PAINT_SLOTS[id][0];
+  let num = { x: -44, y: -42, s: 1 };
+  if (base) {
+    const n = parseInt(base.slice(1), 16);
+    const br = n >> 16 & 255, bg = n >> 8 & 255, bb = n & 255;
+    const isBody = (x, y) => {
+      const p = at(x, y);
+      return p && p[3] > 250 && Math.abs(p[0] - br) < 14
+        && Math.abs(p[1] - bg) < 14 && Math.abs(p[2] - bb) < 14;
+    };
+    const fits = (x0, y0, r) => {
+      for (let dy = -r; dy <= r; dy += 3)
+        for (let dx = -r; dx <= r; dx += 3)
+          if (dx * dx + dy * dy <= r * r && !isBody(x0 + dx, y0 + dy)) return false;
+      return true;
+    };
+    // Ищем ближайшее к привычному месту (−44, −42); не влезает
+    // большой кружок — пробуем поменьше
+    let found = null;
+    for (const s of [1, 0.8, 0.65]) {
+      const r = Math.ceil(15 * s);
+      let best = null, bestD = Infinity;
+      for (let y = -120; y <= -14; y += 2)
+        for (let x = -84; x <= 84; x += 2) {
+          const d = (x + 44) ** 2 + (y + 42) ** 2;
+          if (d < bestD && fits(x, y, r)) { best = { x, y, s }; bestD = d; }
+        }
+      if (best) { found = best; break; }
+    }
+    if (found) num = found;
+  }
+
+  // Ножки спойлера: от крыла вниз до первого пикселя машины
+  const fit = MOD_FIT[id] || {};
+  const sy = fit.spoilerY ?? -72;
+  let legDown = 12;
+  for (const lx of [-31.5, 31.5]) {
+    for (let y = sy + 7; y <= sy + 90; y++) {
+      const p = at(lx, y);
+      if (p && p[3] > 60) { legDown = Math.max(legDown, y - (sy + 6) + 2); break; }
+    }
+  }
+  // Золотые диски — точно на ВИДИМУЮ часть колеса («на фары лезет»:
+  // по таблице RIM_X диски ЗИС-5 сидели на фонарях). Ищем пиксели
+  // шины (почти чёрные, #121212) с каждой стороны
+  let rim = null;
+  {
+    // Шина — строго серая #121212 или #0b0b0b (у болидов): у похожих
+    // тёмных деталей (диффузор #141416) синий канал чуть другой
+    const tire = (x, y) => {
+      const p = at(x, y);
+      return p && p[3] > 250 && p[0] === p[1] && p[1] === p[2]
+        && (p[0] === 18 || p[0] === 11);
+    };
+    let x0 = Infinity, x1 = -Infinity, y0 = Infinity, y1 = -Infinity;
+    for (let y = -70; y <= 10; y++)
+      for (let x = 24; x <= 115; x++)
+        if (tire(x, y)) {
+          x0 = Math.min(x0, x); x1 = Math.max(x1, x);
+          y0 = Math.min(y0, y); y1 = Math.max(y1, y);
+        }
+    if (x1 - x0 >= 8 && y1 - y0 >= 6) {
+      // Диск — в нижней видимой части колеса: так он не залезает на
+      // фонари и бампер, но остаётся крупным
+      const r = Math.min(6.5, (x1 - x0) / 2 - 2);
+      rim = { x: (x0 + x1) / 2, y: Math.max((y0 + y1) / 2, y1 - r - 1), r };
+    }
+  }
+  return (MOD_MAP[id] = { plate, num, legDown, rim });
+}
+
 function drawMods(g, id, t) {
   const fit = MOD_FIT[id] || {};
+  const mm = modMap(id);
   if (t.vinyl === "полосы") {
     const top = fit.stripeTop ?? -98;
     g.fillStyle = "rgba(255,255,255,0.85)";
-    g.fillRect(-19, top, 12, -8 - top);
-    g.fillRect(  7, top, 12, -8 - top);
+    // Полосы ОБХОДЯТ номер: кусок над ним и кусок под ним
+    const p = mm.plate;
+    const cut = p ? [p.y - 10, p.y + 4] : null;
+    for (const x0 of [-19, 7]) {
+      if (!cut) { g.fillRect(x0, top, 12, -8 - top); continue; }
+      // Кусок над номером и кусок под ним — номер может стоять
+      // даже ВЫШЕ начала полос (у Четвёрки он на калитке)
+      if (cut[0] > top) g.fillRect(x0, top, 12, cut[0] - top);
+      const from = Math.max(top, cut[1]);
+      if (from < -8) g.fillRect(x0, from, 12, -8 - from);
+    }
   } else if (t.vinyl === "пламя") {
     const flame = (h1, h2, color) => {
       g.fillStyle = color;
@@ -3304,28 +3429,36 @@ function drawMods(g, id, t) {
     flame(-36, -25, "#d5121e");
     flame(-28, -19, "#ff8c1a");
   } else if (t.vinyl === "номер") {
+    // Гоночный номер «8» (Саша сменил 7 на 8) — на свободном кузове
+    const { x, y, s } = mm.num;
+    g.save();
+    g.translate(x, y);
+    g.scale(s, s);
     g.fillStyle = "#f2f3f0";
-    g.beginPath(); g.arc(-44, -42, 13, 0, Math.PI * 2); g.fill();
+    g.beginPath(); g.arc(0, 0, 13, 0, Math.PI * 2); g.fill();
     g.strokeStyle = "#17191c";
     g.lineWidth = 2;
-    g.beginPath(); g.arc(-44, -42, 13, 0, Math.PI * 2); g.stroke();
+    g.beginPath(); g.arc(0, 0, 13, 0, Math.PI * 2); g.stroke();
     g.fillStyle = "#17191c";
     g.font = "bold 15px Verdana";
     g.textAlign = "center";
-    g.fillText("7", -44, -36);
+    g.fillText("8", 0, 6);
+    g.restore();
   }
   if (t.spoiler && !fit.noSpoiler) {
     const sy = fit.spoilerY ?? -72;
     g.fillStyle = "#101214";
-    g.fillRect(-34, sy + 6, 5, 12);
-    g.fillRect( 29, sy + 6, 5, 12);
+    // Ножки — до самой машины, не в воздух (закон Ф-1!)
+    g.fillRect(-34, sy + 6, 5, mm.legDown);
+    g.fillRect( 29, sy + 6, 5, mm.legDown);
     roundRect(g, -58, sy, 116, 7, 3, "#101214");
   }
   if (t.rims) {
-    const x = RIM_X[id] || 66;
+    // Место колеса нашёл «осмотр»; таблица RIM_X — запасной вариант
+    const r = mm.rim || { x: RIM_X[id] || 66, y: -11, r: 6.5 };
     for (const s of [-1, 1]) {
-      circle(g, s * x, -11, 6.5, "#e8b40c");
-      circle(g, s * x, -11, 3, "#3a2f05");
+      circle(g, s * r.x, r.y, r.r, "#e8b40c");
+      circle(g, s * r.x, r.y, r.r * 0.46, "#3a2f05");
     }
   }
 }
