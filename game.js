@@ -3462,7 +3462,8 @@ function modMap(id) {
         }
     if (gTop !== null) {
       const above = HATCH.has(id) || CAR_CATEGORY[id] === "suv";
-      const LEG = above ? 12 : 22;
+      // Хэтчбэкам — КОРОТКИЕ ножки (просьба Саши), седанам — высокие стойки
+      const LEG = above ? 4 : 22;
       let base = null;
       if (above) {
         // Наш спойлер — НА КРЫШУ (Саша: козырёк вышел странным):
