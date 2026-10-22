@@ -3135,6 +3135,11 @@ function saveTuning() {
   try { localStorage.setItem("ins1-tuning", JSON.stringify(tuning)); } catch {}
 }
 function getTun(id) {
+  // Машина времени не тюнингуется (правило Саши): всегда заводская,
+  // даже если в старом сохранении что-то было куплено
+  if (id === "timemachine")
+    return { paint: null, vinyl: "нет", spoiler: false, rims: false,
+             neon: "нет", engine: 0, brakes: 0, tires: 0, turbo: false };
   if (!tuning[id]) tuning[id] = { paint: null, vinyl: "нет", spoiler: false,
                                   rims: false, neon: "нет", engine: 0, brakes: 0, tires: 0 };
   if (tuning[id].turbo === undefined) tuning[id].turbo = false; // старые сейвы без турбо
@@ -3170,6 +3175,8 @@ function paintedContext(g, map) {
 
 // Нарисовать машину СО ВСЕМ тюнингом: неон → кузов (в цвете) → винил/детали
 function drawCarTuned(g, id, t) {
+  // Без внешнего тюнинга (DMC) — всегда заводской вид
+  if (NO_EXTERIOR.has(id)) t = null;
   if (t && NEON_COLORS[t.neon]) {
     const nc = NEON_COLORS[t.neon];
     g.save();
@@ -3207,6 +3214,7 @@ const MOD_FIT = {
   navigator: { spoilerY: -122, stripeTop: -62 },
   disco: { spoilerY: -120, stripeTop: -58 },
   hilux: { spoilerY: -116, stripeTop: -56 },   // над КРЫШЕЙ кабины, не на стекле
+  semerka: { spoilerY: -65 },                  // на крышке багажника, не на стекле
   rav4: { spoilerY: -124, stripeTop: -62 },
   kuga: { spoilerY: -118, stripeTop: -60 },
   gle: { spoilerY: -108, stripeTop: -58 },
@@ -3281,6 +3289,21 @@ const MOD_FIT = {
   aero: { spoilerY: -84, stripeTop: -72 },
 };
 
+// ПРАВИЛА ТЮНИНГА (Саша, по альбому):
+// — военным и тяжёлым ничего не надевают на КОРПУС (винилы и спойлер)
+const NO_BODY_TUNING = new Set(["zis", "zis5", "uaz469"]);
+// — у кого спойлер уже стоит с завода, надевной не надевают
+const FACTORY_SPOILER = new Set(["focus", "corsa", "camaroNew", "darkhorse",
+  "rav4", "charger14", "merc190", "amggt53", "tucson", "astro", "m3e30",
+  "m5", "models", "dbs", "m4", "vantage", "gsupra"]);
+const hasFactoryWing = (id) =>
+  FACTORY_SPOILER.has(id) || !!(MOD_FIT[id] && MOD_FIT[id].noSpoiler);
+// — машина времени не берёт НИЧЕГО (ни краску, ни железо)
+const NO_TUNING = new Set(["timemachine"]);
+// — DMC (TimeLorean TMC-12) — без тюнинга СНАРУЖИ: ни краски, ни
+//   винилов, ни деталей. Железо и турбо — можно
+const NO_EXTERIOR = new Set(["delorean"]);
+
 // «ОСМОТР МАШИНЫ» (фикс по альбому тюнинга Саши): мерки MOD_FIT не
 // спасали все 138 машин — полосы закрывали номер, кружок с номером
 // налезал на фонари, спойлер висел в воздухе. Теперь тюнинг ОДИН раз
@@ -3323,27 +3346,67 @@ function modMap(id) {
     return [px[i], px[i + 1], px[i + 2], px[i + 3]];
   };
 
-  // Кружок с номером — только на ЧИСТОМ кузове (цвет краски из
-  // PAINT_SLOTS): фонари, стёкла, значки и номер — не кузов
-  const base = PAINT_SLOTS[id] && PAINT_SLOTS[id][0];
+  // КРАСКА: пиксели ровно цветов краски из PAINT_SLOTS. Стёкла, хром,
+  // фонари, значки — другого цвета. Номер вырезаем отдельно: у белых
+  // машин он почти того же цвета, что кузов
+  const slots = (PAINT_SLOTS[id] || []).map((h) => {
+    const n = parseInt(h.slice(1), 16);
+    return [n >> 16 & 255, n >> 8 & 255, n & 255];
+  });
+  const onPlate = (x, y) => plate && y >= plate.y - 10 && y <= plate.y + 4
+    && Math.abs(x) <= plate.w / 2 + 2;
+  // Стекло (#1a2026 и его блик) — НИКОГДА не краска: у тёмных машин
+  // (BNW M3) краска отличается от стекла всего на 2–3 единицы
+  const glassy = (p) => (Math.abs(p[0] - 26) <= 1 && Math.abs(p[1] - 32) <= 1
+    && Math.abs(p[2] - 38) <= 1);
+  const isPaint = (x, y) => {
+    const p = at(x, y);
+    if (!p || p[3] < 250 || onPlate(x, y) || glassy(p)) return false;
+    return slots.some((s) => Math.abs(p[0] - s[0]) <= 2
+      && Math.abs(p[1] - s[1]) <= 2 && Math.abs(p[2] - s[2]) <= 2);
+  };
+
+  // ПОЛОСЫ — только по краске (правило Саши: стёкла, серебристые
+  // детали, номера и фары остаются чистыми). Рисуем их один раз на
+  // свой холстик, пиксель за пикселем. Щёлки до 4 px (блик на краске)
+  // заливаем, чтобы полоса не рвалась
+  const sc = document.createElement("canvas");
+  sc.width = c.width; sc.height = c.height;
+  const scx = sc.getContext("2d");
+  const img = scx.createImageData(c.width, c.height);
+  for (const [xa, xb] of [[-19, -8], [7, 18]]) {
+    for (let x = xa; x <= xb; x++) {
+      const col = [];
+      for (let y = -170; y <= -8; y++) col.push(isPaint(x, y));
+      for (let i = 0; i < col.length; i++) {
+        if (col[i]) continue;
+        let j = i;
+        while (j < col.length && !col[j]) j++;
+        if (i > 0 && j < col.length && j - i <= 4) for (let k = i; k < j; k++) col[k] = true;
+        i = j;
+      }
+      col.forEach((on, i) => {
+        if (!on) return;
+        const X = x + OX, Y = -170 + i + OY;
+        const o = (Y * c.width + X) * 4;
+        img.data[o] = 255; img.data[o + 1] = 255; img.data[o + 2] = 255;
+        img.data[o + 3] = 217;
+      });
+    }
+  }
+  scx.putImageData(img, 0, 0);
+  const stripes = { canvas: sc, ox: OX, oy: OY };
+
+  // Кружок с номером — только на ЧИСТОЙ краске, ближе к привычному
+  // месту (−44, −42); не влезает большой — пробуем поменьше
   let num = { x: -44, y: -42, s: 1 };
-  if (base) {
-    const n = parseInt(base.slice(1), 16);
-    const br = n >> 16 & 255, bg = n >> 8 & 255, bb = n & 255;
-    const isBody = (x, y) => {
-      const p = at(x, y);
-      return p && p[3] > 250 && Math.abs(p[0] - br) < 14
-        && Math.abs(p[1] - bg) < 14 && Math.abs(p[2] - bb) < 14;
-    };
+  if (slots.length) {
     const fits = (x0, y0, r) => {
       for (let dy = -r; dy <= r; dy += 3)
         for (let dx = -r; dx <= r; dx += 3)
-          if (dx * dx + dy * dy <= r * r && !isBody(x0 + dx, y0 + dy)) return false;
+          if (dx * dx + dy * dy <= r * r && !isPaint(x0 + dx, y0 + dy)) return false;
       return true;
     };
-    // Ищем ближайшее к привычному месту (−44, −42); не влезает
-    // большой кружок — пробуем поменьше
-    let found = null;
     for (const s of [1, 0.8, 0.65]) {
       const r = Math.ceil(15 * s);
       let best = null, bestD = Infinity;
@@ -3352,14 +3415,31 @@ function modMap(id) {
           const d = (x + 44) ** 2 + (y + 42) ** 2;
           if (d < bestD && fits(x, y, r)) { best = { x, y, s }; bestD = d; }
         }
-      if (best) { found = best; break; }
+      if (best) { num = best; break; }
     }
-    if (found) num = found;
   }
-
-  // Ножки спойлера: от крыла вниз до первого пикселя машины
+  // Где крыло: мерка из MOD_FIT, а если её нет — сразу ПОД задним
+  // стеклом, на крышке багажника (раньше стояло на −72 и у Волг
+  // ложилось на стекло). Стекло — тёмно-синий #1a2026 и его блик
   const fit = MOD_FIT[id] || {};
-  const sy = fit.spoilerY ?? -72;
+  let sy = fit.spoilerY ?? -72;
+  if (fit.spoilerY === undefined) {
+    const isGlass = (x, y) => {
+      const p = at(x, y);
+      if (!p || p[3] < 250) return false;
+      const near = (r, g2, b, tol) => Math.abs(p[0] - r) <= tol
+        && Math.abs(p[1] - g2) <= tol && Math.abs(p[2] - b) <= tol;
+      return near(26, 32, 38, 6) || near(54, 59, 64, 8);
+    };
+    let glassBottom = null;
+    for (const gx of [-31, 0, 31])
+      for (let y = -40; y >= -130; y--)
+        if (isGlass(gx, y)) { glassBottom = Math.max(glassBottom ?? y, y); break; }
+    // Только если под стеклом есть багажник: у TimeLorean «стекло»
+    // (жалюзи) доходит до фонарей, и крыло легло бы на них
+    if (glassBottom !== null && glassBottom + 2 <= -60) sy = glassBottom + 2;
+  }
+  // Ножки спойлера: от крыла вниз до первого пикселя машины
   let legDown = 12;
   for (const lx of [-31.5, 31.5]) {
     for (let y = sy + 7; y <= sy + 90; y++) {
@@ -3367,27 +3447,20 @@ function modMap(id) {
       if (p && p[3] > 60) { legDown = Math.max(legDown, y - (sy + 6) + 2); break; }
     }
   }
-  return (MOD_MAP[id] = { plate, num, legDown });
+  return (MOD_MAP[id] = { stripes, num, legDown, spoilerY: sy });
 }
 
 function drawMods(g, id, t) {
+  if (NO_TUNING.has(id)) return;          // машина времени — ничего
   const fit = MOD_FIT[id] || {};
   const mm = modMap(id);
-  if (t.vinyl === "полосы") {
-    const top = fit.stripeTop ?? -98;
-    g.fillStyle = "rgba(255,255,255,0.85)";
-    // Полосы ОБХОДЯТ номер: кусок над ним и кусок под ним
-    const p = mm.plate;
-    const cut = p ? [p.y - 10, p.y + 4] : null;
-    for (const x0 of [-19, 7]) {
-      if (!cut) { g.fillRect(x0, top, 12, -8 - top); continue; }
-      // Кусок над номером и кусок под ним — номер может стоять
-      // даже ВЫШЕ начала полос (у Четвёрки он на калитке)
-      if (cut[0] > top) g.fillRect(x0, top, 12, cut[0] - top);
-      const from = Math.max(top, cut[1]);
-      if (from < -8) g.fillRect(x0, from, 12, -8 - from);
-    }
-  } else if (t.vinyl === "пламя") {
+  // Военным и тяжёлым — ничего на корпус: ни винилов, ни спойлера
+  const body = !NO_BODY_TUNING.has(id);
+  if (body && t.vinyl === "полосы") {
+    // Готовый слой полос «только по краске» из осмотра машины
+    const s = mm.stripes;
+    g.drawImage(s.canvas, -s.ox, -s.oy);
+  } else if (body && t.vinyl === "пламя") {
     const flame = (h1, h2, color) => {
       g.fillStyle = color;
       g.beginPath();
@@ -3403,7 +3476,7 @@ function drawMods(g, id, t) {
     };
     flame(-36, -25, "#d5121e");
     flame(-28, -19, "#ff8c1a");
-  } else if (t.vinyl === "номер") {
+  } else if (body && t.vinyl === "номер") {
     // Гоночный номер «8» (Саша сменил 7 на 8) — на свободном кузове
     const { x, y, s } = mm.num;
     g.save();
@@ -3420,8 +3493,8 @@ function drawMods(g, id, t) {
     g.fillText("8", 0, 6);
     g.restore();
   }
-  if (t.spoiler && !fit.noSpoiler) {
-    const sy = fit.spoilerY ?? -72;
+  if (body && t.spoiler && !hasFactoryWing(id)) {
+    const sy = mm.spoilerY;
     g.fillStyle = "#101214";
     // Ножки — до самой машины, не в воздух (закон Ф-1!)
     g.fillRect(-34, sy + 6, 5, mm.legDown);
@@ -3468,9 +3541,36 @@ function renderTuning() {
   drawCarTuned(tctx, c.id, t);
   tctx.restore();
 
+  const lockedChip = (box, text) => {
+    const b = chip(text, false, () => {});
+    b.classList.add("locked");
+    box.appendChild(b);
+  };
+  // Машина времени — экспонат: тюнинг не берёт вообще (правило Саши)
+  if (NO_TUNING.has(c.id)) {
+    for (const id of ["paints", "vinyls", "details", "hardware"]) {
+      const box = document.getElementById(id);
+      box.innerHTML = "";
+      lockedChip(box, "машина времени не тюнингуется");
+    }
+    updateMoneyUI();
+    return;
+  }
+  const noBody = NO_BODY_TUNING.has(c.id);
+  const noExt = NO_EXTERIOR.has(c.id);
+
   // 🎨 Краски (+ кнопка "завод")
   const paints = document.getElementById("paints");
   paints.innerHTML = "";
+  if (noExt) {
+    // DMC — только железо: снаружи всё заводское
+    for (const id of ["paints", "vinyls", "details"]) {
+      const box = document.getElementById(id);
+      box.innerHTML = "";
+      lockedChip(box, "Делориан — снаружи только заводской");
+    }
+  }
+  if (!noExt) {
   paints.appendChild(chip("завод", !t.paint, () => { t.paint = null; }));
   for (const col of PAINT_PALETTE) {
     const b = document.createElement("button");
@@ -3483,16 +3583,20 @@ function renderTuning() {
   // 🏁 Винилы
   const vin = document.getElementById("vinyls");
   vin.innerHTML = "";
-  for (const v of VINYLS)
-    vin.appendChild(chip(v, t.vinyl === v, () => { t.vinyl = v; }));
+  if (noBody) {
+    lockedChip(vin, "военным и тяжёлым винилы не клеят");
+  } else {
+    for (const v of VINYLS)
+      vin.appendChild(chip(v, t.vinyl === v, () => { t.vinyl = v; }));
+  }
 
   // 🔩 Детали
   const det = document.getElementById("details");
   det.innerHTML = "";
-  if (MOD_FIT[c.id] && MOD_FIT[c.id].noSpoiler) {
-    const b = chip("крыло уже есть!", false, () => {});
-    b.classList.add("locked");
-    det.appendChild(b);
+  if (noBody) {
+    lockedChip(det, "спойлер: не для военных и тяжёлых");
+  } else if (hasFactoryWing(c.id)) {
+    lockedChip(det, "крыло уже есть!");
   } else {
     det.appendChild(chip("спойлер", t.spoiler, () => { t.spoiler = !t.spoiler; }));
   }
@@ -3501,6 +3605,7 @@ function renderTuning() {
   det.appendChild(chip("неон: " + t.neon, t.neon !== "нет", () => {
     t.neon = neons[(neons.indexOf(t.neon) + 1) % neons.length];
   }));
+  }   // конец внешнего тюнинга (у DMC его нет)
 
   // ⚙️ Железо: покупается за монеты! Клик = купить следующий уровень.
   // Ревизия реалистики (заказ Саши): ЗИСу тормоза не продаются
