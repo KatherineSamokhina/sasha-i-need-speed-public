@@ -297,10 +297,11 @@ body.touch-device .menu-grid button { font-size: 14px; padding: 11px 4px; }
   display: flex;
   align-items: center;
   justify-content: center;
-  transform: rotate(-8deg);
+  overflow: hidden;   /* углы наклона не торчат — иначе у меню лишний скролл */
   pointer-events: none;
   user-select: none;
 }
+.studio-bg svg { transform: rotate(-8deg); }
 
 .studio-bg svg {
   width: 500px;
@@ -332,7 +333,16 @@ body.touch-device .menu-grid button { font-size: 14px; padding: 11px 4px; }
   border-radius: 18px;
   background: rgba(9, 9, 17, 0.97);
   box-shadow: 0 0 60px rgba(255, 40, 40, 0.3);
-  overflow: hidden;
+  /* На низком экране телефона гараж, город, заезды и тюнинг выше
+     квадрата: overflow:hidden срезал заголовок и кнопки «Выбрать /
+     Тюнинг / Назад» — их было не нажать. Теперь — прокрутка, а
+     «safe center» не даёт верху уехать за край (там не докрутишь) */
+  overflow-x: hidden;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  justify-content: center;
+  justify-content: safe center;
+  padding: 10px 0;
   z-index: 5;
 }
 
